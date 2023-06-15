@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#D75A4A"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Select Sub Branch"
+            android:textColor="@color/white"
+            android:padding="@dimen/_10sdp"
+            />
+
+        <ImageView
+            android:id="@+id/close"
+            app:srcCompat="@drawable/ic_close_pop_up"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/height_2"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+    </RelativeLayout>
+
+
+
+    <EditText
+        android:id="@+id/editText_of_searchableSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search Sub Branch"
+        android:padding="12dp"
+        android:singleLine="true"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_13sdp"
+        android:background="@drawable/et_bg_selector"
+        />
+    <ListView
+        android:id="@+id/listView_of_searchableSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        />
+
+</LinearLayout>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/div_property_land"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/_5sdp">
+        <TextView
+            android:id="@+id/textview_land_measurement_land"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/height_3"
+            android:layout_marginTop="@dimen/height_3"
+            android:text="@string/land_measurement"
+            android:textColor="@color/font_heading"
+            android:textSize="@dimen/font_samll"
+            android:textStyle="normal" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/height_2"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:weightSum="1"
+                >
+                <com.google.android.material.textfield.TextInputLayout
+                   style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:id="@+id/layout_compound_permissiblearea_land"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.8"
+                    android:layout_marginEnd="@dimen/_2sdp"
+                    android:layout_marginRight="@dimen/_2sdp"
+                    android:layout_height="wrap_content"
+                    app:hintTextAppearance="@style/TextInputLayout_hint"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_compound_permissiblearea_land"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_11sdp"
+                        android:hint="@string/compound_permissiblearea"
+                        android:inputType="numberDecimal"
+                        android:maxLength="10" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/open_calc_compound"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_calculator" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:weightSum="1"
+               >
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:id="@+id/layout_land_measurement_land"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.8"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/font_texthint">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_land_measurement_land"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_11sdp"
+                        android:hint="@string/as_per_measurement"
+                        android:inputType="numberDecimal"
+                        android:maxLength="10" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/open_calc_measurment"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_calculator"
+                     />
+            </LinearLayout>
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/_115sdp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginLeft="@dimen/_1sdp"
+                android:layout_marginRight="@dimen/_3sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:orientation="vertical"
+                ><TextView
+                    android:id="@+id/textview_measurement_doc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:layout_marginLeft="@dimen/height_3"
+                    android:gravity="left"
+                    android:text="@string/measurement"
+                    android:textColor="@color/font_text_minor_heading"
+                    android:textSize="@dimen/miniut_small" />
+
+                <Spinner
+                    android:id="@+id/spinner_measurementland"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner_status" />
+
+                <!--<ImageView
+                    style="@style/StyledImagedown_large"
+                    android:layout_marginTop="@dimen/height_6" />-->
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

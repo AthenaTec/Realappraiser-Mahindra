@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/ra_login_bg"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/logo"
+        tools:ignore="ContentDescription"
+        android:layout_marginBottom="@dimen/_30sdp"
+        />
+
+
+        <EditText
+            android:id="@+id/email_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/Black"
+            tools:ignore="HardcodedText"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/login_background"
+            android:drawableStart="@drawable/ic_mail_svg"
+            android:drawableLeft="@drawable/ic_mail_svg"
+            android:drawablePadding="@dimen/_10sdp"
+            android:layout_marginTop="20dp"
+            />
+   <!-- <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:textColorHint="@color/Gray"
+        app:passwordToggleDrawable="@drawable/eye"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/Activite">-->
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_background"
+            android:layout_marginTop="@dimen/_10sdp"
+            >
+        <EditText
+            android:id="@+id/pwd_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter password"
+            android:inputType="textPassword"
+            android:textColor="@color/Black"
+            tools:ignore="HardcodedText"
+            android:drawableStart="@drawable/ic_password_svg"
+            android:drawableLeft="@drawable/ic_password_svg"
+            android:drawablePadding="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:background="@null"
+            />
+
+        <ImageView
+            android:id="@+id/password_hide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toStartOf="@id/pwd_input"
+            android:src="@drawable/ic_password_hide"
+            android:layout_marginStart="@dimen/_20sdp"
+            />
+
+        </RelativeLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/forgotpassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:text="Forgot Password"
+            android:textColor="@color/Black"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText,InefficientWeight" />
+    </LinearLayout>
+        <TextView
+            android:id="@+id/seturl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Server URL"
+            android:textColor="@color/Black"
+            android:textSize="15sp"
+            tools:ignore="HardcodedText"
+            android:gravity="right|end"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            />
+
+    <TextView
+        android:id="@+id/loginBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginLeft="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_4sdp"
+        android:background="@drawable/buttonshape"
+        android:gravity="center"
+        android:text="Login"
+        android:textAllCaps="true"
+        android:textColor="@color/White"
+        android:textSize="16sp"
+        tools:ignore="HardcodedText"
+        android:padding="@dimen/_10sdp"
+        />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/realappraiser_brand"
+        android:textColor="@color/Black"
+        android:textSize="15sp"
+        android:layout_marginTop="@dimen/_90sdp"
+        android:layout_gravity="center"
+        />
+</LinearLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="15dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginEnd="15dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="8dp"
+    app:contentPadding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/medium"
+            android:letterSpacing="0.05"
+            android:lineSpacingMultiplier=".9"
+            android:paddingStart="5dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="2.5dp"
+            android:text="Lalgudi Bustand"
+            android:textColor="@color/Activite"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvSnippet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:letterSpacing="0.05"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingStart="5dp"
+            android:paddingTop="2.5dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="5dp"
+            android:text="No.6 Ramasamy Naidu Nagar, Villankurichi Rd, Coimbatore, Tamil Nadu 641035"
+            android:textColor="@color/Gray"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
