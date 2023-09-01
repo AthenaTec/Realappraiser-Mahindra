@@ -3160,6 +3160,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
                                             android:singleLine="true"
+                                            android:fontFamily="@font/medium"
                                             android:textSize="@dimen/_11sdp"
                                             android:hint="Concrete Grade"
                                             android:inputType="textAutoCorrect"

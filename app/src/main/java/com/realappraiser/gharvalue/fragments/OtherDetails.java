@@ -4819,6 +4819,20 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
             editText_liftinbuilding.setText("");
         }
 
+        //Concrete Grade
+        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indProperty.getConcreteGrade()))) {
+            et_concrete.setText("" + Singleton.getInstance().indProperty.getConcreteGrade());
+        } else {
+            et_concrete.setText("");
+        }
+
+        //EnvironmentExposureCondition
+        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indProperty.getEnvironmentExposureCondition()))) {
+            et_Environment.setText("" + Singleton.getInstance().indProperty.getEnvironmentExposureCondition());
+        } else {
+            et_Environment.setText("");
+        }
+
         editText_liftinbuilding.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
