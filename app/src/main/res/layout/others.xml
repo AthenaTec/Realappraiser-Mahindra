@@ -275,7 +275,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:weightSum="3">
+                                android:weightSum="3"
+                                android:visibility="gone">
 
                                 <View
                                     android:layout_width="0dp"
@@ -319,6 +320,7 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:weightSum="2"
+                                android:layout_marginTop="@dimen/_6sdp"
                                 tools:ignore="DisableBaselineAlignment">
 
                                 <com.google.android.material.textfield.TextInputLayout
@@ -326,6 +328,7 @@
                                     android:id="@+id/layout_addr_perdoc"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/_3sdp"
                                     android:layout_weight="1"
                                     android:textColorHint="@color/font_texthint"
                                     >
@@ -344,6 +347,7 @@
                                 </com.google.android.material.textfield.TextInputLayout>
 
                                 <com.google.android.material.textfield.TextInputLayout
+                                    android:visibility="gone"
                                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                                     android:id="@+id/layout_addr_site"
                                     android:layout_width="0dp"
@@ -364,18 +368,9 @@
                                         android:inputType="textCapWords"
                                         android:maxLength="350" />
                                 </com.google.android.material.textfield.TextInputLayout>
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/control_padding"
-                                android:orientation="horizontal"
-                                tools:ignore="DisableBaselineAlignment">
-
                                 <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_marginStart="@dimen/_3sdp"
+                                    android:layout_marginLeft="@dimen/_3sdp"
                                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                                     android:id="@+id/layout_landmark"
                                     android:layout_width="0dp"
@@ -395,6 +390,36 @@
                                         android:fontFamily="@font/regular"
                                         />
                                 </com.google.android.material.textfield.TextInputLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/control_padding"
+                                android:orientation="horizontal"
+                                tools:ignore="DisableBaselineAlignment">
+
+                                <!--<com.google.android.material.textfield.TextInputLayout
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                                    android:id="@+id/layout_landmark"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:textColorHint="@color/font_texthint">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/editText_landmark"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:hint="@string/landmark"
+                                        android:inputType="textCapWords"
+                                        android:maxLength="150"
+                                        android:textSize="@dimen/_11sdp"
+                                        android:singleLine="true"
+                                        android:fontFamily="@font/regular"
+                                        />
+                                </com.google.android.material.textfield.TextInputLayout>-->
 
                                 <com.google.android.material.textfield.TextInputLayout
                                     android:id="@+id/layout_servey_persence"
@@ -961,14 +986,12 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/height_3"
-                                android:weightSum="2"
                                 tools:ignore="RtlHardcoded">
 
                                 <TextView
                                     android:id="@+id/textview_actual_boundary"
-                                    android:layout_width="0dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:gravity="left"
                                     android:text="@string/actual_boundary"
                                     android:textColor="@color/font_heading"
@@ -978,9 +1001,10 @@
 
                                 <CheckBox
                                     android:id="@+id/checkbox_same_as_doc_boundary"
-                                    android:layout_width="0dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="@dimen/_25sdp"
-                                    android:layout_marginRight="@dimen/height_3"
+                                    android:layout_marginRight="@dimen/height_6"
+                                    android:layout_marginLeft="@dimen/height_8"
                                     android:layout_weight="1"
                                     android:button="@drawable/check_box_selector"
                                     android:checked="false"
@@ -1441,13 +1465,13 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <View
+                    <!--<View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginBottom="@dimen/_5sdp"
                         android:layout_marginTop="@dimen/_10sdp"
-                        android:background="@color/line"></View>
-                    <androidx.cardview.widget.CardView
+                        android:background="@color/line"></View>-->
+                  <!--  <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:cardElevation="10dp"
@@ -1456,7 +1480,7 @@
                         app:cardMaxElevation="12dp"
                         app:cardPreventCornerOverlap="true"
                         android:layout_marginTop="@dimen/_5sdp"
-                        >
+                        >-->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -1596,7 +1620,7 @@
 
                             </LinearLayout>
                         </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                   <!-- </androidx.cardview.widget.CardView>-->
 
                     <View
                         android:layout_width="match_parent"
@@ -2810,101 +2834,7 @@
 
                                 </LinearLayout>
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/_5sdp"
-                                    android:orientation="horizontal"
-                                    android:weightSum="2"
-                                    tools:ignore="DisableBaselineAlignment">
 
-
-                                    <LinearLayout
-                                        android:layout_width="0dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginRight="@dimen/height_8"
-                                        android:layout_weight="1"
-                                        android:orientation="vertical">
-
-                                        <TextView
-                                            android:id="@+id/maintenanceofbuilding"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginBottom="@dimen/_3sdp"
-                                            android:layout_marginLeft="@dimen/height_3"
-                                            android:gravity="left"
-                                            android:text="@string/maintenanceofbuilding"
-                                            android:textColor="@color/font_text_minor_heading"
-                                            android:textSize="@dimen/font_very_small"
-                                            tools:ignore="RtlHardcoded" />
-
-                                        <Spinner
-                                            android:id="@+id/spinner_maintenanceofbuilding"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:background="@drawable/spinner_status"
-                                            tools:ignore="InconsistentLayout"
-                                            android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
-                                            />
-                                       <!-- <ImageView
-                                            style="@style/StyledImagedown_large"
-                                            tools:ignore="ContentDescription" />-->
-                                    </LinearLayout>
-
-                                    <com.google.android.material.textfield.TextInputLayout
-                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                                        android:id="@+id/layout_liftinbuilding"
-                                        android:layout_width="0dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginLeft="@dimen/height_8"
-                                        android:layout_marginRight="@dimen/height_8"
-                                        android:layout_weight="1"
-                                        android:orientation="vertical"
-                                        android:textColorHint="@color/font_texthint"
-                                        tools:ignore="RtlHardcoded">
-
-                                        <com.google.android.material.textfield.TextInputEditText
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:textSize="@dimen/font_very_small"
-                                            android:id="@+id/editText_liftinbuilding"
-                                            android:hint="@string/liftinbuilding"
-                                            android:inputType="number"
-                                            android:maxLength="2"
-                                            tools:ignore="InconsistentLayout"
-                                            android:singleLine="true"
-                                            />
-                                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                                    <!--<FrameLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/height_8"
-                                android:layout_weight="1"
-                                android:background="@drawable/bottom_grey">
-
-                                <TextView
-                                    android:id="@+id/liftinbuilding"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/height_3"
-                                    android:gravity="left"
-                                    android:text="@string/liftinbuilding"
-                                    android:textColor="@color/font_text_minor_heading"
-                                    android:textSize="@dimen/_7sdp" />
-
-                                <Spinner
-                                    android:id="@+id/spinner_liftinbuilding"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@null" />
-
-                                <ImageView style="@style/StyledImagedown_large" />
-                            </FrameLayout>-->
-
-
-                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -3129,13 +3059,13 @@
                                             android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
                                             tools:ignore="InconsistentLayout" />
 
-                                       <!-- <ImageView
-                                            style="@style/StyledImagedown_large"
-                                            tools:ignore="ContentDescription" />-->
+
                                     </LinearLayout>
 
 
                                 </LinearLayout>
+
+
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -3143,7 +3073,9 @@
                                     android:layout_marginTop="@dimen/_5sdp"
                                     android:orientation="horizontal"
                                     android:weightSum="2"
-                                    tools:ignore="DisableBaselineAlignment">
+                                    tools:ignore="DisableBaselineAlignment"
+                                    android:visibility="gone"
+                                    >
 
                                     <com.google.android.material.textfield.TextInputLayout
                                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -3221,6 +3153,181 @@
                             </FrameLayout>-->
                                 </LinearLayout>
 
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:orientation="horizontal"
+                                    android:weightSum="2"
+                                    tools:ignore="DisableBaselineAlignment">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginRight="@dimen/height_8"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical"
+                                        tools:ignore="RtlHardcoded">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="@dimen/height_3"
+                                            android:layout_marginBottom="@dimen/_3sdp"
+                                            android:gravity="left"
+                                            android:text="Concrete Grade"
+                                            android:textColor="@color/font_text_minor_heading"
+                                            android:textSize="@dimen/font_very_small"
+                                            tools:ignore="RtlHardcoded" />
+
+                                        <Spinner
+                                            android:id="@+id/spinner_concrete_grade"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:background="@drawable/spinner_status"
+                                            tools:ignore="InconsistentLayout"
+                                            android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+                                            />
+
+                                        <!-- <ImageView
+                                             style="@style/StyledImagedown_large"
+                                             tools:ignore="ContentDescription" />-->
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginLeft="@dimen/height_8"
+                                        android:layout_marginRight="@dimen/height_8"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="@dimen/height_3"
+                                            android:layout_marginBottom="@dimen/_3sdp"
+                                            android:gravity="left"
+                                            android:text="Environment Exposure Condition"
+                                            android:textColor="@color/font_text_minor_heading"
+                                            android:textSize="@dimen/font_very_small"
+                                            tools:ignore="RtlHardcoded" />
+
+                                        <Spinner
+                                            android:id="@+id/spinner_environment_exposure_condition"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:background="@drawable/spinner_status"
+                                            android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+                                            tools:ignore="InconsistentLayout" />
+
+
+                                    </LinearLayout>
+
+
+                                </LinearLayout>
+
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:orientation="horizontal"
+                                    android:weightSum="2"
+                                    tools:ignore="DisableBaselineAlignment">
+
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginRight="@dimen/height_8"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:id="@+id/maintenanceofbuilding"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="@dimen/_3sdp"
+                                            android:layout_marginLeft="@dimen/height_3"
+                                            android:gravity="left"
+                                            android:text="@string/maintenanceofbuilding"
+                                            android:textColor="@color/font_text_minor_heading"
+                                            android:textSize="@dimen/font_very_small"
+                                            tools:ignore="RtlHardcoded" />
+
+                                        <Spinner
+                                            android:id="@+id/spinner_maintenanceofbuilding"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:background="@drawable/spinner_status"
+                                            tools:ignore="InconsistentLayout"
+                                            android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+                                            />
+                                        <!-- <ImageView
+                                             style="@style/StyledImagedown_large"
+                                             tools:ignore="ContentDescription" />-->
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        android:visibility="gone"
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                                        android:id="@+id/layout_liftinbuilding"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginLeft="@dimen/height_8"
+                                        android:layout_marginRight="@dimen/height_8"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical"
+                                        android:textColorHint="@color/font_texthint"
+                                        tools:ignore="RtlHardcoded">
+
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:textSize="@dimen/font_very_small"
+                                            android:id="@+id/editText_liftinbuilding"
+                                            android:hint="@string/liftinbuilding"
+                                            android:inputType="number"
+                                            android:maxLength="2"
+                                            tools:ignore="InconsistentLayout"
+                                            android:singleLine="true"
+                                            />
+                                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                                    <!--<FrameLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="@dimen/height_8"
+                                android:layout_weight="1"
+                                android:background="@drawable/bottom_grey">
+
+                                <TextView
+                                    android:id="@+id/liftinbuilding"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/height_3"
+                                    android:gravity="left"
+                                    android:text="@string/liftinbuilding"
+                                    android:textColor="@color/font_text_minor_heading"
+                                    android:textSize="@dimen/_7sdp" />
+
+                                <Spinner
+                                    android:id="@+id/spinner_liftinbuilding"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@null" />
+
+                                <ImageView style="@style/StyledImagedown_large" />
+                            </FrameLayout>-->
+
+
+                                </LinearLayout>
+
+
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -3234,7 +3341,7 @@
                                     <CheckBox
                                         android:id="@+id/checkbox_expansion_joint"
                                         android:layout_width="0dp"
-                                        android:layout_height="@dimen/_25sdp"
+                                        android:layout_height="@dimen/_28sdp"
                                         android:layout_weight="1"
                                         android:button="@drawable/check_box_selector"
                                         android:checked="false"
@@ -3252,7 +3359,7 @@
                                     <CheckBox
                                         android:id="@+id/checkbox_projected_part"
                                         android:layout_width="0dp"
-                                        android:layout_height="@dimen/_25sdp"
+                                        android:layout_height="@dimen/_28sdp"
                                         android:layout_gravity="top"
                                         android:layout_weight="1"
                                         android:button="@drawable/check_box_selector"
@@ -3269,6 +3376,24 @@
                                         tools:ignore="RtlHardcoded" />
 
                                 </LinearLayout>
+
+                                <CheckBox
+                                    android:id="@+id/checkbox_lift_in_building"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="@dimen/_28sdp"
+                                    android:button="@drawable/check_box_selector"
+                                    android:checked="false"
+                                    android:fontFamily="@font/medium"
+                                    android:gravity="center_vertical"
+                                    android:lines="2"
+                                    android:paddingLeft="@dimen/height_4"
+                                    android:paddingRight="@dimen/height_2"
+                                    android:singleLine="false"
+                                    android:text="Lift In Building"
+                                    android:textColor="@color/font_text"
+                                    android:textSize="@dimen/for_check_box"
+                                    tools:ignore="RtlHardcoded" />
+
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -3415,6 +3540,154 @@
 
             </LinearLayout>
 
+            <!-- Site Visit Date Tab-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_8sdp"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/height_8"
+                    android:background="@drawable/bottom_red">
+
+                    <RelativeLayout
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="@dimen/height_8"
+                        tools:ignore="RtlHardcoded,UselessParent">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            tools:ignore="DisableBaselineAlignment,UselessParent">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.5"
+                                android:background="@color/colorPrimary"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/height_10"
+                                android:paddingTop="@dimen/height_4"
+                                android:paddingRight="@dimen/height_0"
+                                android:paddingBottom="@dimen/height_4"
+                                tools:ignore="RtlHardcoded">
+
+                                <TextView
+                                    android:id="@+id/textview_remarks"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:letterSpacing="0.1"
+                                    android:text="@string/site_visit_date"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/font_very_medium"
+                                    tools:ignore="UnusedAttribute" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="-0dp"
+                                android:layout_weight="0.5"
+                                tools:ignore="RtlHardcoded">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="0dp"
+                                    android:padding="0dp"
+                                    android:scaleType="centerCrop"
+                                    app:srcCompat="@drawable/cutlayout_dummy"
+                                    tools:ignore="ContentDescription" />
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/icon_site_visit"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_below="@+id/rlTopButton"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/height_4"
+                        android:layout_marginBottom="@dimen/_3sdp"
+                        android:padding="@dimen/height_1"
+                        android:src="@drawable/icon_more"
+                        tools:ignore="ContentDescription,RtlHardcoded" />
+                </RelativeLayout>
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/llSiteVisitInfo"
+                    android:visibility="gone"
+                    android:orientation="vertical"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/white"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_10sdp"
+                        android:paddingTop="@dimen/_10sdp"
+                        >
+
+                        <ImageView
+                            android:id="@+id/iv_calender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/calender_icon"
+                            />
+                        <TextView
+                            android:id="@+id/date_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_13sdp"
+                            android:text=""
+                            android:textColor="@color/font_text_minor_heading"
+                            android:layout_marginStart="@dimen/_3sdp"
+                            android:layout_marginLeft="@dimen/_3sdp"
+                            android:layout_marginTop="@dimen/_2sdp"
+                            />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/date_error_msg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_8sdp"
+                        android:text="***Please Select Site visit Date"
+                        android:textColor="@color/red_error"
+                        android:layout_marginStart="@dimen/_13sdp"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:visibility="gone"
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
             <!-- Remarks details tab -->
 
             <LinearLayout
@@ -3506,6 +3779,8 @@
                         android:src="@drawable/icon_more"
                         tools:ignore="ContentDescription,RtlHardcoded" />
                 </RelativeLayout>
+
+
 
 
 
@@ -4029,7 +4304,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:textSize="@dimen/font_very_small"
-                                        android:hint="Plan Aspect Ratio"
+                                        android:hint="@string/plan_aspect_ratio"
                                         android:inputType="textCapSentences"
                                         android:maxLength="100" />
                                 </com.google.android.material.textfield.TextInputLayout>
@@ -4060,6 +4335,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
                                 android:orientation="horizontal"
                                 android:weightSum="2"
                                 tools:ignore="DisableBaselineAlignment">
@@ -4070,7 +4346,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:paddingRight="@dimen/height_5"
+                                    android:paddingRight="@dimen/height_3"
                                     tools:ignore="RtlHardcoded,RtlSymmetry"
                                     android:textColorHint="@color/font_texthint"
                                     >
@@ -4085,7 +4361,7 @@
                                         android:maxLength="100" />
                                 </com.google.android.material.textfield.TextInputLayout>
 
-                                <com.google.android.material.textfield.TextInputLayout
+                               <!-- <com.google.android.material.textfield.TextInputLayout
                                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                                     android:id="@+id/layout_fire_exit"
                                     android:layout_width="0dp"
@@ -4104,7 +4380,48 @@
                                         android:hint="Fire Exit"
                                         android:inputType="textEmailAddress"
                                         android:maxLength="50" />
-                                </com.google.android.material.textfield.TextInputLayout>
+                                </com.google.android.material.textfield.TextInputLayout>-->
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/_3sdp"
+                                    android:layout_marginStart="@dimen/_3sdp"
+                                    android:layout_marginRight="@dimen/height_12"
+                                    tools:ignore="RtlHardcoded"
+                                    android:orientation="vertical"
+                                    android:paddingLeft="@dimen/height_5"
+                                    >
+
+                                    <TextView
+                                        android:id="@+id/txt_soil_title"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="Soil Type"
+                                        android:textColor="@color/font_texthint"
+                                        android:textSize="@dimen/_7sdp"
+                                        android:layout_marginBottom="@dimen/_2sdp"
+                                        tools:ignore="RtlHardcoded" />
+
+                                    <Spinner
+                                        android:id="@+id/spinner_soil_type"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/spinner_status"
+                                        android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+                                        />
+
+                                   <!-- <TextView
+                                        android:id="@+id/tv_soil_spinner_text"
+                                        style="@style/StyledTilText_multicheck"
+                                        tools:ignore="InconsistentLayout,RtlHardcoded"
+                                        android:background="@drawable/spinner_status"
+                                        />-->
+                                </LinearLayout>
+
+
                             </LinearLayout>
 
                             <LinearLayout
@@ -4113,6 +4430,7 @@
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:orientation="horizontal"
                                 android:weightSum="2"
+                                android:visibility="gone"
                                 tools:ignore="DisableBaselineAlignment">
 
                                 <com.google.android.material.textfield.TextInputLayout
@@ -4136,7 +4454,7 @@
                                         android:maxLength="9" />
                                 </com.google.android.material.textfield.TextInputLayout>
 
-                                <com.google.android.material.textfield.TextInputLayout
+                               <!-- <com.google.android.material.textfield.TextInputLayout
                                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                                     android:id="@+id/layout_soil_type"
                                     android:layout_width="0dp"
@@ -4155,6 +4473,11 @@
                                         android:maxLength="50"
                                         android:textSize="@dimen/font_very_small"/>
                                 </com.google.android.material.textfield.TextInputLayout>
+-->
+
+
+
+
                             </LinearLayout>
 
                             <LinearLayout
@@ -4187,6 +4510,58 @@
                                         android:maxLength="100" />
 
                                 </com.google.android.material.textfield.TextInputLayout>
+                            </LinearLayout>
+
+                            <!-- soil type drop down-->
+
+
+
+
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <CheckBox
+                                    android:id="@+id/id_radio_fire_exit"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:layout_weight="1"
+                                    android:button="@drawable/check_box_selector"
+                                    android:checked="false"
+                                    android:gravity="center_vertical"
+                                    android:lines="2"
+                                    android:paddingLeft="@dimen/height_4"
+                                    android:paddingRight="@dimen/height_2"
+                                    android:singleLine="false"
+                                    android:text="Fire Exit"
+                                    android:textColor="@color/font_text"
+                                    android:textSize="@dimen/for_check_box"
+                                    tools:ignore="RtlHardcoded" />
+
+                                <CheckBox
+                                    android:id="@+id/id_ground_slope_more_than"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="top"
+                                    android:layout_weight="1"
+                                    android:button="@drawable/check_box_selector"
+                                    android:checked="false"
+                                    android:gravity="center_vertical"
+                                    android:lines="2"
+                                    android:paddingLeft="@dimen/height_4"
+                                    android:paddingRight="@dimen/height_2"
+                                    android:singleLine="false"
+                                    android:text="Ground slope more than 20%"
+                                    android:textColor="@color/font_text"
+                                    android:textSize="@dimen/for_check_box"
+                                    tools:ignore="RtlHardcoded" />
+
+
                             </LinearLayout>
 
                             <LinearLayout
@@ -4236,6 +4611,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/height_5"
@@ -4288,6 +4664,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
@@ -4546,6 +4923,7 @@
 
 
                             <LinearLayout
+                                android:visibility="gone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
@@ -4647,6 +5025,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:visibility="gone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
@@ -4718,6 +5097,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:visibility="gone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_5sdp"
@@ -4829,6 +5209,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:visibility="gone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_5sdp"
@@ -4941,6 +5322,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:visibility="gone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_5sdp"
@@ -5061,6 +5443,7 @@
 
 
                                 <LinearLayout
+                                    android:visibility="gone"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"

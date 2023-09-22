@@ -140,13 +140,8 @@ public class Case {
     @ColumnInfo(name = "InspectionTime")
     private String InspectionTime;
 
-
-
-
-
-
-
-
+    @ColumnInfo(name = "SiteVisitDate")
+    private String SiteVisitDate;
 
     public int getCaseId() {
         return CaseId;
@@ -658,5 +653,13 @@ public class Case {
 
     public void setInspectionTime(String inspectionTime) {
         InspectionTime = inspectionTime;
+    }
+
+    public String getSiteVisitDate() {
+        return SiteVisitDate;
+    }
+
+    public void setSiteVisitDate(String siteVisitDate) {
+        SiteVisitDate = siteVisitDate;
     }
 }

@@ -2662,9 +2662,30 @@ public class OfflineCaseAdapter extends RecyclerView.Adapter<OfflineCaseAdapter.
                                 upload_image_measurment(case_int, PropertyId_is);
                             }*/
                             if (requestData.isSuccessful()) {
-                                send_updatecaseID_data(case_int,
-                                        mContext.getResources().getString(R.string.edit_inspection),
-                                        PropertyId_is);
+
+                                boolean temp = false;
+
+                                try{
+                                    JSONObject jsonObject = new JSONObject(requestData.getResponse().trim());
+                                    if(jsonObject.has("status")){
+                                        /* if case already send into report marker means below functionality get execute*/
+                                        if(jsonObject.getString("status").equals("3")){
+                                           temp = true;
+                                            removeOfflineCaseFromDB(case_int,PropertyId_is);
+                                        }
+                                    }
+                                }catch (Exception e){
+                                    e.getMessage();
+                                }
+
+                                if(!temp){
+                                    send_updatecaseID_data(case_int,
+                                            mContext.getResources().getString(R.string.edit_inspection),
+                                            PropertyId_is);
+                                }
+
+
+
                             } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
                                 General.sessionDialog(mContext);
                             } else {
@@ -2805,7 +2826,7 @@ public class OfflineCaseAdapter extends RecyclerView.Adapter<OfflineCaseAdapter.
                             Singleton.getInstance().openCaseList.clear();
                             Singleton.getInstance().closeCaseList.clear();
                             general.CustomToast("Caseid: " + case_id + " is synced to server");
-                            Singleton.getInstance().call_offline_tab = "call_offline_tab";
+                           // Singleton.getInstance().call_offline_tab = "call_offline_tab";
                             Intent intent = new Intent(mContext, HomeActivity.class);
                             mContext.startActivity(intent);
                         } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
@@ -2859,5 +2880,46 @@ public class OfflineCaseAdapter extends RecyclerView.Adapter<OfflineCaseAdapter.
             }
         });
     }
+
+
+
+    void removeOfflineCaseFromDB(final int case_id, int propertyId_is){
+
+        appDatabase.interfaceOfflineCaseQuery().deleteRow(case_id);
+        // Room - Delete - Document_list
+        appDatabase.interfaceDocumentListQuery().deleteRow(case_id);
+        // Room - Delete - GetPhoto
+        appDatabase.interfaceGetPhotoQuery().deleteRow(propertyId_is);
+        // Room - Delete - LatLong
+        appDatabase.interfaceLatLongQuery().deleteRow(case_id);
+        // Room Delete - Case
+        appDatabase.interfaceCaseQuery().deleteRow(case_id);
+        // Room Delete - Property
+        appDatabase.interfacePropertyQuery().deleteRow(case_id);
+        // Room Delete - Indproperty
+        appDatabase.interfaceIndpropertyQuery().deleteRow(case_id);
+        // Room Delete - IndPropertyValuation
+        appDatabase.interfaceIndPropertyValuationQuery().deleteRow(case_id);
+        // Room Delete - IndPropertyFloors
+        appDatabase.interfaceIndPropertyFloorsQuery().deleteRow(case_id);
+        // Room Delete - IndPropertyFloorsValuation
+        appDatabase.interfaceIndPropertyFloorsValuationQuery().deleteRow(case_id);
+        // Room Delete - Proximity
+        appDatabase.interfaceProximityQuery().deleteRow(case_id);
+
+        // Room Delete - Offline case
+        DeleteOfflineDatabyCaseID("" + case_id);
+
+        general.hideloading();
+        connectionDialog_circle.hide();
+        Singleton.getInstance().openCaseList.clear();
+        Singleton.getInstance().closeCaseList.clear();
+        general.CustomToast("Case Already Moved to Next Stage");
+        //Singleton.getInstance().call_offline_tab = "call_offline_tab";
+        Intent intent = new Intent(mContext, HomeActivity.class);
+        mContext.startActivity(intent);
+    }
+
+
 
 }

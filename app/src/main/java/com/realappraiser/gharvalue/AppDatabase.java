@@ -55,7 +55,7 @@ import org.jetbrains.annotations.NotNull;
         Case.class, Property.class, IndProperty.class, IndPropertyValuation.class,
         IndPropertyFloor.class, IndPropertyFloorsValuation.class, Proximity.class,
         GetPhoto.class, CaseDetail.class, OflineCase.class, Document_list.class,
-        LatLongDetails.class, GetPhoto_measurment.class}, version = 6, exportSchema = false)
+        LatLongDetails.class, GetPhoto_measurment.class}, version = 7, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
@@ -124,7 +124,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     +"ADD COLUMN Filename TEXT");
                         }
                     })*/
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4,MIGRATION_5_6)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4,MIGRATION_5_6,MIGRATION_6_7)
                     /* call fallbackToDestructiveMigration in the builder in which case Room will re-create all of the tables */
                     .fallbackToDestructiveMigration()
                     .build();
@@ -269,6 +269,17 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-
+    static final Migration MIGRATION_6_7 = new Migration(6,7) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE CaseModal ADD COLUMN SiteVisitDate TEXT;");
+            database.execSQL("ALTER TABLE IndProperty ADD COLUMN ConcreteGradeDd INTEGER;");
+            database.execSQL("ALTER TABLE IndProperty ADD COLUMN EnvironmentExposureConditionDd INTEGER;");
+            database.execSQL("ALTER TABLE IndProperty ADD COLUMN IsLiftInBuilding INTEGER;");
+            database.execSQL("ALTER TABLE IndProperty ADD COLUMN SoilTypeDd INTEGER;");
+            database.execSQL("ALTER TABLE IndProperty ADD COLUMN IsFireExit INTEGER;");
+            database.execSQL("ALTER TABLE IndProperty ADD COLUMN IsGroundSlope INTEGER;");
+        }
+    };
 
 }

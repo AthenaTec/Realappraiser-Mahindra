@@ -110,19 +110,19 @@
     <string name="condition_approad">Condition of Approach road</string>
     <string name="localitycate">Locality Category</string>
     <string name="class_head">Class</string>
-    <string name="tenureownership">Tenure / Ownership</string>
+    <string name="tenureownership">Tenure / Ownership - Land</string>
     <string name="actualusage">Actual Usage</string>
     <string name="documents">Property Documents</string>
     <string name="enter_custom_valu_one" tools:ignore="UnusedResources">Enter Custom value</string>
     <string name="document_boundary">Document Boundary</string>
     <string name="unit_boundary_doc">Unit Boundary as per document</string>
-    <string name="unit_boundary_actual">Unit Boundary as per actual</string>
+    <string name="unit_boundary_actual">As per Site - For flat</string>
 
 
-    <string name="actual_boundary">Actual Boundary</string>
+    <string name="actual_boundary">As per site - Building/House</string>
     <string name="same_as_docs">Same as Doc</string>
     <string name="document_dimension">Document Dimension</string>
-    <string name="actual_dimension">Actual Dimension</string>
+    <string name="actual_dimension">Dimension as per actual</string>
     <string name="east">East</string>
     <string name="west">West</string>
     <string name="north">North</string>
@@ -133,12 +133,12 @@
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="rear">Rear</string>
-    <string name="proximity">Proximity</string>
+    <string name="proximity">Proximity - civic, social commercial facilities</string>
     <string name="proximities">Proximities</string>
     <string name="name_head">Name</string>
     <string name="km">Distance</string>
     <string name="plot_demarcated">Plot demarcated at site</string>
-    <string name="isproperty_demolish">Is Property in demolish list?</string>
+    <string name="isproperty_demolish">Is Property in demolition risk?</string>
     <string name="property_within_muni">Property with in Municipal Area</string>
     <string name="property_details">Property Details</string>
     <string name="is_compounded">Is Compounded?</string>
@@ -279,7 +279,8 @@
     <!-- valuation-->
     <string name="subsequent_revaluation">Subsequent-Final Disbursement, NPA - Revaluation:</string>
     <string name="landvaluation">Land Valuation:</string>
-    <string name="guideline_rate">Guideline / DLC Rate:</string>
+    <string name="guideline_rate">Govt. Guideline Land (DLC) Rate</string>
+    <string name="site_visit_date">Site Visit Date</string>
 
     <string name="compare_property_rate">
         <u>Compare Property Rates</u>.
@@ -298,8 +299,9 @@
     <string name="rate">Rate</string>
     <string name="rate_sqft">Rate / Sq.ft</string>
     <string name="rate_sqm">Rate / Sq.m</string>
+    <string name="plan_aspect_ratio">Plan Aspect Ratio/ Length &amp; Width</string>
     <string name="constructionvaluation">Construction Valuation:</string>
-    <string name="construction_rate">Construction / DLC Rate</string>
+    <string name="construction_rate">Govt. Guideline Construction (DLC) Rate</string>
     <string name="construction_value">Construction DLC Value</string>
     <string name="totalconstructionvalue">Total Construction Value</string>
     <string name="additional_description">Additional Description</string>

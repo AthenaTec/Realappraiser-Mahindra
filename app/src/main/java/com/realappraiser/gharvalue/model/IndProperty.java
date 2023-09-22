@@ -266,10 +266,25 @@ public class IndProperty {
     @ColumnInfo(name = "ConcreteGrade")
     private String concreteGrade;
 
+    @SerializedName("ConcreteGradeDd")
+    @Expose
+    @ColumnInfo(name = "ConcreteGradeDd")
+    private Integer ConcreteGradeDd;
+
+    @SerializedName("EnvironmentExposureConditionDd")
+    @Expose
+    @ColumnInfo(name = "EnvironmentExposureConditionDd")
+    private Integer environmentExposureConditionDd;
+
     @SerializedName("WhetherExpansionJointAvailable")
     @Expose
     @ColumnInfo(name = "WhetherExpansionJointAvailable")
     private Boolean whetherExpansionJointAvailable;
+
+    @SerializedName("IsLiftInBuilding")
+    @Expose
+    @ColumnInfo(name = "IsLiftInBuilding")
+    private Boolean isLiftInBuilding;
 
     @SerializedName("IsProjectedPartAvailable")
     @Expose
@@ -346,10 +361,26 @@ public class IndProperty {
     @ColumnInfo(name = "SoilType")
     private String soilType;
 
+    @SerializedName("SoilTypeDd")
+    @Expose
+    @ColumnInfo(name = "SoilTypeDd")
+    private Integer soilTypeDd;
+
     @SerializedName("IsSoilLiquefiable")
     @Expose
     @ColumnInfo(name = "IsSoilLiquefiable")
     private Boolean isSoilLiquefiable;
+
+
+    @SerializedName("IsFireExit")
+    @Expose
+    @ColumnInfo(name = "IsFireExit")
+    private Boolean isFireExitData;
+
+    @SerializedName("IsGroundSlope")
+    @Expose
+    @ColumnInfo(name = "IsGroundSlope")
+    private Boolean isGroundSlopeData;
 
     @SerializedName("DescriptionofConstructionStage")
     @Expose
@@ -1088,5 +1119,56 @@ public class IndProperty {
 
     public void setNoOfLiftInBuilding(String noOfLiftInBuilding) {
         this.noOfLiftInBuilding = noOfLiftInBuilding;
+    }
+
+    public Boolean getLiftInBuilding() {
+        return isLiftInBuilding;
+    }
+
+    public void setLiftInBuilding(Boolean liftInBuilding) {
+        isLiftInBuilding = liftInBuilding;
+    }
+
+    public Integer getConcreteGradeDd() {
+        return ConcreteGradeDd;
+    }
+
+    public void setConcreteGradeDd(Integer concreteGradeDd) {
+        ConcreteGradeDd = concreteGradeDd;
+    }
+
+    public Integer getEnvironmentExposureConditionDd() {
+        return environmentExposureConditionDd;
+    }
+
+    public void setEnvironmentExposureConditionDd(Integer environmentExposureConditionDd) {
+        this.environmentExposureConditionDd = environmentExposureConditionDd;
+    }
+
+    public Integer getSoilTypeDd() {
+        return soilTypeDd;
+    }
+
+    public void setSoilTypeDd(Integer soilTypeDd) {
+        this.soilTypeDd = soilTypeDd;
+    }
+
+
+
+
+    public Boolean getFireExitData() {
+        return isFireExitData;
+    }
+
+    public void setFireExitData(Boolean fireExitData) {
+        isFireExitData = fireExitData;
+    }
+
+    public Boolean getGroundSlopeData() {
+        return isGroundSlopeData;
+    }
+
+    public void setGroundSlopeData(Boolean groundSlopeData) {
+        isGroundSlopeData = groundSlopeData;
     }
 }

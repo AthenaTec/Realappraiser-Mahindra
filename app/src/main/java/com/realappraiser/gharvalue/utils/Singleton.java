@@ -11,10 +11,12 @@ import com.realappraiser.gharvalue.model.CarParking;
 import com.realappraiser.gharvalue.model.Case;
 import com.realappraiser.gharvalue.model.CaseOtherDetailsModel;
 import com.realappraiser.gharvalue.model.ClassModel;
+import com.realappraiser.gharvalue.model.ConcreteGrade;
 import com.realappraiser.gharvalue.model.Construction;
 import com.realappraiser.gharvalue.model.Document_list;
 import com.realappraiser.gharvalue.model.DocumentsSeen;
 import com.realappraiser.gharvalue.model.Door;
+import com.realappraiser.gharvalue.model.EnvExposureCondition;
 import com.realappraiser.gharvalue.model.Exterior;
 import com.realappraiser.gharvalue.model.FittingQuality;
 import com.realappraiser.gharvalue.model.Floor;
@@ -54,6 +56,7 @@ import com.realappraiser.gharvalue.model.QualityConstruction;
 import com.realappraiser.gharvalue.model.RejectionComment;
 import com.realappraiser.gharvalue.model.Remarks;
 import com.realappraiser.gharvalue.model.Roof;
+import com.realappraiser.gharvalue.model.SoilType;
 import com.realappraiser.gharvalue.model.Structure;
 import com.realappraiser.gharvalue.model.Tenure;
 import com.realappraiser.gharvalue.model.TypeOfFooting;
@@ -213,6 +216,11 @@ public class Singleton {
     public List<TypeOfMortar.Datum> typeOfMortarsList = new ArrayList<>();
     public List<TypeOfFooting.Datum> typeOfFootingList = new ArrayList<>();
     public List<TypeOfSteel.Datum> typeOfSteelList = new ArrayList<>();
+
+    public List<ConcreteGrade.ConcreteGradeData> concreteGrade = new ArrayList<>();
+    public List<EnvExposureCondition.EnvExposureConditionData> envExposureConditionData = new ArrayList<>();
+    public List<SoilType.SoilTypeData> soilTypeData = new ArrayList<>();
+
 
     public ArrayList<InternalFloorModel> internalFloorHalldining = new ArrayList<>();
     public ArrayList<InternalFloorModel> internalFloorKitchen = new ArrayList<>();

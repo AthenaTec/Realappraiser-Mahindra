@@ -814,7 +814,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(Connectivity.isConnected(this) && !successful && responseCode == 0){
               General.customToastLong(getString(R.string.validurl),LoginActivity.this);
             }else{
-                General.customToast(getString(R.string.something_wrong), LoginActivity.this);
+                General.customToast(getString(R.string.validurl), LoginActivity.this);
 
             }
              }

@@ -400,7 +400,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
             }*/
         } catch (Exception e) {
             General.hideloading();
-            General.customToastLong(context.getString(R.string.something_wrong), context);
+          //  General.customToastLong(context.getString(R.string.something_wrong), context);
             Log.e(TAG, "makeOkHttpGetCall: " + e.getLocalizedMessage());
             jsonResponse.setSuccessful(false);
             e.printStackTrace();

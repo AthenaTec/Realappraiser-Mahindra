@@ -89,7 +89,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
     ArrayList<DataModel> propertyTypeList;
     ArrayList<Document_list> documentRead;
 
-    private String msg = "", info = "", propertyType = "";
+    private String msg = "", info = "", propertyType = "",caseStatus = "";
     private String case_id = "", property_caseid = "", bank_id = "", reporty_type = "", agencybranchid = "", type_id = "", property_type = "", StatusId_is = "";
     public Dialog dialog;
     DataModel dataModel = new DataModel();
@@ -795,6 +795,27 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
                 general.CustomToast(msg);
                 general.hideloading();
             } else if (result.equals("0")) {
+
+
+
+               try{
+                   JSONObject jsonObject = new JSONObject(response.trim());
+                   if(jsonObject.has("status")){
+                       /* if case already send into report marker means below functionality get execute*/
+                       if(jsonObject.getString("status").equals("3")){
+                           msg = "Case Already Moved to Next Stage";
+                           RemoveCasefromList();
+                           Singleton.getInstance().openCaseList.clear();
+                           Singleton.getInstance().closeCaseList.clear();
+                           Intent intent = new Intent(mContext, HomeActivity.class);
+                           mContext.startActivity(intent);
+                       }
+                   }
+               }catch (Exception e){
+                   e.getMessage();
+               }
+
+
                 general.CustomToast(msg);
                 general.hideloading();
             }
@@ -1879,6 +1900,8 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             Singleton.getInstance().indPropertyFloors = dataResponse.indPropertyFloors;
             Singleton.getInstance().proximities = dataResponse.proximities;
             Log.e("Called Edit Inspection :", "Ok");
+            caseStatus = String.valueOf(dataResponse.aCase.getStatus());
+            SettingsUtils.getInstance().putValue(SettingsUtils.StatusId, caseStatus);
         }
 
         getDBValue();
@@ -1971,11 +1994,35 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
                     // Start Inspection as 13
                     StartInspectionPopup();
                 } else {
-                    // Edit Inspection
-                    Singleton.getInstance().enable_validation_error = false;
-                    // online
-                    SettingsUtils.getInstance().putValue(SettingsUtils.is_offline, false);
-                    mContext.startActivity(new Intent(mContext, PhotoLatLngTab.class));
+
+                    if(status_id.equalsIgnoreCase("6") ||
+                            status_id.equalsIgnoreCase("14") ||
+                            status_id.equalsIgnoreCase("21") ||
+                            status_id.equalsIgnoreCase("22") ||
+                            status_id.equalsIgnoreCase("25") ||
+                            status_id.equalsIgnoreCase("26") ||
+                            status_id.equalsIgnoreCase("27")
+                    ){
+                        //this scenario of this issue like this case already sent into report maker in web
+
+                        msg = "Case Already Moved to Next Stage";
+                        general.CustomToast(msg);
+                        RemoveCasefromList();
+                        Singleton.getInstance().openCaseList.clear();
+                        Singleton.getInstance().closeCaseList.clear();
+                        Intent intent = new Intent(mContext, HomeActivity.class);
+                        mContext.startActivity(intent);
+
+                    }else{
+                        // Edit Inspection
+                        Singleton.getInstance().enable_validation_error = false;
+                        // online
+                        SettingsUtils.getInstance().putValue(SettingsUtils.is_offline, false);
+                        mContext.startActivity(new Intent(mContext, PhotoLatLngTab.class));
+                    }
+
+
+
                 }
             } else {
                 // Kakode
@@ -2051,8 +2098,11 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
 
         if (general.isEmpty(Singleton.getInstance().aCase.getPropertyAddress()))
             is_valid = true;
-        if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
-            is_valid = true;
+        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
+            is_valid = true;*/
+
+        if (general.isEmpty(Singleton.getInstance().aCase.getSiteVisitDate()))
+            is_valid = false;
 
         // Lat Long
         if (general.isEmpty(Singleton.getInstance().property.getLatLongDetails())) {
@@ -2067,11 +2117,11 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             is_valid = false;
         }
         // PropertyAddressAtSite
-        if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
+        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
             Log.e(TAG, "building_validation: getPropertyAddressAtSite");
             // empty
             is_valid = false;
-        }
+        }*/
         // DocumentLandArea (Compound)
         if (general.isEmpty(Singleton.getInstance().indProperty.getDocumentLandArea())) {
             Log.e(TAG, "building_validation: getDocumentLandArea");
@@ -2367,8 +2417,11 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
 
         if (general.isEmpty(Singleton.getInstance().aCase.getPropertyAddress()))
             is_valid = true;
-        if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
-            is_valid = true;
+        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
+            is_valid = true;*/
+
+        if (general.isEmpty(Singleton.getInstance().aCase.getSiteVisitDate()))
+            is_valid = false;
 
         if (general.isEmpty(Singleton.getInstance().aCase.getContactPersonName()))
             is_valid = false;
@@ -2387,10 +2440,10 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             is_valid = false;
         }
         // PropertyAddressAtSite
-        if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
+       /* if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
             // empty
             is_valid = false;
-        }
+        }*/
         // DocumentLandArea (Compound)
        /* if (general.isEmpty(Singleton.getInstance().indProperty.getDocumentLandArea())) {
             // empty
@@ -2451,8 +2504,11 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
 
         if (general.isEmpty(Singleton.getInstance().aCase.getPropertyAddress()))
             is_valid = true;
-        if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
-            is_valid = true;
+        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
+            is_valid = true;*/
+
+        if (general.isEmpty(Singleton.getInstance().aCase.getSiteVisitDate()))
+            is_valid = false;
 
         if (general.isEmpty(Singleton.getInstance().aCase.getContactPersonName()))
             is_valid = false;
@@ -2486,10 +2542,10 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             is_valid = false;
         }
         // PropertyAddressAtSite
-        if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
+        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
             // empty
             is_valid = false;
-        }
+        }*/
 
         String flatsituated = Singleton.getInstance().indProperty.getFlatSituatedInFloor();
         if (Singleton.getInstance().indPropertyFloors.size() > 0) {
@@ -2553,13 +2609,13 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
 
         if (general.isEmpty(Singleton.getInstance().aCase.getPropertyAddress()))
             is_valid = true;
-        if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
-            is_valid = true;
+        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
+            is_valid = true;*/
 
         if (general.isEmpty(Singleton.getInstance().aCase.getContactPersonName()))
             is_valid = false;
 
-        if (general.isEmpty(Singleton.getInstance().aCase.getContactPersonNumber()))
+        if (general.isEmpty(Singleton.getInstance().aCase.getSiteVisitDate()))
             is_valid = false;
 
         // Lat Long
@@ -2573,10 +2629,10 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             is_valid = false;
         }
         // PropertyAddressAtSite
-        if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
+        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
             // empty
             is_valid = false;
-        }
+        }*/
         // DocumentLandArea (Compound)
         if (general.isEmpty(Singleton.getInstance().indProperty.getDocumentLandArea())) {
             // empty

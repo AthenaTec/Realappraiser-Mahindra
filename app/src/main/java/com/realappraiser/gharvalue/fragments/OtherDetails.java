@@ -1,6 +1,9 @@
 package com.realappraiser.gharvalue.fragments;
 
+import static com.realappraiser.gharvalue.utils.General.siteVisitDateToConversion;
+
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -81,7 +85,9 @@ import com.realappraiser.gharvalue.model.CarParking;
 import com.realappraiser.gharvalue.model.Case;
 import com.realappraiser.gharvalue.model.CaseDetail;
 import com.realappraiser.gharvalue.model.ClassModel;
+import com.realappraiser.gharvalue.model.ConcreteGrade;
 import com.realappraiser.gharvalue.model.Door;
+import com.realappraiser.gharvalue.model.EnvExposureCondition;
 import com.realappraiser.gharvalue.model.Exterior;
 import com.realappraiser.gharvalue.model.FittingQuality;
 import com.realappraiser.gharvalue.model.Floor;
@@ -109,6 +115,7 @@ import com.realappraiser.gharvalue.model.Proximity;
 import com.realappraiser.gharvalue.model.QualityConstruction;
 import com.realappraiser.gharvalue.model.Remarks;
 import com.realappraiser.gharvalue.model.Roof;
+import com.realappraiser.gharvalue.model.SoilType;
 import com.realappraiser.gharvalue.model.Structure;
 import com.realappraiser.gharvalue.model.Tenure;
 import com.realappraiser.gharvalue.model.TypeOfFooting;
@@ -129,9 +136,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -331,6 +341,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     boolean is_address_visible = false;
     boolean is_property_visible = false;
     boolean is_valuation_visible = false;
+    boolean is_site_viste_visible = false;
     boolean is_remark_visible = false;
     boolean is_broker_visible = false;
 
@@ -339,6 +350,9 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     @BindView(R.id.textview_save_bottom_dashboard)
     TextView textview_save_bottom_dashboard;
 
+    // TODO TextView - Site Visit Date
+    @BindView(R.id.date_error_msg)
+    TextView date_error_msg;
     // TODO TextView - Address
     @BindView(R.id.textview_address)
     TextView textview_address;
@@ -623,12 +637,25 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     Spinner spinner_masonry;
     @BindView(R.id.spinner_mortar)
     Spinner spinner_mortar;
+    @BindView(R.id.spinner_concrete_grade)
+    Spinner spinner_concrete_grade;
+
+    @BindView(R.id.spinner_environment_exposure_condition)
+    Spinner spinner_environment_exposure_condition;
+
     @BindView(R.id.et_concrete)
     EditText et_concrete;
+
+    @BindView(R.id.spinner_soil_type)
+    Spinner spinner_soil_type;
+
     @BindView(R.id.checkbox_expansion_joint)
     CheckBox checkbox_expansion_joint;
     @BindView(R.id.checkbox_projected_part)
     CheckBox checkbox_projected_part;
+
+    @BindView(R.id.checkbox_lift_in_building)
+    CheckBox checkbox_lift_in_building;
     @BindView(R.id.spinner_foundation)
     Spinner spinner_foundation;
     @BindView(R.id.spinner_steel)
@@ -651,14 +678,21 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     EditText et_above_ground;
     @BindView(R.id.et_basement)
     EditText et_basement;
-    @BindView(R.id.et_fire_exit)
-    EditText et_fire_exit;
+   /* @BindView(R.id.et_fire_exit)
+    EditText et_fire_exit;*/
     @BindView(R.id.et_globe_scope)
     EditText et_globe_scope;
-    @BindView(R.id.et_soil_type)
-    EditText et_soil_type;
+    /*@BindView(R.id.et_soil_type)
+    EditText et_soil_type;*/
     @BindView(R.id.checkbox_liquefiable)
     CheckBox checkbox_liquefiable;
+    @BindView(R.id.id_ground_slope_more_than)
+    CheckBox cb_ground_slope_more_than;
+
+    @BindView(R.id.id_radio_fire_exit)
+    CheckBox cb_fire_exit;
+
+
     @BindView(R.id.et_construction_stage)
     EditText et_construction_stage;
 
@@ -717,7 +751,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     private String cycloneZone = "", seismicZone = "", floodProneZone = "";
     private String coastalRegulatoryZone = "", isHillSlope = "";
     private String typeMasonry = "", typeMortar = "", concreteGrade = "";
-    private boolean whetherExpansion = false, isProjectedPartAvail = false;
+    private boolean whetherExpansion = false, isProjectedPartAvail = false, isLiftInBuilding = false;
     private String foundationType = "", steelType = "", exposureCondition = "";
     private String sanctionedPlan = "", typeSeller = "";
     private String engineerLicense = "", multipleKitchen = "", groundCoverage = "";
@@ -725,6 +759,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     private String fireExit = "", groundSlope = "", soilType = "";
     private String soilLiquefiable = "", constructionStage = "";
 
+    private String siteVisiteInCalender = "", visitDate = "";
 
     public FragmentBuilding fragment_building;
     private ArrayList<Boolean> mandatoryfloors;
@@ -737,6 +772,9 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     /*17th*/
     @BindView(R.id.textview_property_heading)
     TextView textview_property_heading;
+
+    @BindView(R.id.date_value)
+    TextView date_value;
     @BindView(R.id.textview_property_type_heading)
     TextView textview_property_type_heading;
     @BindView(R.id.relative_more_click)
@@ -754,14 +792,24 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     LinearLayout llAddressInfo;
     @BindView(R.id.icon_address)
     ImageView icon_address;
+
+    @BindView(R.id.iv_calender)
+    ImageView iv_calender;
+
     @BindView(R.id.llPropertyInfo)
     LinearLayout llPropertyInfo;
     @BindView(R.id.icon_property)
     ImageView icon_property;
     @BindView(R.id.llValuationInfo)
     LinearLayout llValuationInfo;
+
+    @BindView(R.id.llSiteVisitInfo)
+    LinearLayout llSiteVisitInfo;
     @BindView(R.id.icon_valuation)
     ImageView icon_valuation;
+
+    @BindView(R.id.icon_site_visit)
+    ImageView icon_site_visit;
     @BindView(R.id.llRemarkInfo)
     LinearLayout llRemarkInfo;
     @BindView(R.id.icon_remark)
@@ -1185,6 +1233,12 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
         if (Singleton.getInstance().indProperty.getIsSoilLiquefiable() != null) {
             checkbox_liquefiable.setChecked(Singleton.getInstance().indProperty.getIsSoilLiquefiable());
         }
+        if (Singleton.getInstance().indProperty.getFireExitData() != null) {
+            cb_fire_exit.setChecked(Singleton.getInstance().indProperty.getFireExitData());
+        }
+        if (Singleton.getInstance().indProperty.getGroundSlopeData() != null) {
+            cb_ground_slope_more_than.setChecked(Singleton.getInstance().indProperty.getGroundSlopeData());
+        }
 
         if (!general.isEmpty(Singleton.getInstance().indProperty.getTypeofSeller())) {
             et_seller_type.setText(Singleton.getInstance().indProperty.getTypeofSeller());
@@ -1214,17 +1268,19 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
             et_basement.setText(Singleton.getInstance().indProperty.getBasementDetails() + "");
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indProperty.getFireExit())) {
+        initiateSoilType();
+
+       /* if (!general.isEmpty(Singleton.getInstance().indProperty.getFireExit())) {
             et_fire_exit.setText(Singleton.getInstance().indProperty.getFireExit());
-        }
+        }*/
 
         if (!general.isEmpty(Singleton.getInstance().indProperty.getGroundSlope())) {
             et_globe_scope.setText(Singleton.getInstance().indProperty.getGroundSlope());
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indProperty.getSoilType())) {
+        /*if (!general.isEmpty(Singleton.getInstance().indProperty.getSoilType())) {
             et_soil_type.setText(Singleton.getInstance().indProperty.getSoilType());
-        }
+        }*/
 
         if (!general.isEmpty(Singleton.getInstance().indProperty.getDescriptionofConstructionStage())) {
             et_construction_stage.setText(Singleton.getInstance().indProperty.getDescriptionofConstructionStage());
@@ -1347,6 +1403,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
         icon_address.setImageResource(R.drawable.icon_less);
         icon_property.setImageResource(R.drawable.icon_more);
         icon_valuation.setImageResource(R.drawable.icon_more);
+        icon_site_visit.setImageResource(R.drawable.icon_more);
         icon_remark.setImageResource(R.drawable.icon_more);
         icon_broker.setImageResource(R.drawable.icon_more);
         linear_more_details.setVisibility(View.GONE);
@@ -1355,6 +1412,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
         is_valuation_visible = false;
         is_remark_visible = false;
         is_broker_visible = false;
+        is_site_viste_visible = false;
         if (isTablet()) {
             llAddressInfo.setVisibility(View.VISIBLE);
             llPropertyInfo.setVisibility(View.VISIBLE);
@@ -1397,6 +1455,16 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                 }
             }
         });
+
+
+        iv_calender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCalender();
+            }
+        });
+
+
         icon_property.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1422,6 +1490,20 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                     is_valuation_visible = true;
                     icon_valuation.setImageResource(R.drawable.icon_less);
                     llValuationInfo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        icon_site_visit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (is_site_viste_visible) {
+                    is_site_viste_visible = false;
+                    icon_site_visit.setImageResource(R.drawable.icon_more);
+                    llSiteVisitInfo.setVisibility(View.GONE);
+                } else {
+                    is_site_viste_visible = true;
+                    icon_site_visit.setImageResource(R.drawable.icon_less);
+                    llSiteVisitInfo.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -1894,6 +1976,9 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                         }
                 }
             }
+
+            initiateConcreteGradeDropDownFields();
+            initiateEnvExposureConditionDropDownFields();
 
 
             ArrayAdapter<ApproachRoadCondition> adapterApproachRoadCondition = new ArrayAdapter<ApproachRoadCondition>(mContext, R.layout.row_spinner_item, Singleton.getInstance().approachRoadConditions_list) {
@@ -2563,6 +2648,13 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                 Singleton.getInstance().aCase.setPropertyAddress("");
             }
 
+           if (!general.isEmpty(visitDate)){
+                 siteVisiteInCalender = siteVisitDateToConversion(visitDate);
+                Singleton.getInstance().aCase.setSiteVisitDate(siteVisiteInCalender);
+            } else {
+                Singleton.getInstance().aCase.setSiteVisitDate("");
+            }
+
 
             if (!general.isEmpty(etPersonName.getText().toString())) {
                 Singleton.getInstance().aCase.setContactPersonName(etPersonName.getText().toString());
@@ -2673,6 +2765,14 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                 Singleton.getInstance().indProperty.setTypeofFootingFoundationId(Singleton.getInstance().typeOfFootingList.get(spinner_foundation.getSelectedItemPosition()).getTypeoffootingfoundationId());
             }
 
+            if (spinner_concrete_grade.getSelectedItemPosition() > 0) {
+                Singleton.getInstance().indProperty.setConcreteGradeDd(Singleton.getInstance().concreteGrade.get(spinner_concrete_grade.getSelectedItemPosition()).getId());
+            }
+
+            if (spinner_environment_exposure_condition.getSelectedItemPosition() > 0) {
+                Singleton.getInstance().indProperty.setEnvironmentExposureConditionDd(Singleton.getInstance().envExposureConditionData.get(spinner_environment_exposure_condition.getSelectedItemPosition()).getId());
+            }
+
             if (!general.isEmpty(et_concrete.getText().toString())) {
                 Singleton.getInstance().indProperty.setConcreteGrade(et_concrete.getText().toString());
             } else {
@@ -2688,6 +2788,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
 
             Singleton.getInstance().indProperty.setWhetherExpansionJointAvailable(checkbox_expansion_joint.isChecked());
             Singleton.getInstance().indProperty.setProjectedPartAvailable(checkbox_projected_part.isChecked());
+            Singleton.getInstance().indProperty.setLiftInBuilding(checkbox_lift_in_building.isChecked());
 
             int spinner_typeofbuildingSelectedItemPosition = spinner_typeofbuilding.getSelectedItemPosition();
             if (spinner_typeofbuildingSelectedItemPosition > 0) {
@@ -3563,14 +3664,14 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
             isvalid = false;
         }
         // Address site
-        String addr_site = editText_addr_site.getText().toString();
+        /*String addr_site = editText_addr_site.getText().toString();
         if (!general.isEmpty(addr_site)) {
             editText_addr_site.setError(null);
         } else {
             editText_addr_site.requestFocus();
             editText_addr_site.setError(getResources().getString(R.string.err_addrsite));
             isvalid = false;
-        }
+        }*/
         return isvalid;
     }
 
@@ -3584,6 +3685,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
         if (general.isEmpty(etPersonNo.getText().toString())) {
             etPersonNo.setError("Phone number required!");
             etPersonNo.requestFocus();
+
         }
 
         String address_per_doc = editText_addr_perdoc.getText().toString();
@@ -3592,8 +3694,33 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
         } else {
             editText_addr_perdoc.requestFocus();
             editText_addr_perdoc.setError(getResources().getString(R.string.err_addperdoc));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scroll_view.scrollTo(0, 0);
+                    /*****Scroll to top of position******/
+                    int nY_Pos = editText_addr_perdoc.getTop(); // getBottom(); X_pos  getLeft(); getRight();
+                    scroll_view.scrollTo(0, nY_Pos);
+
+                }
+            }, 2000);
         }
-        // Address site
+
+
+        if (general.isEmpty(etPersonNo.getText().toString())) {
+            etPersonNo.setError("Phone number required!");
+            etPersonNo.requestFocus();
+        }
+        if (general.isEmpty(date_value.getText().toString())) {
+            date_error_msg.setVisibility(View.VISIBLE);
+        }else{
+            date_error_msg.setVisibility(View.GONE);
+        }
+
+
+
+
+       /* // Address site
         String addr_site = editText_addr_site.getText().toString();
         if (!general.isEmpty(addr_site)) {
             editText_addr_site.setError(null);
@@ -3601,17 +3728,8 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
             editText_addr_site.requestFocus();
             editText_addr_site.setError(getResources().getString(R.string.err_addrsite));
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scroll_view.scrollTo(0, 0);
-                    /*****Scroll to top of position******/
-                    int nY_Pos = editText_addr_site.getTop(); // getBottom(); X_pos  getLeft(); getRight();
-                    scroll_view.scrollTo(0, nY_Pos);
 
-                }
-            }, 2000);
-        }
+        }*/
     }
 
     // Broker number - Valiation Mobile number
@@ -4217,6 +4335,29 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                 general.CustomToast(msg);
                 general.hideloading();
             } else if (result.equals("0")) {
+
+                try{ //if case alredy move into report maker but still it editing in mobile to avoid this negative case.Handle below code
+                    JSONObject jsonObject = new JSONObject(response.trim());
+                    if(jsonObject.has("status")){
+                        /* if case already send into report marker means below functionality get execute*/
+                        if(jsonObject.getString("status").equals("3")){
+                            msg = "Case Already Moved to Next Stage";
+                            Singleton.getInstance().openCaseList.clear();
+                            Singleton.getInstance().closeCaseList.clear();
+                            is_offline = SettingsUtils.getInstance().getValue(SettingsUtils.is_offline, false);
+                            if (is_offline) {
+                                Singleton.getInstance().call_offline_tab = "call_offline_tab";
+                            }
+                            startActivity(new Intent(getContext(), HomeActivity.class));
+                            getActivity().finish();
+                        }
+                    }
+                }catch (Exception e){
+                    e.getMessage();
+                }
+
+
+
                 general.CustomToast(msg);
                 general.hideloading();
             }
@@ -4502,6 +4643,8 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
             checkbox_property_within_muni.setChecked(Singleton.getInstance().property.getIsWithinMunicipalArea());
         if (Singleton.getInstance().indProperty.getWhetherExpansionJointAvailable() != null)
             checkbox_expansion_joint.setChecked(Singleton.getInstance().indProperty.getWhetherExpansionJointAvailable());
+         if (Singleton.getInstance().indProperty.getLiftInBuilding() != null)
+            checkbox_lift_in_building.setChecked(Singleton.getInstance().indProperty.getLiftInBuilding());
         if (Singleton.getInstance().indProperty.getProjectedPartAvailable() != null)
             checkbox_projected_part.setChecked(Singleton.getInstance().indProperty.getProjectedPartAvailable());
 
@@ -4512,8 +4655,20 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
             etPersonNo.setText(Singleton.getInstance().aCase.getContactPersonNumber());
         if (Singleton.getInstance().aCase.getPropertyAddress() != null)
             editText_addr_perdoc.setText(Singleton.getInstance().aCase.getPropertyAddress());
-        if (Singleton.getInstance().property.getPropertyAddressAtSite() != null)
+       /* if (Singleton.getInstance().property.getPropertyAddressAtSite() != null)
             editText_addr_site.setText(Singleton.getInstance().property.getPropertyAddressAtSite());
+       */
+         if (Singleton.getInstance().aCase.getSiteVisitDate() != null){
+
+             visitDate = general.siteVisitDate(Singleton.getInstance().aCase.getSiteVisitDate());
+             if(visitDate != null && !visitDate.isEmpty() )
+             date_value.setText(visitDate);
+
+         }
+
+         Log.e("otherDetails","visitDate"+visitDate);
+
+
         if (Singleton.getInstance().property.getLandmark() != null)
             editText_landmark.setText(Singleton.getInstance().property.getLandmark());
         if (Singleton.getInstance().property.getSurveyInPresenceOf() != null)
@@ -6085,6 +6240,8 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
 
         Singleton.getInstance().indProperty.setIsConstructionDoneasPerSanctionedPlan(checkbox_sanctioned_plan.isChecked());
         Singleton.getInstance().indProperty.setIsSoilLiquefiable(checkbox_liquefiable.isChecked());
+        Singleton.getInstance().indProperty.setFireExitData(cb_fire_exit.isChecked());
+        Singleton.getInstance().indProperty.setGroundSlopeData(cb_ground_slope_more_than.isChecked());
 
 
         if (!general.isEmpty(et_seller_type.getText().toString())) {
@@ -6115,17 +6272,21 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
             Singleton.getInstance().indProperty.setBasementDetails(et_basement.getText().toString());
         }
 
-        if (!general.isEmpty(et_fire_exit.getText().toString())) {
+        /*if (!general.isEmpty(et_fire_exit.getText().toString())) {
             Singleton.getInstance().indProperty.setFireExit(et_fire_exit.getText().toString());
-        }
+        }*/
 
         if (!general.isEmpty(et_globe_scope.getText().toString())) {
             Singleton.getInstance().indProperty.setGroundSlope(et_globe_scope.getText().toString());
         }
 
-        if (!general.isEmpty(et_soil_type.getText().toString())) {
-            Singleton.getInstance().indProperty.setSoilType(et_soil_type.getText().toString());
+        if (spinner_soil_type.getSelectedItemPosition() > 0) {
+            Singleton.getInstance().indProperty.setSoilTypeDd(Singleton.getInstance().soilTypeData.get(spinner_soil_type.getSelectedItemPosition()).getId());
         }
+
+       /* if (!general.isEmpty(et_soil_type.getText().toString())) {
+            Singleton.getInstance().indProperty.setSoilType(et_soil_type.getText().toString());
+        }*/
 
         if (!general.isEmpty(et_construction_stage.getText().toString())) {
             Singleton.getInstance().indProperty.setDescriptionofConstructionStage(et_construction_stage.getText().toString());
@@ -6914,5 +7075,148 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
     public void onDestroy() {
         super.onDestroy();
         _handler.removeCallbacksAndMessages(getData);
+    }
+
+    private void initiateConcreteGradeDropDownFields(){
+        ArrayAdapter<ConcreteGrade.ConcreteGradeData> concreteGradeAdapter = new ArrayAdapter<ConcreteGrade.ConcreteGradeData>(mContext, R.layout.row_spinner_item, Singleton.getInstance().concreteGrade) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTypeface(general.mediumtypeface());
+               // ((TextView) v).setText(Singleton.getInstance().concreteGrade.get(position).getName());
+                return v;
+            }
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                ((TextView) v).setTypeface(general.mediumtypeface());
+                return v;
+            }
+
+        };
+        concreteGradeAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
+        spinner_concrete_grade.setAdapter(concreteGradeAdapter);
+        spinner_concrete_grade.setOnTouchListener(this);
+
+        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indProperty.getConcreteGradeDd()))) {
+            Log.e("spinner_concreteGrade", "::: " + Singleton.getInstance().indProperty.getConcreteGrade());
+            for (int x = 0; x < Singleton.getInstance().concreteGrade.size(); x++) {
+
+                    if (Singleton.getInstance().indProperty.getConcreteGradeDd()
+                            .equals(Singleton.getInstance().concreteGrade.get(x).getId())) {
+                        spinner_concrete_grade.setSelection(x);
+                        break;
+                    }
+            }
+        }
+
+    }
+    private void initiateEnvExposureConditionDropDownFields(){
+        ArrayAdapter<EnvExposureCondition.EnvExposureConditionData> envExposureConditionAdapter = new ArrayAdapter<EnvExposureCondition.EnvExposureConditionData>(mContext, R.layout.row_spinner_item, Singleton.getInstance().envExposureConditionData) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTypeface(general.mediumtypeface());
+               // ((TextView) v).setText(Singleton.getInstance().concreteGrade.get(position).getName());
+                return v;
+            }
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                ((TextView) v).setTypeface(general.mediumtypeface());
+                return v;
+            }
+
+        };
+        envExposureConditionAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
+        spinner_environment_exposure_condition.setAdapter(envExposureConditionAdapter);
+        spinner_environment_exposure_condition.setOnTouchListener(this);
+
+        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indProperty.getEnvironmentExposureConditionDd()))) {
+            Log.e("spinner_concreteGrade", "::: " + Singleton.getInstance().indProperty.getEnvironmentExposureConditionDd());
+            for (int x = 0; x < Singleton.getInstance().envExposureConditionData.size(); x++) {
+
+                    if (Singleton.getInstance().indProperty.getEnvironmentExposureConditionDd()
+                            .equals(Singleton.getInstance().envExposureConditionData.get(x).getId())) {
+                        spinner_environment_exposure_condition.setSelection(x);
+                        break;
+                    }
+            }
+        }
+
+    }
+
+
+    private void initiateSoilType(){
+        ArrayAdapter<SoilType.SoilTypeData> soilTypeAdapter = new ArrayAdapter<SoilType.SoilTypeData>(mContext, R.layout.row_spinner_item, Singleton.getInstance().soilTypeData) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTypeface(general.mediumtypeface());
+                 return v;
+            }
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                ((TextView) v).setTypeface(general.mediumtypeface());
+                return v;
+            }
+
+        };
+        soilTypeAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
+        spinner_soil_type.setAdapter(soilTypeAdapter);
+        spinner_soil_type.setOnTouchListener(this);
+
+        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indProperty.getSoilTypeDd()))) {
+            Log.e("spinner_soilType", "::: " + Singleton.getInstance().indProperty.getSoilTypeDd());
+            for (int x = 0; x < Singleton.getInstance().soilTypeData.size(); x++) {
+
+                if (Singleton.getInstance().indProperty.getSoilTypeDd()
+                        .equals(Singleton.getInstance().soilTypeData.get(x).getId())) {
+                    spinner_soil_type.setSelection(x);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    private void showCalender(){
+        final Calendar newCalendar = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog;
+        int mYear = newCalendar.get(Calendar.YEAR);
+        int mMonth = newCalendar.get(Calendar.MONTH);
+        int mDay = newCalendar.get(Calendar.DAY_OF_MONTH);
+
+        newCalendar.add(Calendar.YEAR, 0);
+        long upperLimit = newCalendar.getTimeInMillis();
+
+        datePickerDialog = new DatePickerDialog(getActivity(),  new
+                DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        siteVisiteInCalender = "";
+                        newCalendar.set(Calendar.YEAR, year);
+                        newCalendar.set(Calendar.MONTH, month);
+                        newCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale
+                                .getDefault());
+                         date_value.setText(sdf.format(newCalendar.getTime()));
+
+                         visitDate = sdf.format(newCalendar.getTime());
+
+                         siteVisiteInCalender = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                                        .format(newCalendar.getTime());
+                        Log.e("Selected Date","Calender.."+siteVisiteInCalender);
+                        date_error_msg.setVisibility(View.GONE);
+
+                    }
+                }, mYear, mMonth, mDay);
+        //datePickerDialog.getDatePicker().setMinDate(newCalendar.get(Calendar.YEAR));
+
+        datePickerDialog.getDatePicker().getTouchables().get(0).performClick();
+        datePickerDialog.getDatePicker().setMaxDate(upperLimit);
+        datePickerDialog.show();
     }
 }

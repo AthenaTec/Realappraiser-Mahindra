@@ -126,7 +126,7 @@
                     android:layout_marginBottom="@dimen/_2sdp"
                     android:layout_marginLeft="@dimen/height_3"
                     android:gravity="left"
-                    android:text="@string/measurement"
+                    android:text="Measurement Unit"
                     android:textColor="@color/font_text_minor_heading"
                     android:textSize="@dimen/miniut_small" />
 

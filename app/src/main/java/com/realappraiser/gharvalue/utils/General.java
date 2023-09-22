@@ -1882,5 +1882,44 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    public static String siteVisitDate(String date) {
+        String ActualDate = "";
+        if (!date.isEmpty())
+            try {
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat inputFormats = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                //  inputFormats.setTimeZone(TimeZone.getTimeZone("UTC"));
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat outputFormats = new SimpleDateFormat("dd-MM-yyyy");
+                Date datenew = inputFormats.parse(date);
+                String dateee = outputFormats.format(datenew);
+                System.out.println(outputFormats.format(inputFormats.parse(date)));
+                ActualDate = outputFormats.format(inputFormats.parse(date));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        return ActualDate;
+    }
+
+
+
+    public static String siteVisitDateToConversion(String date) {
+        String ActualDate = "";
+        if (!date.isEmpty())
+            try {
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat inputFormats = new SimpleDateFormat("dd-MM-yyyy");
+                //  inputFormats.setTimeZone(TimeZone.getTimeZone("UTC"));
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat outputFormats = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                Date datenew = inputFormats.parse(date);
+                String dateee = outputFormats.format(datenew);
+                System.out.println(outputFormats.format(inputFormats.parse(date)));
+                ActualDate = outputFormats.format(inputFormats.parse(date));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        return ActualDate;
+    }
 
 }

@@ -13,10 +13,12 @@ import com.realappraiser.gharvalue.model.CarParking;
 import com.realappraiser.gharvalue.model.Case;
 import com.realappraiser.gharvalue.model.CaseOtherDetailsModel;
 import com.realappraiser.gharvalue.model.ClassModel;
+import com.realappraiser.gharvalue.model.ConcreteGrade;
 import com.realappraiser.gharvalue.model.Construction;
 import com.realappraiser.gharvalue.model.Document_list;
 import com.realappraiser.gharvalue.model.DocumentsSeen;
 import com.realappraiser.gharvalue.model.Door;
+import com.realappraiser.gharvalue.model.EnvExposureCondition;
 import com.realappraiser.gharvalue.model.Exterior;
 import com.realappraiser.gharvalue.model.FittingQuality;
 import com.realappraiser.gharvalue.model.Floor;
@@ -52,6 +54,7 @@ import com.realappraiser.gharvalue.model.QualityConstruction;
 import com.realappraiser.gharvalue.model.RejectionComment;
 import com.realappraiser.gharvalue.model.Remarks;
 import com.realappraiser.gharvalue.model.Roof;
+import com.realappraiser.gharvalue.model.SoilType;
 import com.realappraiser.gharvalue.model.Structure;
 import com.realappraiser.gharvalue.model.Tenure;
 import com.realappraiser.gharvalue.model.TypeOfProperty;
@@ -2233,6 +2236,12 @@ public class ResponseParser {
                         Singleton.getInstance().rejectionComments_list = RejectionComment_val;
 
 
+                          parseConcreteGradeDropDown(jsonObject);
+                          parseEnvExpoCondition(jsonObject);
+                          parseSoilTypeDropDown(jsonObject);
+
+
+
                     } else {
                         status = "0";
                         msg = jObj.getString("Message");
@@ -2681,6 +2690,98 @@ public class ResponseParser {
         Response.documentRead = dataModels;
 
         return Response;
+    }
+
+    private static void   parseConcreteGradeDropDown(JSONObject jsonObject) throws JSONException {
+
+        /* ******Set Concrete dummy data Data*******/
+        ArrayList<ConcreteGrade.ConcreteGradeData> concreteDummyData = new ArrayList<>();
+        ConcreteGrade.ConcreteGradeData concreteGradeData = new ConcreteGrade.ConcreteGradeData();
+        concreteGradeData.setId(0);
+        concreteGradeData.setName("Select");
+        Gson gson_dummy_reject = new Gson();
+        gson_dummy_reject.toJson(concreteGradeData);
+        concreteDummyData.add(concreteGradeData);
+
+        /* RejectionComment valuation */
+        ArrayList<ConcreteGrade.ConcreteGradeData> concreteGradeMainList = new ArrayList<>();
+        concreteGradeMainList.add(concreteGradeData);
+        /* Json array for Measurements*/
+        JSONArray concreteGradeJson = jsonObject.getJSONArray("ConcreteGrade");
+        for (int p = 0; p < concreteGradeJson.length(); p++) {
+            JSONObject interviewobj = concreteGradeJson.getJSONObject(p);
+            Gson gson = new Gson();
+            ConcreteGrade.ConcreteGradeData obj = null;
+            obj = new ConcreteGrade.ConcreteGradeData();
+            obj = gson.fromJson(interviewobj.toString(), ConcreteGrade.ConcreteGradeData.class);
+            concreteGradeMainList.add(obj);
+            /*if (obj.getCategoryId().equalsIgnoreCase("1")) {
+                concreteGradeMainList.add(obj);
+            }*/
+        }
+        Singleton.getInstance().concreteGrade = concreteGradeMainList;
+
+    }
+
+    private static void parseEnvExpoCondition(JSONObject jsonObject)throws JSONException {
+
+        /* ******Set Concrete dummy data Data*******/
+        ArrayList<EnvExposureCondition.EnvExposureConditionData> envExposureConditionList = new ArrayList<>();
+        EnvExposureCondition.EnvExposureConditionData envExposureConditionData = new EnvExposureCondition.EnvExposureConditionData();
+        envExposureConditionData.setId(0);
+        envExposureConditionData.setName("Select");
+        Gson gson_dummy_envExporeConditionData = new Gson();
+        gson_dummy_envExporeConditionData.toJson(envExposureConditionData);
+        envExposureConditionList.add(envExposureConditionData);
+
+        /* RejectionComment valuation */
+        ArrayList<EnvExposureCondition.EnvExposureConditionData> envExposureConditionMainList = new ArrayList<>();
+        envExposureConditionMainList.add(envExposureConditionData);
+        /* Json array for Measurements*/
+        JSONArray concreteGradeJson = jsonObject.getJSONArray("EnvExposureCondition");
+        for (int p = 0; p < concreteGradeJson.length(); p++) {
+            JSONObject interviewobj = concreteGradeJson.getJSONObject(p);
+            Gson gson = new Gson();
+            EnvExposureCondition.EnvExposureConditionData obj = null;
+            obj = new EnvExposureCondition.EnvExposureConditionData();
+            obj = gson.fromJson(interviewobj.toString(), EnvExposureCondition.EnvExposureConditionData.class);
+            envExposureConditionMainList.add(obj);
+            /*if (obj.getCategoryId().equalsIgnoreCase("1")) {
+                concreteGradeMainList.add(obj);
+            }*/
+        }
+        Singleton.getInstance().envExposureConditionData = envExposureConditionMainList;
+
+    }
+    private static void parseSoilTypeDropDown(JSONObject jsonObject)throws JSONException {
+
+        /* ******Set Concrete dummy data Data*******/
+        ArrayList<SoilType.SoilTypeData> soilList = new ArrayList<>();
+        SoilType.SoilTypeData soilObj = new SoilType.SoilTypeData();
+        soilObj.setId(0);
+        soilObj.setName("Select");
+        Gson gsonSoilType = new Gson();
+        gsonSoilType.toJson(soilObj);
+        soilList.add(soilObj);
+
+        /* RejectionComment valuation */
+        ArrayList<SoilType.SoilTypeData> soilTypeMainList = new ArrayList<>();
+        soilTypeMainList.add(soilObj);
+        /* Json array for Measurements*/
+        JSONArray concreteGradeJson = jsonObject.getJSONArray("SoilType");
+        for (int p = 0; p < concreteGradeJson.length(); p++) {
+            JSONObject interviewobj = concreteGradeJson.getJSONObject(p);
+            Gson gson = new Gson();
+            SoilType.SoilTypeData obj = null;
+            obj = new SoilType.SoilTypeData();
+            obj = gson.fromJson(interviewobj.toString(), SoilType.SoilTypeData.class);
+            soilTypeMainList.add(obj);
+            /*if (obj.getCategoryId().equalsIgnoreCase("1")) {
+                concreteGradeMainList.add(obj);
+            }*/
+        }
+        Singleton.getInstance().soilTypeData = soilTypeMainList;
+
     }
 
 }
