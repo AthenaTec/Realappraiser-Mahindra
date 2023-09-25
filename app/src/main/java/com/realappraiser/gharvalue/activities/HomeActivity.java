@@ -509,13 +509,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setRecyclerViewClickListner(openrecyclerview);
         opened_case.setText(getResources().getString(R.string.open) + " (" + dataModel.size() + ")");
 
-        if(dataModel.size() == 0){
+       /* if(dataModel.size() == 0){
             no_data_found_open.setVisibility(View.VISIBLE);
             openViewLayout.setVisibility(View.GONE);
         }else {
             openViewLayout.setVisibility(View.VISIBLE);
             no_data_found_open.setVisibility(View.GONE);
-        }
+        }*/
 
 
     }
