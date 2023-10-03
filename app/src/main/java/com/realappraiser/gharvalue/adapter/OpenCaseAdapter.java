@@ -60,6 +60,7 @@ import com.realappraiser.gharvalue.model.Proximity;
 import com.realappraiser.gharvalue.model.RejectionComment;
 import com.realappraiser.gharvalue.model.TypeOfProperty;
 import com.realappraiser.gharvalue.utils.Connectivity;
+import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 import com.realappraiser.gharvalue.utils.Singleton;
@@ -89,7 +90,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
     ArrayList<DataModel> propertyTypeList;
     ArrayList<Document_list> documentRead;
 
-    private String msg = "", info = "", propertyType = "",caseStatus = "";
+    private String msg = "", info = "", propertyType = "", caseStatus = "";
     private String case_id = "", property_caseid = "", bank_id = "", reporty_type = "", agencybranchid = "", type_id = "", property_type = "", StatusId_is = "";
     public Dialog dialog;
     DataModel dataModel = new DataModel();
@@ -220,13 +221,12 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
         String textUniqueId = dataModels.
                 get(position).getUniqueIdOfTheValuation();
 
-        if(textUniqueId != null && !textUniqueId.isEmpty() && !textUniqueId.equalsIgnoreCase("null")){
+        if (textUniqueId != null && !textUniqueId.isEmpty() && !textUniqueId.equalsIgnoreCase("null")) {
             holder.txt_unique_id.setText(textUniqueId);
             holder.ll_UniqueId.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.ll_UniqueId.setVisibility(View.GONE);
         }
-
 
 
         if (dataModels.get(position).getBankReferenceNo() != null && !TextUtils.isEmpty(dataModels.get(position).getBankReferenceNo()) &&
@@ -296,7 +296,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             public void onClick(View view) {
                 String finnoneId = dataModels.get(position).getBankReferenceNo();
                 String uniqueId = dataModels.get(position).getUniqueIdOfTheValuation();
-               finIdPopup(mContext,finnoneId,uniqueId);
+                finIdPopup(mContext, finnoneId, uniqueId);
             }
         });
 
@@ -677,9 +677,9 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
         private TextView case_id, case_person_name, case_mobile, case_addressloc,
                 case_bank_name, case_assigned_date, case_assigned_time, property_exits_text;
         private Switch property_exits;
-        private LinearLayout acceptLay, rejectLay,ll_UniqueId,ll_parent_id;
+        private LinearLayout acceptLay, rejectLay, ll_UniqueId, ll_parent_id;
         private LinearLayout property_type_update_lay, document_read_lay, property_heading_type_div, property_exits_lay, transfer_lay;
-        private TextView accept, reject, textview_property_heading, textview_property_type_heading, tvbankNo,txt_unique_id;
+        private TextView accept, reject, textview_property_heading, textview_property_type_heading, tvbankNo, txt_unique_id;
         RelativeLayout relative_name, relative_address;
 
         public ViewHolder(View itemView) {
@@ -797,23 +797,22 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             } else if (result.equals("0")) {
 
 
-
-               try{
-                   JSONObject jsonObject = new JSONObject(response.trim());
-                   if(jsonObject.has("status")){
-                       /* if case already send into report marker means below functionality get execute*/
-                       if(jsonObject.getString("status").equals("3")){
-                           msg = "Case Already Moved to Next Stage";
-                           RemoveCasefromList();
-                           Singleton.getInstance().openCaseList.clear();
-                           Singleton.getInstance().closeCaseList.clear();
-                           Intent intent = new Intent(mContext, HomeActivity.class);
-                           mContext.startActivity(intent);
-                       }
-                   }
-               }catch (Exception e){
-                   e.getMessage();
-               }
+                try {
+                    JSONObject jsonObject = new JSONObject(response.trim());
+                    if (jsonObject.has("status")) {
+                        /* if case already send into report marker means below functionality get execute*/
+                        if (jsonObject.getString("status").equals("3")) {
+                            msg = "Case Already Moved to Next Stage";
+                            RemoveCasefromList();
+                            Singleton.getInstance().openCaseList.clear();
+                            Singleton.getInstance().closeCaseList.clear();
+                            Intent intent = new Intent(mContext, HomeActivity.class);
+                            mContext.startActivity(intent);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.getMessage();
+                }
 
 
                 general.CustomToast(msg);
@@ -971,6 +970,16 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             public void onClick(View v) {
                 UpdateStatusCaseIdWebservice(case_id, statusid); //Doesn't property exists or reject
                 dialog.dismiss();
+
+                if (SettingsUtils.Latitudes > 0.0) {
+                    boolean shareLocation = locationTrackerApi.shareLocation(case_id,
+                            SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
+                            "Field Inspection Finish", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+
+                } else {
+                    getCurrentLocation(mContext,"Field Inspection Finish");
+                }
+
             }
         });
         noBtn.setOnClickListener(new View.OnClickListener() {
@@ -1995,14 +2004,14 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
                     StartInspectionPopup();
                 } else {
 
-                    if(status_id.equalsIgnoreCase("6") ||
+                    if (status_id.equalsIgnoreCase("6") ||
                             status_id.equalsIgnoreCase("14") ||
                             status_id.equalsIgnoreCase("21") ||
                             status_id.equalsIgnoreCase("22") ||
                             status_id.equalsIgnoreCase("25") ||
                             status_id.equalsIgnoreCase("26") ||
                             status_id.equalsIgnoreCase("27")
-                    ){
+                    ) {
                         //this scenario of this issue like this case already sent into report maker in web
 
                         msg = "Case Already Moved to Next Stage";
@@ -2064,9 +2073,16 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             public void onClick(View v) {
                 if (general.isNetworkAvailable() & general.isLocationEnabled(mContext)) {
 
-                    boolean shareLocation = locationTrackerApi.shareLocation(case_id,
-                            SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                            "CaseStart", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                    if (SettingsUtils.Latitudes > 0.0) {
+                        boolean shareLocation = locationTrackerApi.shareLocation(case_id,
+                                SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
+                                "Field Inspection Start", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+
+                    } else {
+                        getCurrentLocation(mContext, "Field Inspection Start");
+                    }
+
+
 
 
                     Singleton.getInstance().enable_validation_error = false;
@@ -2254,13 +2270,13 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
 
 
         //adding mandatory field for cartpet type and carpet areaType
-        if(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage() == null || Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage().isEmpty()){
-            is_valid  = false;
+        if (Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage() == null || Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage().isEmpty()) {
+            is_valid = false;
         }
 
-        if(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId() == null ||
-                Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId().isEmpty()){
-              is_valid =  false;
+        if (Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId() == null ||
+                Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId().isEmpty()) {
+            is_valid = false;
         }
 
 
@@ -2358,9 +2374,6 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             public void onClick(View v) {
                 if (general.isNetworkAvailable() & general.isLocationEnabled(mContext)) {
 
-                    boolean shareLocation = locationTrackerApi.shareLocation(case_id,
-                            SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                            "CaseFinish", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
                     Singleton.getInstance().enable_validation_error = true;
                     // online
                     SettingsUtils.getInstance().putValue(SettingsUtils.is_offline, false);
@@ -2522,8 +2535,8 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             is_valid = false;
         }
         //Check whether market price has values or not
-        if(general.isEmpty(Singleton.getInstance().indPropertyValuation.getTotalPropertyValue())
-         || Singleton.getInstance().getInstance().indPropertyValuation.getTotalPropertyValue().trim().equals("0")
+        if (general.isEmpty(Singleton.getInstance().indPropertyValuation.getTotalPropertyValue())
+                || Singleton.getInstance().getInstance().indPropertyValuation.getTotalPropertyValue().trim().equals("0")
         )
             is_valid = false;
 
@@ -2670,7 +2683,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
         documentlist.setLayoutManager(new LinearLayoutManager(this.mContext));
         setRecyclerViewClickListner(documentlist);
 
-        DocumentAdapter adapter = new DocumentAdapter(mContext, documentRead, 1,null);
+        DocumentAdapter adapter = new DocumentAdapter(mContext, documentRead, 1, null);
         documentlist.setAdapter(adapter);
         documentlist.setItemAnimator(new DefaultItemAnimator());
         documentlist.setNestedScrollingEnabled(false);
@@ -3123,4 +3136,32 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
     }
 
 
+    private void getCurrentLocation(Activity activity, String field_inspection_status) {
+
+        if (general.GPS_status()) {
+            try {
+                GPSService gpsService = new GPSService(activity);
+                gpsService.getLocation();
+                new Handler().postDelayed(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (general.getcurrent_latitude(activity) != 0) {
+                            /*Here store current location of user latLong*/
+                            SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
+                            SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+
+                            new LocationTrackerApi(activity).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
+                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), field_inspection_status, SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+
+                        }
+                    }
+                }, 1500);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
 }

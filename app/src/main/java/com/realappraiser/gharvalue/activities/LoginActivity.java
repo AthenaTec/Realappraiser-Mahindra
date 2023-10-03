@@ -2,6 +2,7 @@ package com.realappraiser.gharvalue.activities;
 
 import static com.realappraiser.gharvalue.utils.General.REQUEST_ID_MULTIPLE_PERMISSIONS;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -41,6 +42,7 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -59,6 +61,7 @@ import com.realappraiser.gharvalue.model.MultiBranchModel;
 import com.realappraiser.gharvalue.model.SafeNetModel;
 import com.realappraiser.gharvalue.model.SecurityToken;
 import com.realappraiser.gharvalue.utils.Connectivity;
+import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.GpsUtils;
 import com.realappraiser.gharvalue.utils.NetworkPolicyTranslucent;
@@ -315,6 +318,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (general.checkPermissions() && checkGps()) {
             makeLocationUpadte();
+        }else{
+            Log.e(TAG,"Permission was denied");
         }
     }
 
@@ -1008,7 +1013,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             general.CustomToast(getResources().getString(R.string.serverProblem));
         }
-        general.CustomToast("Login Successful");
+
         if (latt > 0.0d) {
             String fieldStaffId = SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, "");
 
@@ -1019,15 +1024,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 General general2 = this.general;
                 General.customToast("Please check your Internet Connection!", this);
             }
+
+            general.CustomToast("Login Successful");
+            SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            if ((dialog != null) && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            general.hideloading();
+        }else{
+            getCurrentLocation(this);
+
         }
 
 
-        SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
-        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-        if ((dialog != null) && dialog.isShowing()) {
-            dialog.dismiss();
-        }
-        general.hideloading();
     }
 
 
@@ -1065,6 +1075,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void sendLocationUpdate(double latitude, double longitude) {
         latt = latitude;
         longi = longitude;
+        SettingsUtils.Longitudes = longitude;
+        SettingsUtils.Latitudes = latitude;
     }
 
 
@@ -1120,6 +1132,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             General.exitDialog(LoginActivity.this, "Your phone is rooted,\nPlease unroot to use " +
                     "app");
+        }
+    }
+
+    private  void getCurrentLocation(Activity activity){
+
+        if (general.GPS_status()) {
+            try {
+                GPSService gpsService = new GPSService(this);
+                gpsService.getLocation();
+                 new Handler().postDelayed(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (general.getcurrent_latitude(activity) != 0) {
+                            /*Here store current location of user latLong*/
+                            SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
+                            SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+                            general.CustomToast("Login Successful");
+                            locationTrackerApi.shareLocation("",
+                                    SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
+                                    "Login", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                            SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            if ((dialog != null) && dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            general.hideloading();
+                        }
+                    }
+                }, 1500);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
         }
     }
 }

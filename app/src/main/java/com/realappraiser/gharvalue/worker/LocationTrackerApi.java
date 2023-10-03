@@ -1,15 +1,22 @@
 package com.realappraiser.gharvalue.worker;
 
+import static com.realappraiser.gharvalue.utils.General.GPS_status;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.utils.Connectivity;
+import com.realappraiser.gharvalue.utils.GPSService;
+import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 
 import java.text.SimpleDateFormat;
@@ -26,12 +33,10 @@ public class LocationTrackerApi {
 
 
     public boolean shareLocation(String caseId, String fieldStaffId, String interval, double latitudes, double longitudes) {
-
-
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                 address = SettingsUtils.convertLatLngToAddress(context, latitudes, longitudes);
+                address = SettingsUtils.convertLatLngToAddress(context, latitudes, longitudes);
             }
         });
 
@@ -66,8 +71,17 @@ public class LocationTrackerApi {
             requestData.setLatitude(String.valueOf(latitudes));
             requestData.setLongitude(String.valueOf(longitudes));
             requestData.setTrackerTime(time);
-            requestData.setAddress(address);
-            requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN,""));
+            Log.e("convertLatLngToAddrJson", address);
+
+            if (!address.isEmpty()) {
+                requestData.setAddress(address);
+            } else {
+                address = SettingsUtils.convertLatLngToAddress(context, latitudes, longitudes);
+                requestData.setAddress(address);
+            }
+
+
+            requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
 //            requestData.setAuthToken("Bearer FFcxMfxHjm79qtRcMFNbp4Ydf7l_3jGiLSeSuY2tC3QJmiurkOSfEQGtbN-M6S3kF13VMSM5CALbIJNnT37zMi81gCRCz6YWZD7Usqs9i73kIgJGoHdDsPJdHkWyzD52JuORASt5p-jEB5jN2abX2HXdcIDrZD_YxVHWlFVn4uITc1SA8nk5OPCy5-xmpSq4VrHoUPsRrRMPx411C8gfcJvdaOCTodGRKFVwzVffHRC2cTRi-");
             requestData.setRequestBody(RequestParam.LocationTracker(requestData));
             WebserviceCommunicator webserviceTask = new WebserviceCommunicator(context,

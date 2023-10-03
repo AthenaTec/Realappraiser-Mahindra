@@ -3,6 +3,7 @@ package com.realappraiser.gharvalue.fragments;
 import static com.realappraiser.gharvalue.utils.General.siteVisitDateToConversion;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -55,6 +56,7 @@ import com.realappraiser.gharvalue.AppDatabase;
 import com.realappraiser.gharvalue.MyApplication;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.activities.HomeActivity;
+import com.realappraiser.gharvalue.activities.LoginActivity;
 import com.realappraiser.gharvalue.adapter.CarParkingAdapter;
 import com.realappraiser.gharvalue.adapter.DoorAdapter;
 import com.realappraiser.gharvalue.adapter.ExterPaintAdapter;
@@ -127,10 +129,12 @@ import com.realappraiser.gharvalue.model.WaterAvailability;
 import com.realappraiser.gharvalue.model.Window;
 import com.realappraiser.gharvalue.utils.ConnectionReceiver;
 import com.realappraiser.gharvalue.utils.Connectivity;
+import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.OthersFormListener;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 import com.realappraiser.gharvalue.utils.Singleton;
+import com.realappraiser.gharvalue.worker.LocationTrackerApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -4313,6 +4317,10 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
         if (result != null) {
             if (result.equals("1")) {
                 general.CustomToast(info);
+
+                sendLatLongValueToServer();
+
+
                 //floorgeneralfields = true;
                 if (Singleton.getInstance().is_new_floor_created) {
                     /* Start Inspection - Update the case ID */
@@ -4327,7 +4335,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                         if (is_offline) {
                             Singleton.getInstance().call_offline_tab = "call_offline_tab";
                         }
-                        startActivity(new Intent(getContext(), HomeActivity.class));
+                         startActivity(new Intent(getContext(), HomeActivity.class));
                         getActivity().finish();
                     }
                 }
@@ -7218,5 +7226,45 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
         datePickerDialog.getDatePicker().getTouchables().get(0).performClick();
         datePickerDialog.getDatePicker().setMaxDate(upperLimit);
         datePickerDialog.show();
+    }
+
+    private void sendLatLongValueToServer(){
+        if(SettingsUtils.Latitudes < 0.0){
+            getCurrentLocation(getActivity());
+        }else{
+            new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
+                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+
+        }
+    }
+
+    private  void getCurrentLocation(Activity activity){
+
+        if (general.GPS_status()) {
+            try {
+                GPSService gpsService = new GPSService(activity);
+                gpsService.getLocation();
+                new Handler().postDelayed(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (general.getcurrent_latitude(activity) != 0) {
+                            /*Here store current location of user latLong*/
+                            SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
+                            SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+
+                            new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
+                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+
+                        }
+                    }
+                }, 1500);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
+        }
     }
 }

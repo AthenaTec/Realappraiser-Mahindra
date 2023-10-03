@@ -123,6 +123,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 3;
     String uriSting;
 
+    public static AlertDialog savePopup;
+
     public General(Activity context) {
         this.mContext = context;
         this.Context = context;
@@ -769,7 +771,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         AlertDialog.Builder builder = new AlertDialog.Builder(activity,R.style.CustomDialog);
         builder.setView(view);
 
-        AlertDialog savePopup = builder.create();
+        savePopup = builder.create();
         savePopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         TextView title = view.findViewById(R.id.title);
@@ -1920,6 +1922,13 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
             }
 
         return ActualDate;
+    }
+
+    public static void isShowDialog(){
+
+       if(savePopup != null){
+           savePopup.cancel();
+       }
     }
 
 }

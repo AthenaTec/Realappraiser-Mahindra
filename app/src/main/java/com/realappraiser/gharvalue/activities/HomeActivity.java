@@ -111,6 +111,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -2663,7 +2664,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if (!successful && (responseCode == 400 || responseCode == 401)) {
             General.sessionDialog(HomeActivity.this);
         } else {
-            General.customToast(getString(R.string.something_wrong), HomeActivity.this);
+           // General.customToast(getString(R.string.something_wrong), HomeActivity.this);
         }
 
     }
@@ -2899,6 +2900,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Log.e("HomeActivity", sb.toString());
         locationTrackerApi.shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Interval", latitude, longitude);
         workManager.startWorker();
+        SettingsUtils.Latitudes = latitude;
+        SettingsUtils.Longitudes = longitude;
     }
 
     @Override
@@ -3136,5 +3139,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 });
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        general.isShowDialog();
+        super.onDestroy();
     }
 }

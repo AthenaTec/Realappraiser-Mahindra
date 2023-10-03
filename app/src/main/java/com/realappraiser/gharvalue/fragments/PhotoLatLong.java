@@ -104,6 +104,7 @@ import com.realappraiser.gharvalue.utils.OfflineLocationInterface;
 import com.realappraiser.gharvalue.utils.OfflineLocationReceiver;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 import com.realappraiser.gharvalue.utils.Singleton;
+import com.realappraiser.gharvalue.worker.LocationTrackerApi;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -575,6 +576,12 @@ public class PhotoLatLong extends Fragment implements
                         if (general.getcurrent_latitude(getActivity()) != 0) {
                             latvalue.setText("" + general.getcurrent_latitude(getActivity()));
                             longvalue.setText("" + general.getcurrent_longitude(getActivity()));
+
+                            /*Here store current location of user latLong*/
+                           SettingsUtils.Longitudes = general.getcurrent_longitude(getActivity());
+                           SettingsUtils.Latitudes = general.getcurrent_latitude(getActivity());
+
+
                             create_marker(general.getcurrent_latitude(getActivity()), general.getcurrent_longitude(getActivity()));
                         }
                     }
@@ -758,6 +765,11 @@ public class PhotoLatLong extends Fragment implements
 
         if (!general.isEmpty(str_latvalue)) {
             latvalue.setError(null);
+            try{
+                SettingsUtils.Latitudes = Double.parseDouble(str_latvalue);
+            }catch (Exception e){
+                e.getMessage();
+            }
         } else {
             isvalid = false;
             latvalue.setError(getResources().getString(R.string.error_lat));
@@ -765,6 +777,12 @@ public class PhotoLatLong extends Fragment implements
 
         if (!general.isEmpty(str_longvalue)) {
             longvalue.setError(null);
+            try{
+                SettingsUtils.Longitudes = Double.parseDouble(str_longvalue);
+            }catch (Exception e){
+                e.getMessage();
+            }
+
         } else {
             isvalid = false;
             longvalue.setError(getResources().getString(R.string.error_long));
@@ -1352,6 +1370,7 @@ public class PhotoLatLong extends Fragment implements
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
                 if (requestData.isSuccessful()) {
+                    sendLatLongValueToServer(); //send CurrentLocation to server
                     parseuploadimageResponse(requestData.getResponse());
                 } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
                     Log.e(TAG, "Hide 1306");
@@ -2582,6 +2601,46 @@ public class PhotoLatLong extends Fragment implements
             textview_error_photo.setVisibility(View.VISIBLE);
         }else{
             textview_error_photo.setVisibility(View.GONE);
+        }
+    }
+
+    private void sendLatLongValueToServer(){
+
+        if(SettingsUtils.Latitudes < 0.0){
+            getCurrentLocation(getActivity());
+        }else{
+            new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
+                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Property Images Upload", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+        }
+    }
+
+    private  void getCurrentLocation(Activity activity){
+
+        if (general.GPS_status()) {
+            try {
+                GPSService gpsService = new GPSService(activity);
+                gpsService.getLocation();
+                new Handler().postDelayed(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (general.getcurrent_latitude(activity) != 0) {
+                            /*Here store current location of user latLong*/
+                            SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
+                            SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+
+                            new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
+                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+
+                        }
+                    }
+                }, 1500);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
         }
     }
 

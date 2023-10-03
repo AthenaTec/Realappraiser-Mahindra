@@ -1,8 +1,11 @@
 package com.realappraiser.gharvalue.activities;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -21,24 +24,37 @@ import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.realappraiser.gharvalue.AppDatabase;
 import com.realappraiser.gharvalue.BuildConfig;
+import com.realappraiser.gharvalue.MyApplication;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.communicator.DataResponse;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.ResponseParser;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
+import com.realappraiser.gharvalue.model.Case;
+import com.realappraiser.gharvalue.model.IndProperty;
+import com.realappraiser.gharvalue.model.IndPropertyValuation;
+import com.realappraiser.gharvalue.model.OfflineDataModel;
+import com.realappraiser.gharvalue.model.Property;
 import com.realappraiser.gharvalue.model.SafeNetModel;
 import com.realappraiser.gharvalue.utils.Connectivity;
+import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
+import com.realappraiser.gharvalue.utils.Singleton;
 import com.realappraiser.gharvalue.utils.security.SafetyNetChecker;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
+import com.realappraiser.gharvalue.worker.GeoUpdate;
+import com.realappraiser.gharvalue.worker.OreoLocation;
+import com.realappraiser.gharvalue.worker.WorkerManager;
 import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -142,11 +158,17 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
     public void LoggedInAction() {
         if (!SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false)) {
             // Without Login
-            openLogin();
+           // openLogin();
+           // navigateLoginScreen();
+            removeUser(this);
+            //startActivity(new Intent(SplashActivity.this, HomeActivity.class));
         } else {
             // Already Login
             if (Connectivity.isConnected(this)) {
                 // Get Drop down API
+                if(SettingsUtils.Latitudes < 0.0){
+                    getCurrentLocation(this);
+                }
                 InitiateGetFieldDropDownTask();
             } else {
                 startActivity(new Intent(SplashActivity.this, HomeActivity.class));
@@ -226,6 +248,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
                             requestData.getResponseCode(), requestData.isSuccessful());
                 }else {
                    openLogin();
+                   // navigateLoginScreen();
                 }
             }
         });
@@ -234,6 +257,82 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
     private void openLogin(){
         General.logoutUser(this);
+    }
+
+    public  void removeUser(Activity activity){
+        Singleton.getInstance().longitude = 0.0;
+        Singleton.getInstance().latitude = 0.0;
+        Singleton.getInstance().aCase = new Case();
+        Singleton.getInstance().property = new Property();
+        Singleton.getInstance().indProperty = new IndProperty();
+        Singleton.getInstance().indPropertyValuation = new IndPropertyValuation();
+        Singleton.getInstance().indPropertyFloors = new ArrayList<>();
+        Singleton.getInstance().proximities = new ArrayList<>();
+        Singleton.getInstance().openCaseList.clear();
+        Singleton.getInstance().closeCaseList.clear();
+        Singleton.getInstance().GetImage_list_flat.clear();
+        SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
+        AppDatabase appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
+        ArrayList<OfflineDataModel> oflineData = (ArrayList) appDatabase.interfaceOfflineDataModelQuery().getDataModal_offlinecase(true);
+        if (appDatabase == null) {
+            return;
+        }
+        if (oflineData.size() > 0) {
+            General.customToast("Please sync your offline documents before logout!", activity);
+            return;
+        }
+
+        // Total - 16 DB
+
+
+        // Delete - datamodel
+        appDatabase.interfaceDataModelQuery().deleteRow();
+        // Delete - offlinedatamodel
+        appDatabase.interfaceOfflineDataModelQuery().deleteRow();
+        // Delete - casemodal
+        appDatabase.interfaceCaseQuery().deleteRow();
+        // Delete - propertymodal
+        appDatabase.interfacePropertyQuery().deleteRow();
+        // Delete - indpropertymodal
+        appDatabase.interfaceIndpropertyQuery().deleteRow();
+        // Delete - IndPropertyValuationModal
+        appDatabase.interfaceIndPropertyValuationQuery().deleteRow();
+        // Delete - IndPropertyFloorModal
+        appDatabase.interfaceIndPropertyFloorsQuery().deleteRow();
+        // Delete - IndPropertyFloorsValuationModal
+        appDatabase.interfaceIndPropertyFloorsValuationQuery().deleteRow();
+        // Delete - ProximityModal
+        appDatabase.interfaceProximityQuery().deleteRow();
+        // Delete - GetPhotoModel
+        appDatabase.interfaceGetPhotoQuery().deleteRow();
+        // Delete - OflineCase
+        appDatabase.interfaceOfflineCaseQuery().deleteRow();
+        // Delete - Document_list
+        appDatabase.interfaceDocumentListQuery().deleteRow();
+        // Delete - LatLongDetails
+        appDatabase.interfaceLatLongQuery().deleteRow();
+        // Delete - typeofproperty
+        appDatabase.typeofPropertyQuery().deleteRow();
+        // Delete - casedetail
+        appDatabase.daoAccess().deleteRow();
+        // Delete - propertyupdateroomdb
+        appDatabase.propertyUpdateCategory().deleteRow();
+        // Delete - GetPhotoMeasurmentQuery
+        appDatabase.interfaceGetPhotoMeasurmentQuery().deleteRow();
+
+        activity.finishAffinity();
+
+        if (Build.VERSION.SDK_INT < 26) {
+            activity.stopService(new Intent(activity, GeoUpdate.class));
+        } else {
+            new OreoLocation(activity).stopOreoLocationUpdates();
+        }
+        new WorkerManager(activity).stopWorker();
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
     }
 
     private void parseOfflineCaseCountLimit(String response, int responseCode, boolean successful) {
@@ -303,10 +402,20 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                getLocationFetch();
+
             }
         }, 500);
 
+    }
+
+    private void getLocationFetch(){
+        if(SettingsUtils.Latitudes > 0.0){
+            startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+        }else{
+            getCurrentLocation(this);
+            startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+        }
     }
 
 
@@ -333,6 +442,41 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         } else {
             // A different, unknown type of error occurred.
             Log.d(TAG, "ERROR! " + e.getMessage());
+        }
+    }
+
+    private void navigateLoginScreen(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        SplashActivity.this.startActivity(intent);
+    }
+
+
+    private  void getCurrentLocation(Activity activity){
+
+        if (general.GPS_status()) {
+            try {
+                GPSService gpsService = new GPSService(activity);
+                gpsService.getLocation();
+                new Handler().postDelayed(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (general.getcurrent_latitude(activity) != 0) {
+                            /*Here store current location of user latLong*/
+                            SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
+                            SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+                        }
+                    }
+                }, 1500);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
         }
     }
 }
