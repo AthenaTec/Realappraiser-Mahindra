@@ -1929,7 +1929,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         else if (spBankName.getSelectedItemPosition() == 0)
             general.customToast("Choose bank!", HomeActivity.this);
         else if (etBankNo.getText().toString() == null || etBankNo.getText().toString().isEmpty() || etBankNo.getText().toString().length() < 1)
-            general.customToast("Enter Finnone ID!", HomeActivity.this);
+            general.customToast("Enter Bank Reference No!", HomeActivity.this);
         /*else if (spSubBranch.isEmpty())
             general.customToast("Choose the sub-branch!", HomeActivity.this);*/
         else if (spCaseAdmin.isEmpty())

@@ -172,6 +172,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         initValues();
 
+        SettingsUtils.getInstance().putValue(SettingsUtils.API_BASE_URL, "https://jbac.real-appraiser.com");
+
 
         passwordHide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -310,7 +312,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         String baseurl = general.ApiBaseUrl();
         if (baseurl.equalsIgnoreCase("")) {
-            Serverurldialog();
+           // Serverurldialog();
         }
 
         if (general.checkPermissions() && checkGps()) {
@@ -338,7 +340,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.seturl:
-                Serverurldialog();
+                //Serverurldialog();
                 break;
         }
     }
@@ -792,7 +794,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (result.equals("1")) {
                     // general.CustomToast(msg);
                     String API_BASE_URL = addkeys.getText().toString().trim();
-                    SettingsUtils.getInstance().putValue(SettingsUtils.API_BASE_URL, API_BASE_URL);
+                    //SettingsUtils.getInstance().putValue(SettingsUtils.API_BASE_URL, API_BASE_URL);
                    if(dialog!=null)
                     dialog.dismiss();
 

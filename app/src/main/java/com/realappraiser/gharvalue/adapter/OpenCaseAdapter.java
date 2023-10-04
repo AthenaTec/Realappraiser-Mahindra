@@ -217,7 +217,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             holder.case_id.setText(R.string.dot);
         }
 
-        String textUniqueId = dataModels.
+        /*String textUniqueId = dataModels.
                 get(position).getUniqueIdOfTheValuation();
 
         if(textUniqueId != null && !textUniqueId.isEmpty() && !textUniqueId.equalsIgnoreCase("null")){
@@ -225,8 +225,9 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             holder.ll_UniqueId.setVisibility(View.VISIBLE);
         }else{
             holder.ll_UniqueId.setVisibility(View.GONE);
-        }
+        }*/
 
+        holder.ll_UniqueId.setVisibility(View.GONE);
 
 
         if (dataModels.get(position).getBankReferenceNo() != null && !TextUtils.isEmpty(dataModels.get(position).getBankReferenceNo()) &&

@@ -79,7 +79,7 @@
                         android:id="@+id/fiin_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Fin Id : "
+                        android:text="Bank Reference No : "
                         android:textColor="@color/black"
                         android:textSize="13sp"
                         />

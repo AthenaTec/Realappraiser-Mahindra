@@ -485,7 +485,7 @@
     <string name="create_cases">Create Case</string>
     <string name="bank_name">Bank Name</string>
     <string name="sub_branch">Sub Branch</string>
-    <string name="bankNO">Finnone ID</string>
+    <string name="bankNO">Bank Reference No</string>
     <string name="case_admin">Case Admin</string>
     <string name="report_maker">Report Maker</string>
     <string name="case_transfer">Case Transfer</string>
