@@ -44,6 +44,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_MEDIA_IMAGES;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
@@ -182,16 +183,33 @@ public class MultiPhotoSelectActivity extends AppCompatActivity {
             return true;
         }
 
-        if (checkSelfPermission(READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            return true;
+        if(Build.VERSION.SDK_INT < 33){
+            if (checkSelfPermission(READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
+        }else{
+            if (checkSelfPermission(READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
         }
 
-        if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
-            //promptStoragePermission();
-            showPermissionRationaleSnackBar();
-        } else {
-            requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, REQUEST_FOR_STORAGE_PERMISSION);
+
+
+        if(Build.VERSION.SDK_INT < 33){
+            if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
+                //promptStoragePermission();
+                showPermissionRationaleSnackBar();
+            } else {
+                requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, REQUEST_FOR_STORAGE_PERMISSION);
+            }
+        }else{
+            if (shouldShowRequestPermissionRationale(READ_MEDIA_IMAGES)) {
+                showPermissionRationaleSnackBar();
+            } else {
+                requestPermissions(new String[]{READ_MEDIA_IMAGES}, REQUEST_FOR_STORAGE_PERMISSION);
+            }
         }
+
 
         return false;
     }
@@ -211,11 +229,21 @@ public class MultiPhotoSelectActivity extends AppCompatActivity {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         populateImagesFromGallery();
                     } else {
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
-                            showPermissionRationaleSnackBar();
-                        } else {
-                            Toast.makeText(this, "Go to settings and enable permission", Toast.LENGTH_LONG).show();
+
+                        if (Build.VERSION.SDK_INT < 33) {
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
+                                showPermissionRationaleSnackBar();
+                            } else {
+                                Toast.makeText(this, "Go to settings and enable permission", Toast.LENGTH_LONG).show();
+                            }
+                        }else{
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_MEDIA_IMAGES)) {
+                                showPermissionRationaleSnackBar();
+                            } else {
+                                Toast.makeText(this, "Go to settings and enable permission", Toast.LENGTH_LONG).show();
+                            }
                         }
+
                     }
                 }
 
@@ -367,9 +395,17 @@ public class MultiPhotoSelectActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Request the permission
-                ActivityCompat.requestPermissions(MultiPhotoSelectActivity.this,
-                        new String[]{READ_EXTERNAL_STORAGE},
-                        REQUEST_FOR_STORAGE_PERMISSION);
+                if(Build.VERSION.SDK_INT < 33){
+                    ActivityCompat.requestPermissions(MultiPhotoSelectActivity.this,
+                            new String[]{READ_EXTERNAL_STORAGE},
+                            REQUEST_FOR_STORAGE_PERMISSION);
+                }else{
+                    ActivityCompat.requestPermissions(MultiPhotoSelectActivity.this,
+                            new String[]{READ_MEDIA_IMAGES},
+                            REQUEST_FOR_STORAGE_PERMISSION);
+                }
+
+
             }
         }).show();
 

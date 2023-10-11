@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -85,6 +86,9 @@ public class PropertyDocumentsActivity extends AppCompatActivity implements View
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA,
     };
+    private String[] androidHigherVersionPermission = new String[]{
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.CAMERA };
 
     PropertyDocumentNewFileAdapter newFileAdapter;
 
@@ -474,12 +478,23 @@ public class PropertyDocumentsActivity extends AppCompatActivity implements View
     private boolean checkPermissions() {
         int result;
         List<String> listPermissionsNeeded = new ArrayList<>();
-        for (String p : permissions) {
-            result = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this, p);
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                listPermissionsNeeded.add(p);
+
+        if(Build.VERSION.SDK_INT < 33){
+            for (String p : permissions) {
+                result = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this, p);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(p);
+                }
+            }
+        }else{
+            for (String p : androidHigherVersionPermission) {
+                result = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this, p);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(p);
+                }
             }
         }
+
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(PropertyDocumentsActivity.this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
             return false;
@@ -489,22 +504,44 @@ public class PropertyDocumentsActivity extends AppCompatActivity implements View
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        int write = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int read = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-        int camera = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this,
-                Manifest.permission.CAMERA);
-        if (write == PackageManager.PERMISSION_GRANTED && read == PackageManager.PERMISSION_GRANTED && camera == PackageManager.PERMISSION_GRANTED) {
-            if (REQUEST == 1)
-                takeGalleryPicture();
-            else
-                takePicture();
-        } else {
-            Toast.makeText(PropertyDocumentsActivity.this, "Please allow the permissions requests", Toast.LENGTH_SHORT).show();
-            checkPermissions();
+
+        if(Build.VERSION.SDK_INT < 33){
+            int write = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
+            int camera = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this,
+                    Manifest.permission.CAMERA);
+            if (write == PackageManager.PERMISSION_GRANTED && read == PackageManager.PERMISSION_GRANTED && camera == PackageManager.PERMISSION_GRANTED) {
+                if (REQUEST == 1)
+                    takeGalleryPicture();
+                else
+                    takePicture();
+            } else {
+                Toast.makeText(PropertyDocumentsActivity.this, "Please allow the permissions requests", Toast.LENGTH_SHORT).show();
+                checkPermissions();
+            }
+
+        }else{
+
+            int media = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this,
+                    Manifest.permission.READ_MEDIA_IMAGES);
+            int camera = ContextCompat.checkSelfPermission(PropertyDocumentsActivity.this,
+                    Manifest.permission.CAMERA);
+            if (media == PackageManager.PERMISSION_GRANTED && camera == PackageManager.PERMISSION_GRANTED) {
+                if (REQUEST == 1)
+                    takeGalleryPicture();
+                else
+                    takePicture();
+            } else {
+                Toast.makeText(PropertyDocumentsActivity.this, "Please allow the permissions requests", Toast.LENGTH_SHORT).show();
+                checkPermissions();
+            }
+
         }
-    }
+
+
+      }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

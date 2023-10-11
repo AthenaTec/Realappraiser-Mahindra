@@ -121,6 +121,11 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION};
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 3;
+
+    private String[] androidHigherVersionPermission = new String[]{
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION };
     String uriSting;
 
     public General(Activity context) {
@@ -1182,10 +1187,20 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     public boolean checkPermissions() {
         int result;
         List<String> listPermissionsNeeded = new ArrayList<>();
-        for (String p : permissions) {
-            result = ContextCompat.checkSelfPermission(mContext, p);
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                listPermissionsNeeded.add(p);
+
+        if (Build.VERSION.SDK_INT < 33) {
+            for (String p : permissions) {
+                result = ContextCompat.checkSelfPermission(mContext, p);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(p);
+                }
+            }
+        }else {
+            for (String p : androidHigherVersionPermission) {
+                result = ContextCompat.checkSelfPermission(mContext, p);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(p);
+                }
             }
         }
         if (!listPermissionsNeeded.isEmpty()) {
