@@ -176,6 +176,11 @@ public class PhotoLatLong extends Fragment implements
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA,
     };
+    private String[] androidHigherVersionPermission = new String[]{
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.CAMERA };
+
+
     protected static final int REQUEST_CHECK_SETTINGS = 1000;
     private static final int CAMERA_REQUEST = 123;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 4;
@@ -1894,12 +1899,25 @@ public class PhotoLatLong extends Fragment implements
     private boolean checkPermissions() {
         int result;
         List<String> listPermissionsNeeded = new ArrayList<>();
-        for (String p : permissions) {
-            result = ContextCompat.checkSelfPermission(getActivity(), p);
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                listPermissionsNeeded.add(p);
+
+        if (Build.VERSION.SDK_INT < 33) {
+            for (String p : permissions) {
+                result = ContextCompat.checkSelfPermission(getActivity(), p);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(p);
+                }
+            }
+        }else{
+            for (String p : androidHigherVersionPermission) {
+                result = ContextCompat.checkSelfPermission(getActivity(), p);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(p);
+                }
             }
         }
+
+
+
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(getActivity(),
                     listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),

@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.realappraiser.gharvalue"
-        minSdkVersion 19
-        targetSdkVersion 32
-        versionCode 21
-        versionName "2.1.5"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 23
+        versionName "2.1.7"
         resConfigs "en"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -41,7 +41,7 @@ android {
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'DATE', '"16-Aug-2023"'
+            buildConfigField 'String', 'DATE', '"08-Oct-2023"'
             signingConfig signingConfigs.release
 
         }
@@ -51,7 +51,7 @@ android {
 //            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'DATE', '"16-Aug-2023"'
+            buildConfigField 'String', 'DATE', '"08-Oct-2023"'
         }
     }
     packagingOptions {
