@@ -790,7 +790,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-    public void LogoutDialog(Activity activity) {
+    public void LogoutDialog(Activity activity,double longitudes, double latitudes) {
 
         View view  = activity.getLayoutInflater().inflate(R.layout.save_pop_up,null);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity,R.style.CustomDialog);
@@ -879,7 +879,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
                 if (new LocationTrackerApi(activity).shareLocation("",
                         SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                        "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes)) {
+                        "Logout", latitudes, longitudes)) {
                     if (Build.VERSION.SDK_INT < 26) {
                         activity.stopService(new Intent(activity, GeoUpdate.class));
                     } else {

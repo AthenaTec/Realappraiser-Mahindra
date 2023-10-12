@@ -284,7 +284,7 @@ public class PhotoLatLngTab extends AppCompatActivity implements TabLayout.OnTab
                 savechangesDialog();
                 return true;
             case R.id.logout:
-                general.LogoutDialog(PhotoLatLngTab.this);
+                general.LogoutDialog(PhotoLatLngTab.this,SettingsUtils.Longitudes, SettingsUtils.Latitudes);
                 return true;
 
             case R.id.versionname:

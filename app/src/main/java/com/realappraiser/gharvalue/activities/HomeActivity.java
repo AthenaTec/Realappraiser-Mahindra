@@ -87,6 +87,7 @@ import com.realappraiser.gharvalue.model.TypeOfMortar;
 import com.realappraiser.gharvalue.model.TypeOfSteel;
 import com.realappraiser.gharvalue.model.UrlModel;
 import com.realappraiser.gharvalue.utils.Connectivity;
+import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.GpsUtils;
 import com.realappraiser.gharvalue.utils.OfflineLocationInterface;
@@ -180,6 +181,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private int reportMakerAgentId = -1;
 
     private int caseAdminAgentId = -1;
+
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
     ArrayList<DataModel> dataModels = new ArrayList<>();
     ArrayList<DataModel> openCaseDataModels = new ArrayList<>();
@@ -1596,7 +1600,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case R.id.logout:
                 if (Connectivity.isConnected(this)) {
-                    general.LogoutDialog(HomeActivity.this);
+                    if (general.checkPermissions()){
+                        getCurrentLocation(this);
+                    }
                 } else {
                     Connectivity.showNoConnectionDialog(this);
                 }
@@ -3145,5 +3151,33 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         general.isShowDialog();
         super.onDestroy();
+    }
+
+
+    private  void getCurrentLocation(Activity activity){
+
+        if (general.GPS_status()) {
+            try {
+                GPSService gpsService = new GPSService(activity);
+                gpsService.getLocation();
+                new Handler().postDelayed(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (general.getcurrent_latitude(activity) != 0) {
+                            /*Here store current location of user latLong*/
+                            SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
+                            SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+                            general.LogoutDialog(HomeActivity.this,SettingsUtils.Longitudes,SettingsUtils.Latitudes);
+                        }
+                    }
+                }, 1500);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
+        }
     }
 }
