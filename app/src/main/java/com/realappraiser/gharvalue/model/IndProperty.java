@@ -75,6 +75,11 @@ public class IndProperty {
     @Expose
     @ColumnInfo(name = "documentFloorAreaTotal")
     private String documentFloorAreaTotal;
+
+    @SerializedName("SanctionedFloorAreaTotal")
+    @Expose
+    @ColumnInfo(name = "sanctionedFloorAreaTotal")
+    private String sanctionedFloorAreaTotal;
     @SerializedName("MeasuredFloorAreaTotal")
     @Expose
     @ColumnInfo(name = "measuredFloorAreaTotal")
@@ -1170,5 +1175,13 @@ public class IndProperty {
 
     public void setGroundSlopeData(Boolean groundSlopeData) {
         isGroundSlopeData = groundSlopeData;
+    }
+
+    public String getSanctionedFloorAreaTotal() {
+        return sanctionedFloorAreaTotal;
+    }
+
+    public void setSanctionedFloorAreaTotal(String sanctionedFloorAreaTotal) {
+        this.sanctionedFloorAreaTotal = sanctionedFloorAreaTotal;
     }
 }

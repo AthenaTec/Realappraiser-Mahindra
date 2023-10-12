@@ -68,6 +68,7 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
     public static EditText edittext_general_life;
 
     public static EditText edittext_general_saleablearea;
+    public static EditText et_permssible_area;
     public static EditText edittext_general_builduparea;
     public static EditText edittext_general_carpetarea;
     public static TextView textview_comp_total;
@@ -190,6 +191,9 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
     @BindView(R.id.open_calc_carpetarea)
     ImageView open_calc_carpetarea;
 
+    @BindView(R.id.img_permssible_area)
+    ImageView img_permssible_area;
+
 
     // calc
     Button button0, button1, button2, button3, button4, button5, button6,
@@ -242,6 +246,13 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
             @Override
             public void onClick(View v) {
                 Calculation_Popup_New(2);
+            }
+        });
+
+        img_permssible_area.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calculation_Popup_New(4);
             }
         });
 
@@ -298,6 +309,7 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
         edittext_general_age = (EditText) view.findViewById(R.id.edittext_general_age);
         edittext_general_life = (EditText) view.findViewById(R.id.edittext_general_life);
         edittext_general_saleablearea = (EditText) view.findViewById(R.id.edittext_general_saleablearea);
+        et_permssible_area = (EditText) view.findViewById(R.id.et_permssible_area);
         edittext_general_builduparea = (EditText) view.findViewById(R.id.edittext_general_builduparea);
         edittext_general_carpetarea = (EditText) view.findViewById(R.id.edittext_general_carpetarea);
         textview_comp_total = (TextView) view.findViewById(R.id.textview_comp_total);
@@ -313,6 +325,7 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
         editText_as_per_docs.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(10, 2)});
         edittext_general_builduparea.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         edittext_general_saleablearea.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
+        et_permssible_area.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         edittext_general_carpetarea.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
 
 
@@ -363,6 +376,7 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
         textview_shop_office.setTypeface(general.regulartypeface());
         textview_internal_floor_name_composition.setTypeface(general.regulartypeface());
         edittext_general_saleablearea.setTypeface(general.regulartypeface());
+        et_permssible_area.setTypeface(general.regulartypeface());
         edittext_general_builduparea.setTypeface(general.regulartypeface());
         edittext_general_carpetarea.setTypeface(general.regulartypeface());
         textview_carpetloading_per.setTypeface(general.regulartypeface());
@@ -540,6 +554,17 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
                 }
             }
         });
+
+        et_permssible_area.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    fun_carpet_value();
+                }
+            }
+        });
+
+
     }
 
     private void checkSpinnerAreaType(String editable, String area) {
@@ -1137,6 +1162,12 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
             if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetArea())) {
                 edittext_general_carpetarea.setText(Singleton.getInstance().indPropertyValuation.getCarpetArea());
             }
+
+            if (Singleton.getInstance().indPropertyFloors !=null && Singleton.getInstance().indPropertyFloors.size()>0 && Singleton.getInstance().indPropertyFloors.get(0) != null) {
+                et_permssible_area.setText(Singleton.getInstance().indPropertyFloors.get(0).getSanctionedFloorArea());
+            }
+
+
         }
     }
 
@@ -1269,6 +1300,13 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
                 if (!general.isEmpty(caseid))
                     indPropertyFloor.setCaseId(Integer.valueOf(caseid));
                 indPropertyFloor.setFloorName(generalfloorname);
+
+                if(!general.isEmpty(et_permssible_area.getText().toString())){
+                    indPropertyFloor.setSanctionedFloorArea(""+ et_permssible_area.getText().toString());
+                }else{
+                    indPropertyFloor.setSanctionedFloorArea("");
+                }
+
                 if (!general.isEmpty(flatcomp)) {
                     indPropertyFloor.setPercentageCompletion(Integer.valueOf(flatcomp));
                 } else {
@@ -1402,6 +1440,12 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
                     indPropertyFloor.setFlatPoojaNo(Integer.valueOf(internal_pooja_room.getText().toString()));
                 } else {
                     indPropertyFloor.setFlatPoojaNo(0);
+                }
+
+                if(!general.isEmpty(et_permssible_area.getText().toString())){
+                    indPropertyFloor.setSanctionedFloorArea(""+ et_permssible_area.getText().toString());
+                }else{
+                    indPropertyFloor.setSanctionedFloorArea("");
                 }
 
 
@@ -1632,41 +1676,7 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
     }
 
     private void fun_carpet_value() {
-        String val_buildup = edittext_general_builduparea.getText().toString();
-        String val_saleable = edittext_general_saleablearea.getText().toString();
-        if ((!general.isEmpty(val_carpetloading_per)) && (!general.isEmpty(val_carpetloading_type))) {
-            if (val_carpetloading_type.equalsIgnoreCase("1")) {
-                // buildup
-                float sumtotal = 0;
-                sumtotal = (general.convertTofloat(val_carpetloading_per) / 100) * (general.convertTofloat(val_buildup));
-                /*int sum_total = 0;
-                sum_total = general.convertToRoundoff(sumtotal);*/
 
-                // split the decimal point after dot 2 number
-                String decimalFormat = new DecimalFormat("##.##").format(sumtotal);
-
-                edittext_general_carpetarea.setText("" + decimalFormat);
-                // send the value
-                FragmentValuationPenthouse fragmentValuationPenthouse = new FragmentValuationPenthouse();
-                fragmentValuationPenthouse.setEdittextCarpetArea("" + decimalFormat);
-                checkSpinnerAreaType(edittext_general_carpetarea.getText().toString(), getResources().getString(R.string.carpet));
-            } else if (val_carpetloading_type.equalsIgnoreCase("2")) {
-                // saleable
-                float sumtotal = 0;
-                sumtotal = (general.convertTofloat(val_carpetloading_per) / 100) * (general.convertTofloat(val_saleable));
-                /*int sum_total = 0;
-                sum_total = general.convertToRoundoff(sumtotal);*/
-
-                // split the decimal point after dot 2 number
-                String decimalFormat = new DecimalFormat("##.##").format(sumtotal);
-
-                edittext_general_carpetarea.setText("" + decimalFormat);
-                // send the value
-                FragmentValuationPenthouse fragmentValuationPenthouse = new FragmentValuationPenthouse();
-                fragmentValuationPenthouse.setEdittextCarpetArea("" + decimalFormat);
-                checkSpinnerAreaType(edittext_general_carpetarea.getText().toString(), getResources().getString(R.string.carpet));
-            }
-        }
     }
 
 
@@ -2004,6 +2014,8 @@ public class FragmentFlat extends Fragment implements View.OnTouchListener {
                             FragmentValuationPenthouse fragmentValuationPenthouse = new FragmentValuationPenthouse();
                             fragmentValuationPenthouse.setEdittextCarpetArea(my_val_str);
                             checkSpinnerAreaType(my_val_str, getResources().getString(R.string.carpet));
+                        }else if(type_is == 4){
+                            et_permssible_area.setText(my_val_str);
                         }
                     }
                     dialog.dismiss();

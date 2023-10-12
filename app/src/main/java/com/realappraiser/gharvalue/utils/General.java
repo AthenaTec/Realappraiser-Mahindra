@@ -444,6 +444,26 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         return sumtotal;
     }
 
+
+    public float getPermissibleAreaSumValue_float(ArrayList<IndPropertyFloor> floor_list) {
+        float sumtotal = 0;
+        //int sum_total = 0;
+
+        for (int i = 0; i < floor_list.size(); i++) {
+            if (!isEmpty(floor_list.get(i).getSanctionedFloorArea())) {
+                String numOnly = NumOnly(floor_list.get(i).getSanctionedFloorArea());
+                if (!numOnly.equalsIgnoreCase("")) {
+                    float areaf = Float.valueOf(numOnly);
+                    /*int area = Integer.valueOf(numOnly);*/
+                    sumtotal = sumtotal + areaf;
+                    //sum_total = (int) sumtotal;
+                }
+            }
+        }
+        //return sum_total;
+        return sumtotal;
+    }
+
     public int getCompletedSumValue(ArrayList<IndPropertyFloor> floor_list) {
         int sumtotal = 0;
         if (floor_list.size() > 0) {

@@ -71,6 +71,11 @@ public class IndPropertyFloor {
     @Expose
     @ColumnInfo(name = "measuredFloorAreaUnit")
     private String measuredFloorAreaUnit;
+
+    @SerializedName("SanctionedFloorArea")
+    @Expose
+    @ColumnInfo(name = "sanctionedFloorArea")
+    private String sanctionedFloorArea;
     @SerializedName("FlatHallNo")
     @Expose
     @ColumnInfo(name = "flatHallNo")
@@ -639,4 +644,11 @@ public class IndPropertyFloor {
         this.presentCondition = presentCondition;
     }
 
+    public String getSanctionedFloorArea() {
+        return sanctionedFloorArea;
+    }
+
+    public void setSanctionedFloorArea(String sanctionedFloorArea) {
+        this.sanctionedFloorArea = sanctionedFloorArea;
+    }
 }

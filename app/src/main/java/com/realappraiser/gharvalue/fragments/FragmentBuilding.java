@@ -160,6 +160,8 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
     @SuppressLint("StaticFieldLeak")
     public static TextView txt_total_actual_area;
     @SuppressLint("StaticFieldLeak")
+    public static TextView txt_permissiable_area_value;
+    @SuppressLint("StaticFieldLeak")
     public static TextView textview_comp_total;
 
 
@@ -318,6 +320,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
 
         txt_total_sanctioned_area = (TextView)view.findViewById(R.id.txt_total_sanctioned_area_value);
         txt_total_actual_area = (TextView) view.findViewById(R.id.txt_total_actual_area_value);
+        txt_permissiable_area_value = (TextView) view.findViewById(R.id.txt_permissiable_area_value);
 
         textview_comp_total = (TextView) view.findViewById(R.id.textview_comp_total);
         editText_compound_permissiblearea = (EditText) view.findViewById(R.id.editText_compound_permissiblearea);
@@ -440,6 +443,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
         textview_doc_total.setTypeface(general.regulartypeface());
         txt_total_sanctioned_area.setTypeface(general.regulartypeface());
         txt_total_actual_area.setTypeface(general.regulartypeface());
+        txt_permissiable_area_value.setTypeface(general.regulartypeface());
         textview_actual_total.setTypeface(general.regulartypeface());
         textview_floor_name_composition.setTypeface(general.regulartypeface());
         textview_hall_dinning.setTypeface(general.regulartypeface());
@@ -539,6 +543,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                         stepsModel.setConstructionStageId(Singleton.getInstance().indPropertyFloors.get(i).getConstructionStageId());
                         stepsModel.setFloorName(Singleton.getInstance().indPropertyFloors.get(i).getFloorName());
                         stepsModel.setPercentageCompletion(Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion());
+                        stepsModel.setSanctionedFloorArea(Singleton.getInstance().indPropertyFloors.get(i).getSanctionedFloorArea());
                         stepsModel.setDocumentFloorArea(Singleton.getInstance().indPropertyFloors.get(i).getDocumentFloorArea());
                         stepsModel.setMeasuredFloorArea(Singleton.getInstance().indPropertyFloors.get(i).getMeasuredFloorArea());
                         stepsModel.setPropertyAge(Singleton.getInstance().indPropertyFloors.get(i).getPropertyAge());
@@ -995,6 +1000,13 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                 } else {
                     FragmentValuationBuilding.constrction_actual("");
                 }
+
+
+                float total_permissiable_area_value = general.getPermissibleAreaSumValue_float(Singleton.getInstance().indPropertyFloors);
+                if(FragmentBuilding.txt_permissiable_area_value != null){
+                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiable_area_value);
+                }
+
             }
         }
     }
@@ -1498,6 +1510,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                 }
                 Singleton.getInstance().indProperty.setAvgPercentageCompletion(textview_comp_total.getText().toString());
                 Singleton.getInstance().indProperty.setDocumentFloorAreaTotal(textview_doc_total.getText().toString());
+                Singleton.getInstance().indProperty.setSanctionedFloorAreaTotal(txt_permissiable_area_value.getText().toString());
                 Singleton.getInstance().indProperty.setMeasuredFloorAreaTotal(textview_actual_total.getText().toString());
 
                 /*  *************

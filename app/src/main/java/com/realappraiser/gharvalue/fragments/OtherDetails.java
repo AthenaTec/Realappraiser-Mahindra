@@ -4747,6 +4747,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
 //        final int measureSumValue = general.getMeasureSumValue(Singleton.getInstance().indPropertyFloors);
         final float docSumValue_float = general.getDocSumValue_float(Singleton.getInstance().indPropertyFloors);
         final float measureSumValue_float = general.getMeasureSumValue_float(Singleton.getInstance().indPropertyFloors);
+        final float permissibleSumValue_float = general.getPermissibleAreaSumValue_float(Singleton.getInstance().indPropertyFloors);
 
         long DELAY_TIME = 3000; //3 seconds
         Handler mHandler;
@@ -4761,6 +4762,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                     TextView sanctionedArea = (TextView)view.findViewById(R.id.txt_total_sanctioned_area_value);
                     TextView actionArea = (TextView)view.findViewById(R.id.txt_total_actual_area_value);
                     TextView measuretext = (TextView) view.findViewById(R.id.textview_actual_total);
+                    TextView permissibleText = (TextView) view.findViewById(R.id.txt_permissiable_area_value);
                     Spinner spinner = (Spinner) view.findViewById(R.id.spinner_measurement1);
                     if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null) {
                         if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAreaUnit() != null)
@@ -4773,6 +4775,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                     sanctionedArea.setText(""+docSumValue_float);
                     measuretext.setText("" + measureSumValue_float);
                     actionArea.setText("" + measureSumValue_float);
+                    permissibleText.setText(""+permissibleSumValue_float);
                 }
             }
         };

@@ -91,7 +91,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        EditText edittext_general_doc_area, edittext_general_actual_area;
+        EditText edittext_general_doc_area, edittext_general_actual_area,et_permissiblearea;
         EditText edittext_general_floor_name, edittext_general_comp, edittext_general_progress, edittext_general_age, edittext_general_life;
         TextView spinner_general_floor_usage;
         //Spinner spinner_stage;
@@ -101,7 +101,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
         FrameLayout frameUsagelay;
         final IndPropertyFloor stepsModel = new IndPropertyFloor();
-        ImageView open_calc_doc_area, open_calc_actual_area;
+        ImageView open_calc_doc_area, open_calc_actual_area,img_permissible_calc;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -111,6 +111,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             edittext_general_progress = (EditText) itemView.findViewById(R.id.edittext_general_progress);
             edittext_general_doc_area = (EditText) itemView.findViewById(R.id.edittext_general_doc_area);
             edittext_general_actual_area = (EditText) itemView.findViewById(R.id.edittext_general_actual_area);
+            et_permissiblearea = (EditText) itemView.findViewById(R.id.et_permissiblearea);
             edittext_general_age = (EditText) itemView.findViewById(R.id.edittext_general_age);
             edittext_general_life = (EditText) itemView.findViewById(R.id.edittext_general_life);
             //spinner_stage = (Spinner) itemView.findViewById(R.id.spinner_stage);
@@ -120,18 +121,21 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             frameUsagelay = (FrameLayout) itemView.findViewById(R.id.frameUsagelay);
             open_calc_doc_area = (ImageView) itemView.findViewById(R.id.open_calc_doc_area);
             open_calc_actual_area = (ImageView) itemView.findViewById(R.id.open_calc_actual_area);
+            img_permissible_calc = (ImageView) itemView.findViewById(R.id.img_permissible_calc);
 
             edittext_general_floor_name.setTypeface(General.regularTypeface());
             edittext_general_comp.setTypeface(General.regularTypeface());
             edittext_general_progress.setTypeface(General.regularTypeface());
             edittext_general_doc_area.setTypeface(General.regularTypeface());
             edittext_general_actual_area.setTypeface(General.regularTypeface());
+            et_permissiblearea.setTypeface(General.regularTypeface());
             edittext_general_age.setTypeface(General.regularTypeface());
             edittext_general_life.setTypeface(General.regularTypeface());
 
             //  limit the 2 char after the decimal point
             edittext_general_doc_area.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
             edittext_general_actual_area.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
+            et_permissiblearea.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
 
 
             edittext_general_floor_name.addTextChangedListener(new TextWatcher() {
@@ -252,6 +256,28 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             }
                             steps.set(getAdapterPosition(), stepsModel);
                             Singleton.getInstance().indPropertyFloors.set(getAdapterPosition(), stepsModel);
+                        }
+                    }
+                }
+            });
+
+
+            et_permissiblearea.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        if (getAdapterPosition() != -1) {
+                            String toString = et_permissiblearea.getText().toString();
+                            IndPropertyFloor stepsModel = steps.get(getAdapterPosition());
+                            if (!general.isEmpty(toString)) {
+                                stepsModel.setSanctionedFloorArea(toString);
+                            } else {
+                                stepsModel.setSanctionedFloorArea("");
+                            }
+                            steps.set(getAdapterPosition(), stepsModel);
+                            Singleton.getInstance().indPropertyFloors.set(getAdapterPosition(), stepsModel);
+                            permissible_area_module(toString,getAdapterPosition());
+
                         }
                     }
                 }
@@ -528,14 +554,21 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             open_calc_doc_area.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calculation_Popup_New(1, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area);
+                    Calculation_Popup_New(1, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area,et_permissiblearea);
                 }
             });
 
             open_calc_actual_area.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calculation_Popup_New(2, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area);
+                    Calculation_Popup_New(2, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area,et_permissiblearea);
+                }
+            });
+
+            img_permissible_calc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Calculation_Popup_New(3,getAdapterPosition(),edittext_general_doc_area,edittext_general_actual_area,et_permissiblearea);
                 }
             });
 
@@ -810,6 +843,13 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             holder.edittext_general_doc_area.setText("");
         }
 
+        String permissibleArea  = steps.get(position).getSanctionedFloorArea();
+        if(!general.isEmptyString(permissibleArea)){
+            holder.et_permissiblearea.setText(""+permissibleArea);
+        }else{
+            holder.et_permissiblearea.setText("");
+        }
+
         String measuredFloorArea = steps.get(position).getMeasuredFloorArea();
 
         if (!general.isEmpty(measuredFloorArea)) {
@@ -833,16 +873,21 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
         }
 
         if (Singleton.getInstance().enable_validation_error){
-            if (general.isEmpty(steps.get(position).getDocumentFloorArea())){
-                holder.edittext_general_doc_area.setError("Sanction area required!");
-                holder.edittext_general_doc_area.requestFocus();
-            }
 
             if (steps.get(position).getConstructionStageId()==0){
                 holder.edittext_general_doc_area.setError("Stage required!");
                 holder.edittext_general_doc_area.requestFocus();
             }
 
+            if(general.isEmpty(steps.get(position).getSanctionedFloorArea())){
+                holder.et_permissiblearea.setError("Permissible are required!");
+                holder.et_permissiblearea.requestFocus();
+            }
+
+            if (general.isEmpty(steps.get(position).getDocumentFloorArea())){
+                holder.edittext_general_doc_area.setError("Sanction area required!");
+                holder.edittext_general_doc_area.requestFocus();
+            }
             if (general.isEmpty(steps.get(position).getMeasuredFloorArea())){
                 holder.edittext_general_actual_area.setError("Actual area required!");
                 holder.edittext_general_actual_area.requestFocus();
@@ -1056,6 +1101,15 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 } else {
                     FragmentValuationBuilding.constrction_actual("");
                 }
+
+                float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
+                if(FragmentBuilding.txt_permissiable_area_value!=null){
+                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                }else{
+                    FragmentBuilding.txt_permissiable_area_value.setText("");
+                }
+
+
                 // ValuationPermissibleAreaAdapter
                 if (FragmentValuationBuilding.listAdapter != null) {
                     FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
@@ -1085,6 +1139,75 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 } else {
                     FragmentValuationBuilding.constrction_actual("");
                 }
+
+
+                float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
+                if(FragmentBuilding.txt_permissiable_area_value!=null){
+                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                }else{
+                    FragmentBuilding.txt_permissiable_area_value.setText("");
+                }
+
+
+                // ValuationPermissibleAreaAdapter
+                if (FragmentValuationBuilding.listAdapter != null) {
+                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
+                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                }
+                // ValuationActualAreaAdapter
+                if (FragmentValuationBuilding.listActualAdapter != null) {
+                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
+                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                }
+            }
+        }
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    public void permissible_area_module(String toString, int adapterposition) {
+        if (adapterposition != -1) {
+            IndPropertyFloor stepsModel = steps.get(adapterposition);
+            if (!general.isEmpty(toString.toString())) {
+                //  Save Doc Area to modal
+                stepsModel.setSanctionedFloorArea(toString.toString());
+                steps.set(adapterposition, stepsModel);
+                Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
+                float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
+                if(FragmentBuilding.txt_permissiable_area_value!=null){
+                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                }else{
+                    FragmentBuilding.txt_permissiable_area_value.setText("");
+                }
+
+
+                // ValuationPermissibleAreaAdapter
+                if (FragmentValuationBuilding.listAdapter != null) {
+                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
+                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                }
+                // ValuationActualAreaAdapter
+                if (FragmentValuationBuilding.listActualAdapter != null) {
+                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
+                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                }
+            } else {
+                //  Save Doc Area to modal
+                String docinit = null;
+                stepsModel.setSanctionedFloorArea(docinit);
+                steps.set(adapterposition, stepsModel);
+                Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
+
+
+
+                float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
+                if(FragmentBuilding.txt_permissiable_area_value!=null){
+                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                }else{
+                    FragmentBuilding.txt_permissiable_area_value.setText("");
+                }
+
+
                 // ValuationPermissibleAreaAdapter
                 if (FragmentValuationBuilding.listAdapter != null) {
                     FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
@@ -1616,7 +1739,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 //     Calculation_Popup_New(1,getAdapterPosition(),edittext_general_doc_area,edittext_general_actual_area);
 
     // TODO - calc function
-    public void Calculation_Popup_New(final int type_is, final int position_is, final EditText edittext_general_doc_area, final EditText edittext_general_actual_area) {
+    public void Calculation_Popup_New(final int type_is, final int position_is, final EditText edittext_general_doc_area, final EditText edittext_general_actual_area, EditText et_permissiblearea) {
 
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1992,6 +2115,18 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             String toString = my_val_str;
                             edittext_general_actual_area.setText(toString);
                             Actual_area_module(toString, position_is);
+                        }else if(type_is == 3){
+                            String toString = my_val_str;
+                            et_permissiblearea.setText(toString);
+                            IndPropertyFloor stepsModel = steps.get(position_is);
+                            if (!general.isEmpty(toString)) {
+                                stepsModel.setSanctionedFloorArea(toString);
+                            } else {
+                                stepsModel.setSanctionedFloorArea("");
+                            }
+                            steps.set(position_is, stepsModel);
+                            Singleton.getInstance().indPropertyFloors.set(position_is, stepsModel);
+                            permissible_area_module(toString,position_is);
                         }
                     }
                     dialog.dismiss();
