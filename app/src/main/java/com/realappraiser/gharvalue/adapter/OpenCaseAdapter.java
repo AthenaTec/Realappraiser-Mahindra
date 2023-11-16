@@ -974,7 +974,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
                 if (SettingsUtils.Latitudes > 0.0) {
                     boolean shareLocation = locationTrackerApi.shareLocation(case_id,
                             SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                            "Field Inspection Finish", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                            "Field Inspection Finish", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
 
                 } else {
                     getCurrentLocation(mContext,"Field Inspection Finish");
@@ -2076,7 +2076,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
                     if (SettingsUtils.Latitudes > 0.0) {
                         boolean shareLocation = locationTrackerApi.shareLocation(case_id,
                                 SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                                "Field Inspection Start", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                                "Field Inspection Start", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
 
                     } else {
                         getCurrentLocation(mContext, "Field Inspection Start");
@@ -3152,7 +3152,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
 
                             new LocationTrackerApi(activity).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
-                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), field_inspection_status, SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), field_inspection_status, SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
 
                         }
                     }

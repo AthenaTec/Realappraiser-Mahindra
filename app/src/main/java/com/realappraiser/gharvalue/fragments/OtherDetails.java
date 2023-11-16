@@ -7236,7 +7236,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
             getCurrentLocation(getActivity());
         }else{
             new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
-                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
 
         }
     }
@@ -7257,7 +7257,7 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
 
                             new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
-                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
 
                         }
                     }

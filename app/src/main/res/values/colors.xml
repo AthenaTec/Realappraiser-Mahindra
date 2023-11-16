@@ -17,6 +17,8 @@
     <color name="slightgrey2">#F5F5F5</color>
     <color name="blue_link">#3F51B5</color>
 
+    <color name="selected_case">#1A808080</color>
+
     <color name="orange" tools:ignore="UnusedResources">#fcef6144</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

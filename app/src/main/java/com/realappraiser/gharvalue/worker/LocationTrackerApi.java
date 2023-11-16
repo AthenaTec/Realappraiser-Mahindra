@@ -32,7 +32,8 @@ public class LocationTrackerApi {
     }
 
 
-    public boolean shareLocation(String caseId, String fieldStaffId, String interval, double latitudes, double longitudes) {
+    public boolean shareLocation(String caseId, String fieldStaffId, String interval, double latitudes, double longitudes
+    ,String comments,Integer ActivityType) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -71,6 +72,9 @@ public class LocationTrackerApi {
             requestData.setLatitude(String.valueOf(latitudes));
             requestData.setLongitude(String.valueOf(longitudes));
             requestData.setTrackerTime(time);
+            requestData.setActivityType(String.valueOf(ActivityType));
+            requestData.setComments(comments);
+            requestData.setAgencyBId(SettingsUtils.getInstance().getValue(SettingsUtils.BranchId, ""));
             Log.e("convertLatLngToAddrJson", address);
 
             if (!address.isEmpty()) {
@@ -84,6 +88,9 @@ public class LocationTrackerApi {
             requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
 //            requestData.setAuthToken("Bearer FFcxMfxHjm79qtRcMFNbp4Ydf7l_3jGiLSeSuY2tC3QJmiurkOSfEQGtbN-M6S3kF13VMSM5CALbIJNnT37zMi81gCRCz6YWZD7Usqs9i73kIgJGoHdDsPJdHkWyzD52JuORASt5p-jEB5jN2abX2HXdcIDrZD_YxVHWlFVn4uITc1SA8nk5OPCy5-xmpSq4VrHoUPsRrRMPx411C8gfcJvdaOCTodGRKFVwzVffHRC2cTRi-");
             requestData.setRequestBody(RequestParam.LocationTracker(requestData));
+
+            Log.e("Location Params", new Gson().toJson(requestData));
+
             WebserviceCommunicator webserviceTask = new WebserviceCommunicator(context,
                     requestData, SettingsUtils.POST_TOKEN);
             webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {

@@ -53,6 +53,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -232,6 +233,12 @@ public class PhotoLatLong extends Fragment implements
     @BindView(R.id.textview_error_photo)
     TextView textview_error_photo;
 
+    @BindView(R.id.parentLayout)
+    LinearLayout parentLayout;
+
+    @BindView(R.id.shimmer_photolatlng_view)
+    ShimmerFrameLayout shimmerPhotolatlngView;
+
     private OfflineLocationReceiver offlineLocationReceiver;
 
     private int updatelatLng = 0;
@@ -298,7 +305,10 @@ public class PhotoLatLong extends Fragment implements
             } else {
                 Connectivity.showNoConnectionDialog(getActivity());
                 Log.e(TAG, "Hide 293");
-                general.hideloading();
+               // general.hideloading();
+                shimmerPhotolatlngView.stopShimmer();
+                shimmerPhotolatlngView.setVisibility(View.GONE);
+                parentLayout.setVisibility(View.VISIBLE);
             }
         } else {
             // Room - offline
@@ -338,7 +348,10 @@ public class PhotoLatLong extends Fragment implements
                                 @Override
                                 public void run() {
                                     Log.e(TAG, "Hide 334");
-                                    general.hideloading();
+                                    //general.hideloading();
+                                    shimmerPhotolatlngView.stopShimmer();
+                                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                                    parentLayout.setVisibility(View.VISIBLE);
                                 }
                             }, 500);
                         } else {
@@ -346,7 +359,10 @@ public class PhotoLatLong extends Fragment implements
                                 @Override
                                 public void run() {
                                     Log.e(TAG, "Hide 342");
-                                    general.hideloading();
+                                  //  general.hideloading();
+                                    shimmerPhotolatlngView.stopShimmer();
+                                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                                    parentLayout.setVisibility(View.VISIBLE);
                                 }
                             }, 500);
                         }
@@ -625,7 +641,12 @@ public class PhotoLatLong extends Fragment implements
 
     private void GetImageAPI() {
         Log.e(TAG, "show: 597" );
-        general.showloading(getActivity());
+        //general.showloading(getActivity());
+
+        shimmerPhotolatlngView.startShimmer();
+        shimmerPhotolatlngView.setVisibility(View.VISIBLE);
+        parentLayout.setVisibility(View.GONE);
+
         Singleton.getInstance().base64image.clear();
         JsonRequestData data = new JsonRequestData();
         String PropertyId = SettingsUtils.getInstance().getValue(SettingsUtils.PropertyId, "");
@@ -643,7 +664,10 @@ public class PhotoLatLong extends Fragment implements
 
                 if (requestData.isSuccessful()) {
                     parseViewimageResponse(requestData.getResponse());
-                    general.hideloading();
+                   // general.hideloading();
+                    shimmerPhotolatlngView.stopShimmer();
+                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.VISIBLE);
                 } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
                     Log.e(TAG, "Hide 611");
                     General.sessionDialog(getActivity());
@@ -652,7 +676,10 @@ public class PhotoLatLong extends Fragment implements
                     General.customToast(getActivity().getString(R.string.something_wrong),
                             getActivity());
                 }
-                general.hideloading();
+                //general.hideloading();
+                shimmerPhotolatlngView.stopShimmer();
+                shimmerPhotolatlngView.setVisibility(View.GONE);
+                parentLayout.setVisibility(View.VISIBLE);
             }
         });
         webserviceTask.execute();
@@ -753,7 +780,10 @@ public class PhotoLatLong extends Fragment implements
 
                 Log.e("ImageAPI :", "Ok");
                 Log.e(TAG, "Hide 699");
-                general.hideloading();
+                //general.hideloading();
+                shimmerPhotolatlngView.stopShimmer();
+                shimmerPhotolatlngView.setVisibility(View.GONE);
+                parentLayout.setVisibility(View.VISIBLE);
 //                general.hideloading();
             }
         }, 1000);
@@ -839,10 +869,16 @@ public class PhotoLatLong extends Fragment implements
         if (GetPhoto_list_response.size() <= 2) {
             textview_error_photo.setVisibility(View.VISIBLE);
             Singleton.getInstance().photo_valid = true;
-            general.hideloading();
+            //general.hideloading();
+            shimmerPhotolatlngView.stopShimmer();
+            shimmerPhotolatlngView.setVisibility(View.GONE);
+            parentLayout.setVisibility(View.VISIBLE);
         } else {
             Singleton.getInstance().photo_valid = false;
-            general.hideloading();
+            //general.hideloading();
+            shimmerPhotolatlngView.stopShimmer();
+            shimmerPhotolatlngView.setVisibility(View.GONE);
+            parentLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -882,7 +918,10 @@ public class PhotoLatLong extends Fragment implements
                             if (Connectivity.isConnected(getActivity())) {
                                 textview_next.setVisibility(View.GONE);
                                 Log.e(TAG, "show 814");
-                                general.showloading(getActivity());
+                              //  general.showloading(getActivity());
+                                shimmerPhotolatlngView.startShimmer();
+                                shimmerPhotolatlngView.setVisibility(View.VISIBLE);
+                                parentLayout.setVisibility(View.GONE);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -912,13 +951,19 @@ public class PhotoLatLong extends Fragment implements
                                         } else {
                                             textview_next.setVisibility(View.VISIBLE);
                                             Log.e(TAG, "Hide 843");
-                                            general.hideloading();
+                                           // general.hideloading();
+                                            shimmerPhotolatlngView.stopShimmer();
+                                            shimmerPhotolatlngView.setVisibility(View.GONE);
+                                            parentLayout.setVisibility(View.VISIBLE);
                                         }
                                         textview_next.setVisibility(View.VISIBLE);
                                     }
                                 }, 500);
                             } else {
-                                general.hideloading();
+                               // general.hideloading();
+                                shimmerPhotolatlngView.stopShimmer();
+                                shimmerPhotolatlngView.setVisibility(View.GONE);
+                                parentLayout.setVisibility(View.VISIBLE);
                                 String curent_statusID = Singleton.getInstance().curent_statusID;
                                 Log.e("curent_statusID", "curent_statusID: " + curent_statusID);
                                 if (!general.isEmpty(curent_statusID)) {
@@ -947,7 +992,11 @@ public class PhotoLatLong extends Fragment implements
                             // Photo delete and add
                             textview_next.setVisibility(View.GONE);
                             Log.e(TAG, "show 879");
-                            general.showloading(getActivity());
+                            //general.showloading(getActivity());
+                            shimmerPhotolatlngView.startShimmer();
+                            shimmerPhotolatlngView.setVisibility(View.VISIBLE);
+                            parentLayout.setVisibility(View.GONE);
+
                             save_image_offline("next_btn");
                         }
                     } else {
@@ -1008,7 +1057,10 @@ public class PhotoLatLong extends Fragment implements
                         // Photo delete and add
                         textview_next.setVisibility(View.GONE);
                         Log.e(TAG, "show 940");
-                        general.showloading(getActivity());
+                       // general.showloading(getActivity());
+                        shimmerPhotolatlngView.startShimmer();
+                        shimmerPhotolatlngView.setVisibility(View.VISIBLE);
+                        parentLayout.setVisibility(View.GONE);
                         save_image_offline("next_btn");
                     } else {
                         // TODO - Edit_inspec - Add the offline case to the modal
@@ -1090,7 +1142,10 @@ public class PhotoLatLong extends Fragment implements
                         // Photo delete and add
                         textview_next.setVisibility(View.GONE);
                         Log.e(TAG, "show 1022");
-                        general.showloading(getActivity());
+                        //general.showloading(getActivity());
+                        shimmerPhotolatlngView.startShimmer();
+                        shimmerPhotolatlngView.setVisibility(View.VISIBLE);
+                        parentLayout.setVisibility(View.GONE);
 
                         if (str.equalsIgnoreCase("deletephoto_edit_inspec")) {
                             // From delete cross button
@@ -1315,7 +1370,10 @@ public class PhotoLatLong extends Fragment implements
                             general.CustomToast(getActivity().getResources().getString(R.string.case_moved_offline));
                         }
                         Log.e(TAG, "Hide 1243");
-                        general.hideloading();
+                        //general.hideloading();
+                        shimmerPhotolatlngView.stopShimmer();
+                        shimmerPhotolatlngView.setVisibility(View.GONE);
+                        parentLayout.setVisibility(View.VISIBLE);
                     }
                 }, 1000);
 
@@ -1379,11 +1437,17 @@ public class PhotoLatLong extends Fragment implements
                     parseuploadimageResponse(requestData.getResponse());
                 } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
                     Log.e(TAG, "Hide 1306");
-                    general.hideloading();
+                   // general.hideloading();
+                    shimmerPhotolatlngView.stopShimmer();
+                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.VISIBLE);
                     General.sessionDialog(getActivity());
                 } else {
                     Log.e(TAG, "Hide 1310");
-                    general.hideloading();
+                    //general.hideloading();
+                    shimmerPhotolatlngView.stopShimmer();
+                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.VISIBLE);
                     General.customToast(getActivity().getString(R.string.something_wrong),
                             getActivity());
                 }
@@ -1410,14 +1474,20 @@ public class PhotoLatLong extends Fragment implements
                 Toast.makeText(getActivity(), dataResponse.msg, Toast.LENGTH_LONG).show();
             }
             Log.e(TAG, "Hide 1337");
-            general.hideloading();
+           // general.hideloading();
+            shimmerPhotolatlngView.stopShimmer();
+            shimmerPhotolatlngView.setVisibility(View.GONE);
+            parentLayout.setVisibility(View.VISIBLE);
             PhotoLatLngTab.pager.setCurrentItem(1);
             if (Connectivity.isConnected(getActivity())) {
                 GetImageAPI();
             } else {
                 Connectivity.showNoConnectionDialog(getActivity());
                 Log.e(TAG, "Hide 1344");
-                general.hideloading();
+                //general.hideloading();
+                shimmerPhotolatlngView.stopShimmer();
+                shimmerPhotolatlngView.setVisibility(View.GONE);
+                parentLayout.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -1607,7 +1677,10 @@ public class PhotoLatLong extends Fragment implements
             /***** From Image Adapter *****/
             ImageAdapter imageAdapter = MultiPhotoSelectActivity.imageAdapter;
             Log.e(TAG, "show 1538");
-            general.showloading(getActivity());
+            //general.showloading(getActivity());
+            shimmerPhotolatlngView.startShimmer();
+            shimmerPhotolatlngView.setVisibility(View.VISIBLE);
+            parentLayout.setVisibility(View.GONE);
             for (int i = 0; i < imageAdapter.getCheckedItems().size(); i++) {
                 //String realPath = imageAdapter.getCheckedItems().get(i);
 
@@ -1638,7 +1711,10 @@ public class PhotoLatLong extends Fragment implements
 
                 if (i == imageAdapter.getCheckedItems().size() - 1) {
                     Log.e(TAG, "Hide 1564");
-                    general.hideloading();
+                   // general.hideloading();
+                    shimmerPhotolatlngView.stopShimmer();
+                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.VISIBLE);
                 }
             }
             //noinspection StatementWithEmptyBody
@@ -2027,7 +2103,10 @@ public class PhotoLatLong extends Fragment implements
                                     /* Old Image */
                                     if (Connectivity.isConnected(getActivity())) {
                                         Log.e(TAG, "show 1945");
-                                        general.showloading(getActivity());
+                                        //general.showloading(getActivity());
+                                        shimmerPhotolatlngView.startShimmer();
+                                        shimmerPhotolatlngView.setVisibility(View.VISIBLE);
+                                        parentLayout.setVisibility(View.GONE);
                                         JsonRequestData data = new JsonRequestData();
                                         data.setJobID("" + GetPhoto_list.get(position).getId());
                                         data.setPropertyID("" + GetPhoto_list.get(position).getPropertyId());
@@ -2048,13 +2127,19 @@ public class PhotoLatLong extends Fragment implements
                                                     parsedeleteimageResponse(requestData.getResponse(), GetPhoto_list);
                                                 } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
                                                     Log.e(TAG, "Hide 1960");
-                                                    general.hideloading();
+                                                    //general.hideloading();
+                                                    shimmerPhotolatlngView.stopShimmer();
+                                                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                                                    parentLayout.setVisibility(View.VISIBLE);
                                                     General.sessionDialog(mContext);
                                                 } else {
                                                     GetPhoto_list.remove(position);
                                                     notifyDataSetChanged();
                                                     Log.e(TAG, "Hide 1966");
-                                                    general.hideloading();
+                                                    //general.hideloading();
+                                                    shimmerPhotolatlngView.stopShimmer();
+                                                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                                                    parentLayout.setVisibility(View.VISIBLE);
                                                     General.customToast(mContext.getString(R.string.something_wrong),
                                                             mContext);
                                                 }
@@ -2070,7 +2155,10 @@ public class PhotoLatLong extends Fragment implements
                                 } else {
                                     /* New Image */
                                     Log.e(TAG, "show 1988");
-                                    general.showloading(getActivity());
+                                    //general.showloading(getActivity());
+                                    shimmerPhotolatlngView.startShimmer();
+                                    shimmerPhotolatlngView.setVisibility(View.VISIBLE);
+                                    parentLayout.setVisibility(View.GONE);
                                     GetPhoto_list.remove(position);
                                     parsedeleteimageResponse(GetPhoto_list);
                                 }
@@ -2169,7 +2257,10 @@ public class PhotoLatLong extends Fragment implements
             @Override
             public void run() {
                 Log.e(TAG, "Hide 2078");
-                general.hideloading();
+               // general.hideloading();
+                shimmerPhotolatlngView.stopShimmer();
+                shimmerPhotolatlngView.setVisibility(View.GONE);
+                parentLayout.setVisibility(View.VISIBLE);
             }
         }, 1000);
     }
@@ -2185,7 +2276,10 @@ public class PhotoLatLong extends Fragment implements
             @Override
             public void run() {
                 Log.e(TAG, "Hide 2091");
-                general.hideloading();
+               // general.hideloading();
+                shimmerPhotolatlngView.stopShimmer();
+                shimmerPhotolatlngView.setVisibility(View.GONE);
+                parentLayout.setVisibility(View.VISIBLE);
             }
         }, 1000);
     }
@@ -2260,7 +2354,10 @@ public class PhotoLatLong extends Fragment implements
         } else {
             Connectivity.showNoConnectionDialog(getActivity());
             Log.e(TAG, "Hide 2166");
-            general.hideloading();
+            //general.hideloading();
+            shimmerPhotolatlngView.stopShimmer();
+            shimmerPhotolatlngView.setVisibility(View.GONE);
+            parentLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -2286,11 +2383,17 @@ public class PhotoLatLong extends Fragment implements
                     parseUpdateStatusCaseidResponse(requestData.getResponse());
                 } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
                     Log.e(TAG, "Hide 2192");
-                    general.hideloading();
+                   // general.hideloading();
+                    shimmerPhotolatlngView.stopShimmer();
+                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.VISIBLE);
                     General.sessionDialog(getActivity());
                 } else {
                     Log.e(TAG, "Hide 2196");
-                    general.hideloading();
+                   // general.hideloading();
+                    shimmerPhotolatlngView.stopShimmer();
+                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.VISIBLE);
                     General.customToast(getActivity().getString(R.string.something_wrong),
                             getActivity());
                 }
@@ -2314,14 +2417,20 @@ public class PhotoLatLong extends Fragment implements
         if (result != null) {
             if (result.equals("1")) {
                 Log.e(TAG, "Hide 2220");
-                general.hideloading();
+               // general.hideloading();
+                shimmerPhotolatlngView.stopShimmer();
+                shimmerPhotolatlngView.setVisibility(View.GONE);
+                parentLayout.setVisibility(View.VISIBLE);
                 PhotoLatLngTab.pager.setCurrentItem(1);
                 if (Connectivity.isConnected(getActivity())) {
                     GetImageAPI();
                 } else {
                     Connectivity.showNoConnectionDialog(getActivity());
                     Log.e(TAG, "Hide 2227");
-                    general.hideloading();
+                    //general.hideloading();
+                    shimmerPhotolatlngView.stopShimmer();
+                    shimmerPhotolatlngView.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.VISIBLE);
                 }
             } else if (result.equals("2")) {
                 general.CustomToast(msg);
@@ -2332,7 +2441,10 @@ public class PhotoLatLong extends Fragment implements
             general.CustomToast(getActivity().getResources().getString(R.string.serverProblem));
         }
         Log.e(TAG, "Hide 2238");
-        general.hideloading();
+        //general.hideloading();
+        shimmerPhotolatlngView.stopShimmer();
+        shimmerPhotolatlngView.setVisibility(View.GONE);
+        parentLayout.setVisibility(View.VISIBLE);
     }
 
 
@@ -2628,7 +2740,7 @@ public class PhotoLatLong extends Fragment implements
             getCurrentLocation(getActivity());
         }else{
             new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
-                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Property Images Upload", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Property Images Upload", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
         }
     }
 
@@ -2648,7 +2760,7 @@ public class PhotoLatLong extends Fragment implements
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
 
                             new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
-                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
 
                         }
                     }

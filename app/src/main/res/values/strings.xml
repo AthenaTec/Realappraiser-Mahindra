@@ -334,6 +334,7 @@
     <string name="builtup" tools:ignore="UnusedResources">Built up</string>
     <string name="Saleable" tools:ignore="UnusedResources">Saleable</string>
     <string name="current_fair">*Current Fair Market Value:</string>
+    <string name="permissible">Permissible</string>
     <string name="areatype">Area Type</string>
     <string name="marketrate">*Market Rate</string>
     <string name="marketvalue">Market Value</string>
@@ -492,6 +493,15 @@
     <string name="field_staff">Field Staff</string>
     <string name="transfer">TRANSFER</string>
     <string name="loc_updated">Location updated at</string>
+    <string name="non_case_activity">NON CASE ACTIVITY</string>
+    <string name="convenyance_report">CONVEYANCE REPORT</string>
+    <string name="visit_type">Please Select The Visit Type</string>
+    <string name="builder_office_visit">Builder Office Visit</string>
+    <string name="branch_training_visit">Branch/Traning Visit</string>
+    <string name="audit_visit_joint">Audit Visit/Joint Visit</string>
+    <string name="collection_visit">Collection Visit</string>
+    <string name="vendor_visit">Vendor Visit</string>
+    <string name="apf_visit">APF Visit</string>
 
     <array name="salution">
         <item>Mr.</item>
@@ -542,4 +552,6 @@
         <item>2</item>
         <item>5</item>
     </array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

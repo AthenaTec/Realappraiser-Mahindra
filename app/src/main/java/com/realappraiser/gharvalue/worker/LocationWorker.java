@@ -53,7 +53,7 @@ public class LocationWorker extends Worker {
                     " long:" +
                     SettingsUtils.Longitudes;
             Log.e(str, sb);
-            locationTrackerApi.shareLocation("", fieldStaffId, "Interval", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+            locationTrackerApi.shareLocation("", fieldStaffId, "Interval", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",0);
         }
         return Result.success(new Builder().putString(WORK_RESULT, "Jobs Finished").build());
     }

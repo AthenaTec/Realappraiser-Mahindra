@@ -175,6 +175,9 @@ public class RequestParam {
                 .add("Longitude", jsonRequestData.getLongitude())
                 .add("TrackerTime", jsonRequestData.getTrackerTime())
                 .add("Address", jsonRequestData.getAddress())
+                .add("ActivityType",jsonRequestData.getActivityType())
+                .add("Comments",jsonRequestData.getComments())
+                .add("AgencyBranchId",jsonRequestData.getAgencyBId())
                 .build();
     }
 
@@ -437,5 +440,16 @@ public class RequestParam {
 
         return requestBody;
     }*/
+
+
+    public static String GetConvenyanceTypeRequestParams(JsonRequestData jsonRequestData) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
+        urlBuilder.addQueryParameter("AgencyBranchId", jsonRequestData.getAgencyBranchId());
+        urlBuilder.addQueryParameter("FieldStaff", jsonRequestData.getFieldStaff());
+        urlBuilder.addQueryParameter("FromDate", jsonRequestData.getFromDate());
+        urlBuilder.addQueryParameter("ToDate", jsonRequestData.getToDate());
+        String geturl = urlBuilder.build().toString();
+        return geturl;
+    }
 
 }

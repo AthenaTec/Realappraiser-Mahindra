@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".convenyancereport.DialyReportFragment"
+    >
+    <TextView
+        android:id="@+id/no_activity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="There Is No Data In Today's Activity."
+        android:textSize="@dimen/font_extra_large"
+        android:textColor="@color/colorPrimary"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/ll_dailyreport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="2dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/total_distance_travelled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingTop="@dimen/_10sdp"
+            android:textSize="@dimen/font_extra_large"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/total_activity_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="@dimen/font_extra_large"
+            android:textColor="@color/black"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingTop="@dimen/_10sdp"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_dailyReport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:fadeScrollbars="true"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </LinearLayout>
+
+    <include android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/no_internet"
+        android:id="@+id/ll_no_internet"
+        android:visibility="gone"
+        />
+
+
+</LinearLayout>

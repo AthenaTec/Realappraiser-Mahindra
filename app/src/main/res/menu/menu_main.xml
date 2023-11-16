@@ -43,6 +43,18 @@
                 android:theme="@style/OverflowMenu"
                 android:title="@string/about"
                 app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/noncaseactivity"
+                android:icon="@drawable/non_activity_report"
+                android:theme="@style/OverflowMenu"
+                android:title="@string/non_case_activity"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/convyencereport"
+                android:icon="@drawable/report"
+                android:theme="@style/OverflowMenu"
+                android:title="@string/convenyance_report"
+                app:showAsAction="ifRoom" />
         </menu>
     </item>
 </menu>

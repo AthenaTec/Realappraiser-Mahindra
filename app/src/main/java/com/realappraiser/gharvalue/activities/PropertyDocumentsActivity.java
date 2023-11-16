@@ -64,7 +64,7 @@ import java.util.List;
 
 import id.zelory.compressor.Compressor;
 
-public class PropertyDocumentsActivity extends AppCompatActivity implements View.OnClickListener, DeleteItemInterface {
+public class PropertyDocumentsActivity extends BaseActivity implements View.OnClickListener, DeleteItemInterface {
 
     private RecyclerView rvExistingFiles, rvNewFiles;
 
@@ -94,10 +94,16 @@ public class PropertyDocumentsActivity extends AppCompatActivity implements View
 
     private General general;
 
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_propertydocuments;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_propertydocuments);
+        //setContentView(R.layout.activity_propertydocuments);
         general = new General(this);
 
         toolbar = findViewById(R.id.toolbar);

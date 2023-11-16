@@ -1,6 +1,7 @@
 package com.realappraiser.gharvalue.activities;
 
 import static com.realappraiser.gharvalue.utils.General.REQUEST_ID_MULTIPLE_PERMISSIONS;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -77,6 +79,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -147,6 +150,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private boolean isPasswordShow = false;
 
+    private String address = "";
+
+    AlertDialog branchPopup;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +161,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         General.report_bug(LoginActivity.this);
         setContentView(R.layout.login);
         ButterKnife.bind(this);
+
+        SettingsUtils.getInstance().putValue("sessionCountDown", "");
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -166,6 +175,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mFirebaseAnalytics.logEvent("Login", bundle);
         general = new General(LoginActivity.this);
 
+        general.checkPermissions();
 
        /* if (Connectivity.isConnected(this)) {
             SafetyNetChecker safetyNetChecker = new SafetyNetChecker(this, this, this);
@@ -318,8 +328,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (general.checkPermissions() && checkGps()) {
             makeLocationUpadte();
-        }else{
-            Log.e(TAG,"Permission was denied");
+        } else {
+            Log.e(TAG, "Permission was denied");
         }
     }
 
@@ -391,7 +401,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         submit.setTypeface(general.mediumtypeface());
         popuptitle.setTypeface(general.mediumtypeface());*/
 
-        View view  = getLayoutInflater().inflate(R.layout.loginpopup,null);
+        View view = getLayoutInflater().inflate(R.layout.loginpopup, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -430,20 +440,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
 
-
-
-
-
-
-
-
-       // dialog.show();
+        // dialog.show();
        /* addkeys.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         Window windo = dialog.getWindow();
         windo.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-   */ }
+   */
+    }
 
     private void hideSoftKeyboard(View addkeys) {
         if (addkeys != null) {
@@ -697,12 +701,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.setContentView(R.layout.branch_popup);*/
 
 
-        View view  = getLayoutInflater().inflate(R.layout.branch_popup,null);
+        View view = getLayoutInflater().inflate(R.layout.branch_popup, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setView(view);
-        AlertDialog branchPopup = builder.create();
+         branchPopup = builder.create();
         branchPopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         final Spinner spSalution = view.findViewById(R.id.spBranch);
@@ -798,11 +802,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     // general.CustomToast(msg);
                     String API_BASE_URL = addkeys.getText().toString().trim();
                     SettingsUtils.getInstance().putValue(SettingsUtils.API_BASE_URL, API_BASE_URL);
-                   if(dialog!=null)
-                    dialog.dismiss();
+                    if (dialog != null)
+                        dialog.dismiss();
 
-                   if(urlAlertDialog!=null)
-                       urlAlertDialog.dismiss();
+                    if (urlAlertDialog != null)
+                        urlAlertDialog.dismiss();
 
 
                 } else if (result.equals("2")) {
@@ -816,13 +820,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else if (!successful && (responseCode == 400 || responseCode == 401)) {
             General.sessionDialog(LoginActivity.this);
         } else {
-            if(Connectivity.isConnected(this) && !successful && responseCode == 0){
-              General.customToastLong(getString(R.string.validurl),LoginActivity.this);
-            }else{
+            if (Connectivity.isConnected(this) && !successful && responseCode == 0) {
+                General.customToastLong(getString(R.string.validurl), LoginActivity.this);
+            } else {
                 General.customToast(getString(R.string.validurl), LoginActivity.this);
 
             }
-             }
+        }
         general.hideloading();
     }
 
@@ -845,6 +849,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * *******/
     private boolean validateEmailPassword() {
         String emailreg = email_input.getText().toString().trim();
+        String baseurl = general.ApiBaseUrl();
         if (emailreg.isEmpty() || !isValidEmail(emailreg)) {
             email_input.setError(getString(R.string.err_msg_email));
             requestFocus(email_input);
@@ -852,6 +857,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else if (pwd_input.getText().toString().trim().isEmpty()) {
             pwd_input.setError(getString(R.string.err_msg_password));
             requestFocus(pwd_input);
+            return false;
+        } else if (baseurl == null || baseurl.equalsIgnoreCase("")) {
+            general.CustomToast("Please set server url");
             return false;
         }
         return true;
@@ -1014,30 +1022,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             general.CustomToast(getResources().getString(R.string.serverProblem));
         }
 
-        if (latt > 0.0d) {
-            String fieldStaffId = SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, "");
-
-
+        if (SettingsUtils.Latitudes > 0.0d) {
             if (general.isNetworkAvailable()) {
-                locationTrackerApi.shareLocation("", fieldStaffId, "Login", latt, longi);
+               /* if(locationTrackerApi.shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Login", latt, longi, "", 3)){
+                   general.CustomToast("Login Successful");
+                   SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
+                   Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                   startActivity(intent);*/
+
+                general.showloading(this);
+                shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Login", latt, longi, "", 3);
+              // }
             } else {
-                General general2 = this.general;
                 General.customToast("Please check your Internet Connection!", this);
             }
-
-            general.CustomToast("Login Successful");
-            SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-            }
             general.hideloading();
-        }else{
-            getCurrentLocation(this);
-
+        } else {
+            if (general.checkPermissions()) {
+                getCurrentLocation(this);
+            }
         }
-
-
     }
 
 
@@ -1096,12 +1100,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     general.customToast("Please enable all permissions to complete access of this application", this);
 
-                    new Handler().postDelayed(new Runnable() {
+                  /*  new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             general.checkPermissions();
                         }
-                    }, 500);
+                    }, 500);*/
 
                 }
 
@@ -1135,13 +1139,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private  void getCurrentLocation(Activity activity){
+    private void getCurrentLocation(Activity activity) {
 
         if (general.GPS_status()) {
             try {
                 GPSService gpsService = new GPSService(this);
                 gpsService.getLocation();
-                 new Handler().postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void run() {
@@ -1149,25 +1153,130 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
-                            general.CustomToast("Login Successful");
                             locationTrackerApi.shareLocation("",
                                     SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                                    "Login", SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                                    "Login", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 3);
                             SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
-                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            // startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);
                             if ((dialog != null) && dialog.isShowing()) {
                                 dialog.dismiss();
                             }
+                            general.CustomToast("Login Successful");
                             general.hideloading();
                         }
                     }
                 }, 1500);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SettingsUtils.getInstance().putValue("sessionCountDown", "");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SettingsUtils.getInstance().putValue("sessionCountDown", "");
+    }
+
+
+    public void shareLocation(String caseId, String fieldStaffId, String interval, double latitudes, double longitudes
+            ,String comments,Integer ActivityType) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                address = SettingsUtils.convertLatLngToAddress(LoginActivity.this, latitudes, longitudes);
+            }
+        });
+
+        @SuppressLint("SimpleDateFormat") String time =
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .format(Calendar.getInstance().getTime());
+
+        String sb2 = "shareLocation:1 caseId=>" +
+                caseId +
+                "\nfieldStaffId=>" +
+                fieldStaffId +
+                "\nType=>" +
+                interval +
+                "\nLatt=>" +
+                latitudes +
+                "\nLong=>" +
+                longitudes +
+                "\nTime=>" +
+                time +
+                "\nAddress=>" +
+                address;
+        Log.e(TAG, sb2);
+
+        if (Connectivity.isConnected(this)) {
+            JsonRequestData requestData = new JsonRequestData();
+            String url = SettingsUtils.getInstance().getValue(SettingsUtils.API_BASE_URL,
+                    "") + SettingsUtils.LocationTracker;
+            requestData.setUrl(url);
+            requestData.setCaseId(caseId);
+            requestData.setEmpId(fieldStaffId);
+            requestData.setLocationType(interval);
+            requestData.setLatitude(String.valueOf(latitudes));
+            requestData.setLongitude(String.valueOf(longitudes));
+            requestData.setTrackerTime(time);
+            requestData.setActivityType(String.valueOf(ActivityType));
+            requestData.setComments(comments);
+            requestData.setAgencyBId(SettingsUtils.getInstance().getValue(SettingsUtils.BranchId, ""));
+            Log.e("convertLatLngToAddrJson", address);
+
+            if (!address.isEmpty()) {
+                requestData.setAddress(address);
+            } else {
+                address = SettingsUtils.convertLatLngToAddress(this, latitudes, longitudes);
+                requestData.setAddress(address);
             }
 
 
+            requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
+//            requestData.setAuthToken("Bearer FFcxMfxHjm79qtRcMFNbp4Ydf7l_3jGiLSeSuY2tC3QJmiurkOSfEQGtbN-M6S3kF13VMSM5CALbIJNnT37zMi81gCRCz6YWZD7Usqs9i73kIgJGoHdDsPJdHkWyzD52JuORASt5p-jEB5jN2abX2HXdcIDrZD_YxVHWlFVn4uITc1SA8nk5OPCy5-xmpSq4VrHoUPsRrRMPx411C8gfcJvdaOCTodGRKFVwzVffHRC2cTRi-");
+            requestData.setRequestBody(RequestParam.LocationTracker(requestData));
 
+            Log.e("Location Params", new Gson().toJson(requestData));
+
+            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(this,
+                    requestData, SettingsUtils.POST_TOKEN);
+            webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+                public void onTaskComplete(JsonRequestData requestData) {
+                    general.hideloading();
+                    String sb = "Location updated sucessfully" +
+                            requestData.getResponse();
+                    Log.e(TAG, sb);
+                    if ((dialog != null) && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    general.CustomToast("Login Successful");
+                    SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+            });
+            webserviceTask.execute();
+
+        } else {
+            general.hideloading();
+          General.customToast("Please check your Internet Connection!",LoginActivity.this);
+
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(branchPopup !=null){
+            branchPopup.cancel();
         }
     }
 }

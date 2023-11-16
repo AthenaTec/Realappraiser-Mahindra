@@ -9,6 +9,7 @@
 
 
     <LinearLayout
+        android:id="@+id/parentLayout"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_marginLeft="@dimen/control_padding"
@@ -225,13 +226,13 @@
                         android:layout_weight="0.4"
                         tools:ignore="RtlHardcoded">
 
-                        <ImageView
+                        <View
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="0dp"
                             android:padding="0dp"
                             android:scaleType="centerCrop"
-                            app:srcCompat="@drawable/cutlayout_dummy"
+                            app:srcCompat="@drawable/cutlayout_dummy_shimmer"
                             tools:ignore="ContentDescription" />
 
                     </LinearLayout>
@@ -310,6 +311,18 @@
             tools:ignore="ObsoleteLayoutParam,RtlHardcoded,UnusedAttribute" />
 
     </LinearLayout>
+
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_photolatlng_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+        <include
+            layout="@layout/photolatlong_shimmer"
+            />
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </LinearLayout>
 

@@ -15,7 +15,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.icu.util.Calendar;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -81,7 +80,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -125,7 +123,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     private String[] androidHigherVersionPermission = new String[]{
             Manifest.permission.READ_MEDIA_IMAGES,
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION };
+            Manifest.permission.ACCESS_FINE_LOCATION};
+
     String uriSting;
 
     public static AlertDialog savePopup;
@@ -193,11 +192,11 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
     }
 
-    public static String getTodayDate(){
+    public static String getTodayDate() {
         return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     }
 
-    public static String getDateAfterAMonthAgo(){
+    public static String getDateAfterAMonthAgo() {
         Date d = new Date();
         Date dateBefore = new Date(d.getTime() - 30 * 24 * 3600 * 1000l);
         return new SimpleDateFormat("dd/MM/yyyy").format(dateBefore);
@@ -307,7 +306,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     public double calculatePercentage(double obtained, double total) {
 //        return (obtained / total)*100;
 
-        return  obtained * total/100;
+        return obtained * total / 100;
     }
 
     public int convertToInt(float str) {
@@ -318,7 +317,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         return sum_total;
     }
 
-    public int convertDoubleToInt(double in){
+    public int convertDoubleToInt(double in) {
         return (int) Math.round(in);
     }
 
@@ -575,8 +574,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
                 Activity activity = (Activity) context;
 
-                View view  = activity.getLayoutInflater().inflate(R.layout.save_pop_up,null);
-                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context,R.style.CustomDialog);
+                View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context, R.style.CustomDialog);
                 builder.setView(view);
 
                 AlertDialog sessionErrorPopUp = builder.create();
@@ -790,10 +789,9 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-    public void LogoutDialog(Activity activity,double longitudes, double latitudes) {
-
-        View view  = activity.getLayoutInflater().inflate(R.layout.save_pop_up,null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity,R.style.CustomDialog);
+    public void LogoutDialog(Activity activity, double longitudes, double latitudes) {
+        View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.CustomDialog);
         builder.setView(view);
 
         savePopup = builder.create();
@@ -807,12 +805,12 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         btnCancel.setText("NO");
         savePopup.setCancelable(false);
         savePopup.setCanceledOnTouchOutside(false);
-        savePopup.show();
-
+        if(activity != null  && !activity.isFinishing() && !activity.isDestroyed()){
+            savePopup.show();
+        }
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 Singleton.getInstance().longitude = 0.0;
                 Singleton.getInstance().latitude = 0.0;
                 Singleton.getInstance().aCase = new Case();
@@ -833,7 +831,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                 if (oflineData.size() > 0) {
                     General.customToast("Please sync your offline documents before logout!", activity);
                     return;
-                }else
+                } else
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
 
                 // Total - 16 DB
@@ -879,7 +877,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
                 if (new LocationTrackerApi(activity).shareLocation("",
                         SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                        "Logout", latitudes, longitudes)) {
+                        "Logout", latitudes, longitudes, "", 4)) {
                     if (Build.VERSION.SDK_INT < 26) {
                         activity.stopService(new Intent(activity, GeoUpdate.class));
                     } else {
@@ -1032,7 +1030,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-    public static void logoutUser(Activity activity){
+    public static void logoutUser(Activity activity) {
         Singleton.getInstance().longitude = 0.0;
         Singleton.getInstance().latitude = 0.0;
         Singleton.getInstance().aCase = new Case();
@@ -1098,7 +1096,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
         if (new LocationTrackerApi(activity).shareLocation("",
                 SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes)) {
+                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4)) {
             if (Build.VERSION.SDK_INT < 26) {
                 activity.stopService(new Intent(activity, GeoUpdate.class));
             } else {
@@ -1127,7 +1125,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         activity.startActivity(intent);
     }
 
-    public static void clearDataAndLogout(Activity activity){
+    public static void clearDataAndLogout(Activity activity) {
         Singleton.getInstance().longitude = 0.0;
         Singleton.getInstance().latitude = 0.0;
         Singleton.getInstance().aCase = new Case();
@@ -1187,7 +1185,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
         if (new LocationTrackerApi(activity).shareLocation("",
                 SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes)) {
+                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4)) {
             if (Build.VERSION.SDK_INT < 26) {
                 activity.stopService(new Intent(activity, GeoUpdate.class));
             } else {
@@ -1232,15 +1230,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         return true;
     }
 
-
-    /*public void hideSoftKeyboard(Activity activity) {
-        if (activity != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-        }
-    }*/
-
-    public void onRequestPermissionsResult(int requestCode, String permissions[], final int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[],
+                                           final int[] grantResults) {
         switch (requestCode) {
             case REQUEST_ID_MULTIPLE_PERMISSIONS:
                 mContext.runOnUiThread(new Runnable() {
@@ -1434,7 +1425,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     /**********
      * PDF Conversion Functiionality from base64 string to pdf file and view it
      * **********/
-    public GetFilePathAndStatus getFileFromBase64AndSaveInSDCard(String base64, String filename, String extension, PDFView pdfview) {
+    public GetFilePathAndStatus getFileFromBase64AndSaveInSDCard(String base64, String
+            filename, String extension, PDFView pdfview) {
         GetFilePathAndStatus getFilePathAndStatus = new GetFilePathAndStatus();
         pdfView = pdfview;
         try {
@@ -1733,8 +1725,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
         Activity activity = (Activity) context;
 
-        View view  = activity.getLayoutInflater().inflate(R.layout.save_pop_up,null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.CustomDialog);
+        View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomDialog);
         builder.setView(view);
 
         AlertDialog networkPopup = builder.create();
@@ -1792,20 +1784,20 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         alert_show.show();*/
     }
 
-    public static boolean rootAndEmulatorChecker(Activity context){
+    public static boolean rootAndEmulatorChecker(Activity context) {
         boolean status = RootUtil.isDeviceRooted() || RootUtil.isEmulator();
 
-        if (RootUtil.isDeviceRooted()&&RootUtil.isEmulator())
-               exitDialog(context,"Your device is rooted and a emulator!");
+        if (RootUtil.isDeviceRooted() && RootUtil.isEmulator())
+            exitDialog(context, "Your device is rooted and a emulator!");
         else if (RootUtil.isDeviceRooted())
-            exitDialog(context,"Your device is rooted!");
+            exitDialog(context, "Your device is rooted!");
         else if (RootUtil.isEmulator())
-            exitDialog(context,"Your device is a emulator!");
+            exitDialog(context, "Your device is a emulator!");
 
         return status;
     }
 
-    public static void  exitDialog(Activity context,String message){
+    public static void exitDialog(Activity context, String message) {
         AlertDialog.Builder alert_build = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         alert_build.setTitle("Warning");
         alert_build.setMessage(message);
@@ -1959,11 +1951,193 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         return ActualDate;
     }
 
-    public static void isShowDialog(){
 
-       if(savePopup != null){
-           savePopup.cancel();
-       }
+    public static void isShowDialog() {
+
+        if(savePopup != null){
+            savePopup.cancel();
+        }
     }
 
+
+    public static void sessionLogout(Activity activity, double longitudes, double latitudes)
+
+    {
+        Singleton.getInstance().longitude = 0.0;
+        Singleton.getInstance().latitude = 0.0;
+        Singleton.getInstance().aCase = new Case();
+        Singleton.getInstance().property = new Property();
+        Singleton.getInstance().indProperty = new IndProperty();
+        Singleton.getInstance().indPropertyValuation = new IndPropertyValuation();
+        Singleton.getInstance().indPropertyFloors = new ArrayList<>();
+        Singleton.getInstance().proximities = new ArrayList<>();
+        Singleton.getInstance().openCaseList.clear();
+        Singleton.getInstance().closeCaseList.clear();
+        Singleton.getInstance().GetImage_list_flat.clear();
+        SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
+        AppDatabase appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
+
+
+        // Total - 16 DB
+
+
+        // Delete - datamodel
+        appDatabase.interfaceDataModelQuery().deleteRow();
+        // Delete - offlinedatamodel
+        appDatabase.interfaceOfflineDataModelQuery().deleteRow();
+        // Delete - casemodal
+        appDatabase.interfaceCaseQuery().deleteRow();
+        // Delete - propertymodal
+        appDatabase.interfacePropertyQuery().deleteRow();
+        // Delete - indpropertymodal
+        appDatabase.interfaceIndpropertyQuery().deleteRow();
+        // Delete - IndPropertyValuationModal
+        appDatabase.interfaceIndPropertyValuationQuery().deleteRow();
+        // Delete - IndPropertyFloorModal
+        appDatabase.interfaceIndPropertyFloorsQuery().deleteRow();
+        // Delete - IndPropertyFloorsValuationModal
+        appDatabase.interfaceIndPropertyFloorsValuationQuery().deleteRow();
+        // Delete - ProximityModal
+        appDatabase.interfaceProximityQuery().deleteRow();
+        // Delete - GetPhotoModel
+        appDatabase.interfaceGetPhotoQuery().deleteRow();
+        // Delete - OflineCase
+        appDatabase.interfaceOfflineCaseQuery().deleteRow();
+        // Delete - Document_list
+        appDatabase.interfaceDocumentListQuery().deleteRow();
+        // Delete - LatLongDetails
+        appDatabase.interfaceLatLongQuery().deleteRow();
+        // Delete - typeofproperty
+        appDatabase.typeofPropertyQuery().deleteRow();
+        // Delete - casedetail
+        appDatabase.daoAccess().deleteRow();
+        // Delete - propertyupdateroomdb
+        appDatabase.propertyUpdateCategory().deleteRow();
+        // Delete - GetPhotoMeasurmentQuery
+        appDatabase.interfaceGetPhotoMeasurmentQuery().deleteRow();
+
+      //  activity.finishAffinity();
+
+
+
+
+
+                boolean isSuccess = new LocationTrackerApi(activity).shareLocation("",
+                        SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
+                        "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4);
+
+                SettingsUtils.getInstance().putValue("api_success",false);
+
+                if(isSuccess){
+                    if (Build.VERSION.SDK_INT < 26) {
+                        activity.stopService(new Intent(activity, GeoUpdate.class));
+                    } else {
+                        new OreoLocation(activity).stopOreoLocationUpdates();
+                    }
+                    new WorkerManager(activity).stopWorker();
+                    SettingsUtils.getInstance().putValue("api_success",true);
+
+            }
+
+
+
+
+
+
+
+
+        /*if (new LocationTrackerApi(activity).shareLocation("",
+                SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
+                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4)) {
+            if (Build.VERSION.SDK_INT < 26) {
+                activity.stopService(new Intent(activity, GeoUpdate.class));
+            } else {
+                new OreoLocation(activity).stopOreoLocationUpdates();
+            }
+            new WorkerManager(activity).stopWorker();
+
+
+            Intent intent = new Intent(activity, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+
+           *//* activity.finishAffinity();
+            Intent intent = new Intent(activity, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+            activity.finish();*//*
+
+
+
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT < 26) {
+            activity.stopService(new Intent(activity, GeoUpdate.class));
+        } else {
+            new OreoLocation(activity).stopOreoLocationUpdates();
+        }
+        new WorkerManager(activity).stopWorker();
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);*/
+
+       /* activity.finishAffinity();
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+        activity.finish();*/
+    }
+
+    public void checkTimeOut(Activity activity,General general){
+        if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty()) {
+            String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
+            long currentVisitTime = System.currentTimeMillis();
+            long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
+            long minutes = (totalVisitTime / 1000) / 60;
+            Log.e(TAG, "onResume: " + minutes);
+
+            if (minutes >= 1) {
+                Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
+                if (SettingsUtils.Latitudes > 0) {
+                    General.sessionLogout(activity, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
+                } else {
+                    if (general.checkPermissions()) {
+                        getCurrentLocation(activity,general);
+                    }else{
+                        Log.e(TAG,"Permission DENied");
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void getCurrentLocation(Activity activity,General general) {
+
+        if (general.GPS_status()) {
+            try {
+                GPSService gpsService = new GPSService(activity);
+                gpsService.getLocation();
+                new Handler().postDelayed(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (general.getcurrent_latitude(activity) != 0) {
+                            /*Here store current location of user latLong*/
+                            SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
+                            SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+                            General.sessionLogout(activity, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
+                        }
+                    }
+                }, 1500);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

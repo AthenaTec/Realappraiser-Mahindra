@@ -72,7 +72,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PlacePickerActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class PlacePickerActivity extends BaseActivity implements OnMapReadyCallback {
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -100,9 +100,14 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     private RequestQueue queue;
 
     @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_place_picker;
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place_picker);
+       // setContentView(R.layout.activity_place_picker);
         ButterKnife.bind(this);
 
         initiateToolbar();

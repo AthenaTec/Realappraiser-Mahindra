@@ -14,7 +14,7 @@ public class WorkerManager {
     private Context context;
     private WorkManager mWorkManager;
     private PeriodicWorkRequest workRequest = new Builder(LocationWorker.class,
-            15, TimeUnit.MINUTES).addTag(LOCATION_WORKER).build();
+            15, TimeUnit.MINUTES).setInitialDelay(5,TimeUnit.MINUTES).addTag(LOCATION_WORKER).build();
 
     public WorkerManager(Context context2) {
         this.context = context2;

@@ -230,6 +230,9 @@ dependencies {
 
     //Shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    //for generate pdf
+    implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.1'
 }
 // ADD THIS AT THE BOTTOM
 apply plugin: 'com.google.firebase.crashlytics'

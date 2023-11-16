@@ -51,7 +51,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * @author Paresh Mayani (@pareshmayani)
  */
 @SuppressWarnings("ALL")
-public class MultiPhotoSelectActivity extends AppCompatActivity {
+public class MultiPhotoSelectActivity extends BaseActivity {
 
     @SuppressLint("StaticFieldLeak")
     public static ImageAdapter imageAdapter;
@@ -66,9 +66,14 @@ public class MultiPhotoSelectActivity extends AppCompatActivity {
     private boolean photolanlat;
 
     @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_multi_photo_select;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_multi_photo_select);
+        //setContentView(R.layout.activity_multi_photo_select);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && !getIntent().hasExtra("photolanlat")) {

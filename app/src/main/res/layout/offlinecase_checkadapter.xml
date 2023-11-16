@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearlaycheck"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <LinearLayout
             android:id="@+id/offlinecaseLayout"
@@ -26,7 +27,7 @@
             <CheckBox
                 android:id="@+id/offline_caseid"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_18sdp"
                 android:gravity="center"
                 android:text=""
                 android:paddingStart="18dp"

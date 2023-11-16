@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 @SuppressWarnings("ALL")
-public class PdfViewer extends AppCompatActivity  implements OnPageChangeListener, OnLoadCompleteListener,
+public class PdfViewer extends BaseActivity  implements OnPageChangeListener, OnLoadCompleteListener,
         OnPageErrorListener {
 
     private static final String TAG = General.class.getSimpleName();
@@ -46,9 +46,14 @@ public class PdfViewer extends AppCompatActivity  implements OnPageChangeListene
     private General general;
 
     @Override
+    protected int getLayoutResourceId() {
+        return R.layout.pdfreader;
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pdfreader);
+       // setContentView(R.layout.pdfreader);
 
         initView();
     }

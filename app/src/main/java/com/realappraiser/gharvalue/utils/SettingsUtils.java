@@ -95,9 +95,15 @@ public class SettingsUtils {
     public static final String DeleteFloors = "/api/FieldManagement/app_DeleteDynamicFloors";
 
     public static final String TYPE_OF_MASONRY = "/api/TypeOfMasonry/GetAll";
+
+    public static final String TYPE_OF_NON_CASE_VISIT = "/api/NonCaseActivities/LoadNonCaseActivities";
     public static final String TYPE_OF_MORTAR = "/api/TypeOfMortar/GetAll";
     public static final String TYPE_OF_FOOTING = "/api/TypeOfFootingFoundation/GetAll";
     public static final String TYPE_OF_STEEL = "/api/TypeOfSteelGrade/GetAll";
+
+    public static final String CONVEYANCE_REPORT = "/api/FsConveyance/app_DailyConveyanceReportAsync";
+
+    public static final String WEEKLY_REPORT = "/api/FsConveyance/app_CustomConveyanceReport";
 
 
     //public static final String Logout = API_BASE_URL + "login/logout";

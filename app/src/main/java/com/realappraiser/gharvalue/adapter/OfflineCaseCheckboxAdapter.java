@@ -81,30 +81,38 @@ public class OfflineCaseCheckboxAdapter extends RecyclerView.Adapter<OfflineCase
         String caseId = dataModels.get(position).getCaseId();
         if (!general.isEmpty(caseId)) {
             holder.offline_caseid.setText("Case Id : " + caseId);
+            holder.offline_caseid.setVisibility(View.VISIBLE);
         } else {
-            holder.offline_caseid.setText(R.string.dot);
+            //holder.offline_caseid.setText(R.string.dot);
+            holder.offline_caseid.setVisibility(View.GONE);
         }
 
         String applicantName = dataModels.get(position).getApplicantName();
         if (!general.isEmpty(applicantName)) {
             holder.offline_personname.setText(applicantName);
+            holder.offline_personname.setVisibility(View.VISIBLE);
         } else {
-            holder.offline_personname.setText(R.string.dot);
+            //holder.offline_personname.setText(R.string.dot);
+            holder.offline_personname.setVisibility(View.GONE);
         }
         //  holder.offline_personname.setText("");
 
         String address = dataModels.get(position).getPropertyAddress();
         if (!general.isEmpty(address)) {
             holder.offlineaddress.setText(address);
+            holder.offlineaddress.setVisibility(View.VISIBLE);
         } else {
-            holder.offlineaddress.setText(R.string.dot);
+           // holder.offlineaddress.setText(R.string.dot);
+            holder.offlineaddress.setVisibility(View.GONE);
         }
 
         String bank = dataModels.get(position).getBankName();
         if (!general.isEmpty(bank)) {
             holder.offlinebankname.setText(bank);
+            holder.offlinebankname.setVisibility(View.VISIBLE);
         } else {
-            holder.offlinebankname.setText(R.string.dot);
+           // holder.offlinebankname.setText(R.string.dot);
+            holder.offlinebankname.setVisibility(View.GONE);
         }
 
         if (mCheckedState[position])
@@ -150,6 +158,8 @@ public class OfflineCaseCheckboxAdapter extends RecyclerView.Adapter<OfflineCase
 
                 if (isChecked) {
 
+                    holder.linearlaycheck.setBackgroundColor(mContext.getResources().getColor(R.color.selected_case));
+
                     int offlineapicount = 0, offlineadaptercount = 0;
                     if (!general.isEmpty(offlinecase_count)) {
                         offlineapicount = Integer.parseInt(offlinecase_count);
@@ -186,6 +196,8 @@ public class OfflineCaseCheckboxAdapter extends RecyclerView.Adapter<OfflineCase
                     }
                     //OfflineCasesPipeSymbol();
                 } else {
+                    holder.linearlaycheck.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
                     // Singleton.getInstance().CheckboxSelection.remove(complaints);
                     if (Singleton.getInstance().mCheckPosition.contains(position)) {
 

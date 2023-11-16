@@ -1,5 +1,7 @@
 package com.realappraiser.gharvalue.activities;
 
+import static com.realappraiser.gharvalue.utils.General.REQUEST_ID_MULTIPLE_PERMISSIONS;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -166,9 +168,6 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             // Already Login
             if (Connectivity.isConnected(this)) {
                 // Get Drop down API
-                if(SettingsUtils.Latitudes < 0.0){
-                    getCurrentLocation(this);
-                }
                 InitiateGetFieldDropDownTask();
             } else {
                 startActivity(new Intent(SplashActivity.this, HomeActivity.class));
@@ -413,8 +412,11 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         if(SettingsUtils.Latitudes > 0.0){
             startActivity(new Intent(SplashActivity.this, HomeActivity.class));
         }else{
-            getCurrentLocation(this);
-            startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+            if (general.checkPermissions()) {
+                getCurrentLocation(this);
+            }else{
+                Log.e(TAG,"Permission");
+            }
         }
     }
 
@@ -455,7 +457,6 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
 
     private  void getCurrentLocation(Activity activity){
-
         if (general.GPS_status()) {
             try {
                 GPSService gpsService = new GPSService(activity);
@@ -468,13 +469,33 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+                            startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                         }
                     }
                 }, 1500);
             }catch (Exception e){
                 e.printStackTrace();
             }
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ID_MULTIPLE_PERMISSIONS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                   getCurrentLocation(this);
+                } else {
+                    general.customToast("Please enable all permissions to complete access of this application", this);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            general.checkPermissions();
+                        }
+                    }, 500);
+
+                }
 
 
         }

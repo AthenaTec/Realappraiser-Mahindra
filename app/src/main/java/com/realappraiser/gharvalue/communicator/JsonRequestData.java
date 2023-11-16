@@ -1,7 +1,5 @@
 package com.realappraiser.gharvalue.communicator;
 
-import com.google.gson.JsonElement;
-import com.realappraiser.gharvalue.model.PropertyDoc;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -112,6 +110,15 @@ public class JsonRequestData {
 
     private boolean isSuccessful;
     private int responseCode;
+
+    private String activityType;
+    private String Comments;
+
+    private String AgencyBranchId;
+
+    private String FromDate;
+
+    private String ToDate;
 
     public String getNotes() {
         return Notes;
@@ -783,6 +790,54 @@ public class JsonRequestData {
     public void setValidUrl(boolean validUrl) {
         isValidUrl = validUrl;
     }
+
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
+    }
+
+    public String getComments() {
+        return Comments;
+    }
+
+    public void setComments(String comments) {
+        this.Comments = comments;
+    }
+
+    public void setAgencyBId(String agencyBranchId) {
+        AgencyBranchId = agencyBranchId;
+    }
+
+    public String getAgencyBId(){
+        return AgencyBranchId;
+    }
+
+    public String getToDate() {
+        return ToDate;
+    }
+
+    public void setToDate(String toDate) {
+        ToDate = toDate;
+    }
+
+    public String getFromDate() {
+        return FromDate;
+    }
+
+    public void setFromDate(String fromDate) {
+        FromDate = fromDate;
+    }
+
+    /*public DailyActivityDataResponse getData() {
+        return data;
+    }
+
+    public void setData(DailyActivityDataResponse data) {
+        this.data = data;
+    }*/
 
 
     /******

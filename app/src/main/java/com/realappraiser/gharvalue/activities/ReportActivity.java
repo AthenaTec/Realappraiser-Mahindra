@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.realappraiser.gharvalue.R;
 
 @SuppressWarnings("ALL")
-public class ReportActivity extends AppCompatActivity {
+public class ReportActivity extends BaseActivity {
 
     TextView error;
     private String versionCode;
@@ -19,9 +19,14 @@ public class ReportActivity extends AppCompatActivity {
     boolean is_login;
 
     @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_report;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report);
+       // setContentView(R.layout.activity_report);
 
         Intent i = getIntent();
         result = i.getStringExtra("error");

@@ -18,7 +18,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -42,15 +40,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.safetynet.SafetyNetApi;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -71,6 +66,7 @@ import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.ResponseParser;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
+import com.realappraiser.gharvalue.convenyancereport.ConvenyanceReport;
 import com.realappraiser.gharvalue.model.BankSelection;
 import com.realappraiser.gharvalue.model.CaseSelection;
 import com.realappraiser.gharvalue.model.ConfigData;
@@ -86,6 +82,7 @@ import com.realappraiser.gharvalue.model.TypeOfMasonry;
 import com.realappraiser.gharvalue.model.TypeOfMortar;
 import com.realappraiser.gharvalue.model.TypeOfSteel;
 import com.realappraiser.gharvalue.model.UrlModel;
+import com.realappraiser.gharvalue.noncaseactivity.NonCaseActivity;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
@@ -98,6 +95,7 @@ import com.realappraiser.gharvalue.utils.security.SafetyNetChecker;
 import com.realappraiser.gharvalue.worker.GeoUpdate;
 import com.realappraiser.gharvalue.worker.LocationTrackerApi;
 import com.realappraiser.gharvalue.worker.OreoLocation;
+import com.realappraiser.gharvalue.worker.SessionLogoutWorkerManager;
 import com.realappraiser.gharvalue.worker.WorkerManager;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -112,14 +110,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
+import com.realappraiser.gharvalue.activities.BaseActivity;
+
 @SuppressWarnings("ALL")
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener, OpenCaseAdapter.TransferClickListener, OfflineLocationInterface, OnFailureListener, OnSuccessListener<SafetyNetApi.AttestationResponse> {
+public class HomeActivity extends BaseActivity implements View.OnClickListener, OpenCaseAdapter.TransferClickListener,
+        OfflineLocationInterface, OnFailureListener,
+        OnSuccessListener<SafetyNetApi.AttestationResponse> {
 
     private General general;
     @BindView(R.id.toolbar)
@@ -240,6 +241,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "HomeActivity";
     private int propertyId, bankId, caseAdminId, reportMakerId;
     private WorkerManager workManager;
+
+    private SessionLogoutWorkerManager sessionLogoutWorkerManager;
+
     private boolean isGPS = false;
     private LocationTrackerApi locationTrackerApi;
     private OreoLocation oreoLocation;
@@ -252,13 +256,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         //TODO - > For Bug and error report send to api
         General.report_bug(HomeActivity.this);
-        setContentView(R.layout.home_screen);
+        //setContentView(R.layout.home_screen);
         ButterKnife.bind(this);
         SettingsUtils.init(this);
-
         real_appraiser_jaipur = SettingsUtils.getInstance().getValue(SettingsUtils.real_appraiser_jaipur, false);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
+        sessionLogoutWorkerManager = new SessionLogoutWorkerManager(MyApplication.getAppContext());
         if (real_appraiser_jaipur) {
             // Jaipur
             // Obtain the FirebaseAnalytics instance.
@@ -309,9 +312,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         } else if (General.rootAndEmulatorChecker(HomeActivity.this) == false) {
             initiateViewsAndData();
         }*/
-
         initiateViewsAndData();
-
     }
 
     private void initiateViewsAndData() {
@@ -705,7 +706,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             Singleton.getInstance().offlineCaseListOriginal.add(Singleton.getInstance().offlineCaseList.get(i));
 
                             // Singleton.getInstance().mCheckPosition.add(i);
-                          //  Log.e("update", value + "");
+                            //  Log.e("update", value + "");
                         }
                     }
                     loadOfflineCaseAdapter(Singleton.getInstance().offlineCaseListOriginal);
@@ -833,7 +834,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void goOffline() {
         if (Connectivity.isConnected(HomeActivity.this)) {
-
             int offlineapicount = 0, offlineadaptercount = 0;
             if (!general.isEmpty(offlinecase_count)) {
                 offlineapicount = Integer.parseInt(offlinecase_count);
@@ -965,7 +965,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             // Room
             if (appDatabase.interfaceDataModelQuery().getDataModels().size() > 0) {
-              //  general.showloading(HomeActivity.this);
+                //  general.showloading(HomeActivity.this);
 
                 shimmerHomeView.startShimmer();
                 shimmerHomeView.setVisibility(View.VISIBLE);
@@ -990,7 +990,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                       // general.hideloading();
+                        // general.hideloading();
                         shimmerHomeView.stopShimmer();
                         shimmerHomeView.setVisibility(View.GONE);
                         parentLayout.setVisibility(View.VISIBLE);
@@ -1003,7 +1003,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void OfflineCaseList(ArrayList<OfflineDataModel> offlineDataModels) {
         // Room for offline cases
 
-       // general.showloading(HomeActivity.this);
+        // general.showloading(HomeActivity.this);
         shimmerHomeView.startShimmer();
         shimmerHomeView.setVisibility(View.VISIBLE);
         parentLayout.setVisibility(View.GONE);
@@ -1068,7 +1068,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 offlinecaseEmptychecked();
             }
         } else {
-           // general.hideloading();
+            // general.hideloading();
 
             shimmerHomeView.stopShimmer();
             shimmerHomeView.setVisibility(View.GONE);
@@ -1111,7 +1111,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         percentage_level_half = percentage_level / 2;
                         Log.e("percentage_level_half", "percentage_level_half: " + percentage_level_half);
                         // set a one as default value
-                       // general.hideloading();
+                        // general.hideloading();
                         shimmerHomeView.stopShimmer();
                         shimmerHomeView.setVisibility(View.GONE);
                         parentLayout.setVisibility(View.VISIBLE);
@@ -1125,7 +1125,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else {
             Connectivity.showNoConnectionDialog(this);
-           // general.hideloading();
+            // general.hideloading();
             shimmerHomeView.stopShimmer();
             shimmerHomeView.setVisibility(View.GONE);
             parentLayout.setVisibility(View.VISIBLE);
@@ -1136,7 +1136,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         /**********When Offline case is not selected then show the adapter with
          * unchecked checkboxes and load all open cases************/
         if (appDatabase.interfaceOfflineDataModelQuery().getDataModal_offlinecase(false).size() > 0) {
-           // general.showloading(HomeActivity.this);
+            // general.showloading(HomeActivity.this);
 
             shimmerHomeView.startShimmer();
             shimmerHomeView.setVisibility(View.VISIBLE);
@@ -1222,7 +1222,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                 DataModel dataModel = dataModel_open.get(j);
                                 dataModel.setOfflinecase(true);
                                 if (appDatabase.interfaceDataModelQuery().getDataModels().size() > 0) {
-                                   // long value = appDatabase.interfaceDataModelQuery().updateOfflineDataModel(dataModel_open.get(j).getCaseId(), true);
+                                    // long value = appDatabase.interfaceDataModelQuery().updateOfflineDataModel(dataModel_open.get(j).getCaseId(), true);
                                     //Log.e("update", value + "");
                                 }
                             }
@@ -1586,10 +1586,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         MenuItem item1 = menu.findItem(R.id.refresh);
         MenuItem item2 = menu.findItem(R.id.ic_home);
         MenuItem item3 = menu.findItem(R.id.versionname);
+        MenuItem item4 = menu.findItem(R.id.noncaseactivity);
+        MenuItem item5 = menu.findItem(R.id.convyencereport);
 
         item.setVisible(true);
         item1.setVisible(true);
         item3.setVisible(true);
+        item4.setVisible(true);
+        item5.setVisible(true);
         item2.setVisible(false);
         return true;
     }
@@ -1600,7 +1604,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case R.id.logout:
                 if (Connectivity.isConnected(this)) {
-                    if (general.checkPermissions()){
+                    if (general.checkPermissions()) {
                         getCurrentLocation(this);
                     }
                 } else {
@@ -1625,6 +1629,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 getFreshCaseSelections();
                 break;
 
+            case R.id.noncaseactivity:
+                getNonCaseActivity();
+                break;
+            case R.id.convyencereport:
+                getConvyenceReport();
+                break;
 
 
            /* case R.id.ic_home:
@@ -1638,7 +1648,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void getFreshCaseSelections() {
 
         if (Connectivity.isConnected(this)) {
-           // general.showloading(this);
+            // general.showloading(this);
             shimmerHomeView.startShimmer();
             shimmerHomeView.setVisibility(View.VISIBLE);
             parentLayout.setVisibility(View.GONE);
@@ -1680,7 +1690,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void parseCreateCaseResponse(CaseSelection fromJson, int responseCode, boolean isSuccessful) {
-       // general.hideloading();
+        // general.hideloading();
         shimmerHomeView.stopShimmer();
         shimmerHomeView.setVisibility(View.GONE);
         parentLayout.setVisibility(View.VISIBLE);
@@ -1729,7 +1739,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         Log.e(TAG, "onTaskComplete: " + requestData.getResponse());
                         subBranchResponse(new Gson().fromJson(requestData.getResponse(), SubBranchModel.class), requestData.getResponseCode(), requestData.isSuccessful());
                     } catch (Exception e) {
-                       // general.hideloading();
+                        // general.hideloading();
                         shimmerHomeView.stopShimmer();
                         shimmerHomeView.setVisibility(View.GONE);
                         parentLayout.setVisibility(View.VISIBLE);
@@ -1742,7 +1752,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         } else {
             Connectivity.showNoConnectionDialog(this);
-           // general.hideloading();
+            // general.hideloading();
             shimmerHomeView.stopShimmer();
             shimmerHomeView.setVisibility(View.GONE);
             parentLayout.setVisibility(View.VISIBLE);
@@ -1811,7 +1821,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         /*******get the Datamodel Offline checkbox lists******/
         ArrayList<OfflineDataModel> dataModel_offline = new ArrayList<>();
         if (appDatabase.interfaceOfflineDataModelQuery().getDataModal_offlinecase(false).size() > 0) {
-           // general.showloading(HomeActivity.this);
+            // general.showloading(HomeActivity.this);
             shimmerHomeView.startShimmer();
             shimmerHomeView.setVisibility(View.VISIBLE);
             parentLayout.setVisibility(View.GONE);
@@ -1832,7 +1842,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-               // general.hideloading();
+                // general.hideloading();
                 shimmerHomeView.stopShimmer();
                 shimmerHomeView.setVisibility(View.GONE);
                 parentLayout.setVisibility(View.VISIBLE);
@@ -1890,7 +1900,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         spSubBranch.setAdapter(arrayAdapter4);*/
 
 
-       // initSubBranch(tSubBranch);
+        // initSubBranch(tSubBranch);
 
         initCaseAdimn(spCaseAdmin);
 
@@ -1977,7 +1987,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void createCase(String applicantName, int propertyId, int bankId, int caseAdminId, int reportMakerId, String loginId, int subBranchId, String bankRef, int rmAgencyBranchId, int caAgencyBranchId) {
 
         if (Connectivity.isConnected(this)) {
-           // general.showloading(this);
+            // general.showloading(this);
             shimmerHomeView.startShimmer();
             shimmerHomeView.setVisibility(View.VISIBLE);
             parentLayout.setVisibility(View.GONE);
@@ -2062,7 +2072,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
                         prepareBankList(spBankName, new Gson().fromJson(requestData.getResponse(), BankSelection.class), requestData.getResponseCode(), requestData.isSuccessful());
                     } catch (Exception e) {
-                       // general.hideloading();
+                        // general.hideloading();
                         shimmerHomeView.stopShimmer();
                         shimmerHomeView.setVisibility(View.GONE);
                         parentLayout.setVisibility(View.VISIBLE);
@@ -2073,7 +2083,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             webserviceTask.execute();
         } else {
             Connectivity.showNoConnectionDialog(this);
-           // general.hideloading();
+            // general.hideloading();
             shimmerHomeView.stopShimmer();
             shimmerHomeView.setVisibility(View.GONE);
             parentLayout.setVisibility(View.VISIBLE);
@@ -2090,7 +2100,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             arrayAdapter3.setDropDownViewResource(R.layout.row_spinner_item_popup);
             spBankName.setAdapter(arrayAdapter3);
 
-           // general.hideloading();
+            // general.hideloading();
             shimmerHomeView.stopShimmer();
             shimmerHomeView.setVisibility(View.GONE);
             parentLayout.setVisibility(View.VISIBLE);
@@ -2318,7 +2328,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Connectivity.showNoConnectionDialog(this);
             connectionDialog_circle.hide();
-           // general.hideloading();
+            // general.hideloading();
             shimmerHomeView.stopShimmer();
             shimmerHomeView.setVisibility(View.GONE);
             parentLayout.setVisibility(View.VISIBLE);
@@ -2670,7 +2680,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if (!successful && (responseCode == 400 || responseCode == 401)) {
             General.sessionDialog(HomeActivity.this);
         } else {
-           // General.customToast(getString(R.string.something_wrong), HomeActivity.this);
+            // General.customToast(getString(R.string.something_wrong), HomeActivity.this);
         }
 
     }
@@ -2708,7 +2718,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void getTransferCaseSelection(String caseId, String applicantName) {
 
         if (Connectivity.isConnected(this)) {
-           // general.showloading(this);
+            // general.showloading(this);
             shimmerHomeView.startShimmer();
             shimmerHomeView.setVisibility(View.VISIBLE);
             parentLayout.setVisibility(View.GONE);
@@ -2743,7 +2753,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showCaseTransferPopup(String requestData, int responseCode, boolean successful, String caseId, String applicantName) {
-       // general.hideloading();
+        // general.hideloading();
         shimmerHomeView.stopShimmer();
         shimmerHomeView.setVisibility(View.GONE);
         parentLayout.setVisibility(View.VISIBLE);
@@ -2802,7 +2812,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void transferCase(String caseId, Integer empId, String loginId, Integer agencyBranchId) {
 
         if (Connectivity.isConnected(this)) {
-           // General.showloading(this);
+            // General.showloading(this);
             shimmerHomeView.startShimmer();
             shimmerHomeView.setVisibility(View.VISIBLE);
             parentLayout.setVisibility(View.GONE);
@@ -2904,7 +2914,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         sb.append("sendLocationUpdate: ");
         sb.append(latitude);
         Log.e("HomeActivity", sb.toString());
-        locationTrackerApi.shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Interval", latitude, longitude);
+        locationTrackerApi.shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Interval", latitude, longitude, "", 0);
         workManager.startWorker();
         SettingsUtils.Latitudes = latitude;
         SettingsUtils.Longitudes = longitude;
@@ -3154,7 +3164,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private  void getCurrentLocation(Activity activity){
+    private void getCurrentLocation(Activity activity) {
 
         if (general.GPS_status()) {
             try {
@@ -3168,16 +3178,31 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
-                            general.LogoutDialog(HomeActivity.this,SettingsUtils.Longitudes,SettingsUtils.Latitudes);
+                            general.LogoutDialog(HomeActivity.this, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
                         }
                     }
                 }, 1500);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
-
         }
     }
+
+    private void getNonCaseActivity() {
+        Intent intent = new Intent(HomeActivity.this, NonCaseActivity.class);
+        startActivity(intent);
+    }
+
+    private void getConvyenceReport() {
+        Intent intent = new Intent(HomeActivity.this, ConvenyanceReport.class);
+        startActivity(intent);
+    }
+
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.home_screen;
+    }
+
+
 }

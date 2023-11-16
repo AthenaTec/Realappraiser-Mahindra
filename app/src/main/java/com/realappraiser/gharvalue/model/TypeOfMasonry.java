@@ -66,6 +66,10 @@ public class TypeOfMasonry {
         @Expose
         private Object modifiedBy;
 
+        @SerializedName("Id")
+        @Expose
+        private Integer id;
+
         public Integer getTypeofmasonryId() {
             return typeofmasonryId;
         }
@@ -117,6 +121,14 @@ public class TypeOfMasonry {
         @Override
         public String toString() {
             return name ;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
         }
     }
 

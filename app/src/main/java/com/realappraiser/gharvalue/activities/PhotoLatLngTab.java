@@ -70,7 +70,7 @@ import butterknife.ButterKnife;
  */
 
 @SuppressWarnings("ALL")
-public class PhotoLatLngTab extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
+public class PhotoLatLngTab extends BaseActivity implements TabLayout.OnTabSelectedListener {
 
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
@@ -105,7 +105,7 @@ public class PhotoLatLngTab extends AppCompatActivity implements TabLayout.OnTab
         super.onCreate(savedInstanceState);
         //TODO - > For Bug and error report send to api
         General.report_bug(PhotoLatLngTab.this);
-        setContentView(R.layout.photolatlng);
+        //setContentView(R.layout.photolatlng);
         General.statusbarColor(this);
         ButterKnife.bind(this);
 
@@ -260,6 +260,8 @@ public class PhotoLatLngTab extends AppCompatActivity implements TabLayout.OnTab
         MenuItem item3 = menu.findItem(R.id.versionname);
         MenuItem item4 = menu.findItem(R.id.gooffline_case);
         MenuItem item5 = menu.findItem(R.id.create);
+        MenuItem item6 = menu.findItem(R.id.noncaseactivity);
+        MenuItem item7 = menu.findItem(R.id.convyencereport);
 
 
         item.setVisible(true);
@@ -268,6 +270,8 @@ public class PhotoLatLngTab extends AppCompatActivity implements TabLayout.OnTab
         item3.setVisible(true);
         item4.setVisible(false);
         item5.setVisible(false);
+        item6.setVisible(false);
+        item7.setVisible(false);
         return true;
     }
 
@@ -1238,5 +1242,8 @@ public class PhotoLatLngTab extends AppCompatActivity implements TabLayout.OnTab
         }, 0);
     }
 
-
+    @Override
+    protected int getLayoutResourceId(){
+        return R.layout.photolatlng;
+    }
 }
