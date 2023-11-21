@@ -83,14 +83,14 @@ public abstract class BaseActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty()) {
+        if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty() && !general.getOfflineCase()) {
             String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
             long currentVisitTime = System.currentTimeMillis();
             long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
             //minutes >= 1
-            if (minutes >= 5) {
+            if (minutes >= 2) {
                 Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
                 if (general.checkLatLong()) { //SettingsUtils.Latitudes > 0
                     General.showloading(this);

@@ -2088,29 +2088,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         activity.finish();*/
     }
 
-    public void checkTimeOut(Activity activity, General general) {
-        if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty()) {
-            String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
-            long currentVisitTime = System.currentTimeMillis();
-            long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
-            long minutes = (totalVisitTime / 1000) / 60;
-            Log.e(TAG, "onResume: " + minutes);
-            //minutes >= 5
-            if (minutes >= 5) {
-                Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
-                if (general.checkLatLong()) {
-                    General.sessionLogout(activity, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
-                } else {
-                    if (general.checkPermissions()) {
-                        getCurrentLocation(activity, general);
-                    } else {
-                        Log.e(TAG, "Permission DENied");
-                    }
-                }
-            }
-        }
 
-    }
 
     private void getCurrentLocation(Activity activity, General general) {
 
@@ -2152,6 +2130,24 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         } else {
             return false;
         }
+    }
+
+
+    public boolean getOfflineCase(){
+        try{
+            AppDatabase appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
+            ArrayList<OfflineDataModel> oflineData = (ArrayList) appDatabase.interfaceOfflineDataModelQuery().getDataModal_offlinecase(true);
+            if (oflineData.size() > 0) {
+                return true;
+            }
+        }catch (Exception e){
+            e.getMessage();
+            return false;
+        }
+
+
+      return false;
+
     }
 
 

@@ -270,7 +270,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
             fileName = firstname;
         }
 
-        if(lastname != null){
+        if(lastname != null && !lastname.equalsIgnoreCase("null")){
             fileName = fileName + " "+ lastname;
         }
 

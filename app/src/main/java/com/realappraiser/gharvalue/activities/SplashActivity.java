@@ -728,7 +728,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
     }
 
     private void getSessionOut(boolean b){
-        if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty())
+        if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty() && !general.getOfflineCase())
         {
             String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
             long currentVisitTime = System.currentTimeMillis();
@@ -736,7 +736,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
             //minutes >= 1
-            if (minutes >= 5)
+            if (minutes >= 2)
             {
                 Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
                 if (general.checkLatLong()) { //SettingsUtils.Latitudes > 0

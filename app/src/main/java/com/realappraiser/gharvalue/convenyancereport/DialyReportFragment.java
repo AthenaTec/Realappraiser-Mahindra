@@ -24,6 +24,7 @@ import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.convenyancereport.adapter.DailyReportAdapter;
 import com.realappraiser.gharvalue.convenyancereport.response.DailyActivityResponse;
+import com.realappraiser.gharvalue.convenyancereport.response.TodayActivityResponse;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
@@ -128,7 +129,7 @@ public class DialyReportFragment extends Fragment {
                     requestData, SettingsUtils.GET_TOKEN);
             webserviceTask.setFetchMyData((TaskCompleteListener<JsonRequestData>) dailyActivityResponse -> {
 
-                parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), DailyActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
+                parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), TodayActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
                 Log.e(TAG, new Gson().toJson(dailyActivityResponse));
 
             });
@@ -141,19 +142,23 @@ public class DialyReportFragment extends Fragment {
         }
     }
 
-    private void parseDailyActivityResponse(DailyActivityResponse fromJson, int responseCode, boolean isSuccessful) {
+    private void parseDailyActivityResponse(TodayActivityResponse fromJson, int responseCode, boolean isSuccessful) {
 
-        if (fromJson != null && fromJson.getData() != null && fromJson.getData().size() > 0) {
+        if (fromJson != null && fromJson.getData() != null ) {
             noActivity.setVisibility(View.GONE);
             rl_no_internet.setVisibility(View.GONE);
             llDailyReport.setVisibility(View.VISIBLE);
-            totalDistanceTravelled.setText("Total Distance Travelled : " + fromJson.getData().get(0).getTotalDistance() + " Km");
-            totalActivityCount.setText("Total Activity count : " + fromJson.getData().get(0).getNoOfActivities());
-            if (fromJson.getData().get(0).getActivities() != null) {
-                DailyReportAdapter dailyReportAdapter = new DailyReportAdapter(getActivity(), fromJson.getData().get(0).getActivities());
+            totalDistanceTravelled.setText("Total Distance Travelled : " + fromJson.getData().getTotalDistance() + " Km");
+            totalActivityCount.setText("Total Activity count : " + fromJson.getData().getNoOfActivities());
+            if (fromJson.getData().getActivities() != null) {
+                DailyReportAdapter dailyReportAdapter = new DailyReportAdapter(getActivity(), fromJson.getData().getActivities());
                 rvDailyReport.setAdapter(dailyReportAdapter);
                 rvDailyReport.setItemAnimator(new DefaultItemAnimator());
                 rvDailyReport.setNestedScrollingEnabled(false);
+            }else {
+                noActivity.setVisibility(View.VISIBLE);
+                rl_no_internet.setVisibility(View.GONE);
+                llDailyReport.setVisibility(View.GONE);
             }
         } else {
             noActivity.setVisibility(View.VISIBLE);
