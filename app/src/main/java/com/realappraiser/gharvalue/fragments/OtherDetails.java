@@ -7255,6 +7255,8 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
 
                             new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
                                     , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.util.DisplayMetrics;
 
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDex;
 
 import com.google.firebase.FirebaseApp;

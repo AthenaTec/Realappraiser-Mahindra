@@ -39,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity{
 
     private final int LOCATION_REQUEST = 12345;
     private String TAG = "BaseActivity";
@@ -62,6 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "OnCreate");
         setContentView(getLayoutResourceId());
 
     }
@@ -89,12 +90,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
             //minutes >= 1
-            if (minutes >= 1) {
+            if (minutes >= 5) {
                 Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
-                if (SettingsUtils.Latitudes > 0) { //SettingsUtils.Latitudes > 0
+                if (general.checkLatLong()) { //SettingsUtils.Latitudes > 0
                     General.showloading(this);
-                    sessionLogout(this, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
 
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            sessionLogout(BaseActivity.this);
+                        }
+                    }, 7000);
                 } else {
                     if (general.checkPermissions()) {
                         General.showloading(this);
@@ -134,7 +140,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
-                            sessionLogout(activity, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
+
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
+
+                            sessionLogout(activity);
                         }
                     }
                 }, 1500);
@@ -164,8 +174,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    public  void sessionLogout(Activity activity, double longitudes, double latitudes)
-
+    public  void sessionLogout(Activity activity)
     {
         Singleton.getInstance().longitude = 0.0;
         Singleton.getInstance().latitude = 0.0;
@@ -178,7 +187,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         Singleton.getInstance().openCaseList.clear();
         Singleton.getInstance().closeCaseList.clear();
         Singleton.getInstance().GetImage_list_flat.clear();
-        SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
         AppDatabase appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
 
 
@@ -219,11 +227,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         appDatabase.propertyUpdateCategory().deleteRow();
         // Delete - GetPhotoMeasurmentQuery
         appDatabase.interfaceGetPhotoMeasurmentQuery().deleteRow();
-
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                address = SettingsUtils.convertLatLngToAddress(activity, latitudes, longitudes);
+
+                address = SettingsUtils.convertLatLngToAddress(activity);
             }
         });
 
@@ -238,8 +246,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             requestData.setCaseId("");
             requestData.setEmpId(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID,""));
             requestData.setLocationType("Logout");
-            requestData.setLatitude(String.valueOf(SettingsUtils.Latitudes));
-            requestData.setLongitude(String.valueOf(SettingsUtils.Longitudes));
+            requestData.setLatitude(SettingsUtils.getInstance().getValue("lat",""));
+            requestData.setLongitude(SettingsUtils.getInstance().getValue("long",""));
             requestData.setTrackerTime(time);
             requestData.setActivityType(String.valueOf(4));
             requestData.setComments("");
@@ -249,14 +257,12 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (!address.isEmpty()) {
                 requestData.setAddress(address);
             } else {
-                address = SettingsUtils.convertLatLngToAddress(this, latitudes, longitudes);
+                address = SettingsUtils.convertLatLngToAddress(this);
                 requestData.setAddress(address);
             }
 
-
             requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
-//            requestData.setAuthToken("Bearer FFcxMfxHjm79qtRcMFNbp4Ydf7l_3jGiLSeSuY2tC3QJmiurkOSfEQGtbN-M6S3kF13VMSM5CALbIJNnT37zMi81gCRCz6YWZD7Usqs9i73kIgJGoHdDsPJdHkWyzD52JuORASt5p-jEB5jN2abX2HXdcIDrZD_YxVHWlFVn4uITc1SA8nk5OPCy5-xmpSq4VrHoUPsRrRMPx411C8gfcJvdaOCTodGRKFVwzVffHRC2cTRi-");
-            requestData.setRequestBody(RequestParam.LocationTracker(requestData));
+           requestData.setRequestBody(RequestParam.LocationTracker(requestData));
 
             Log.e("Location Params", new Gson().toJson(requestData));
 
@@ -268,6 +274,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                             requestData.getResponse();
                     Log.e(TAG, sb);
                     General.hideloading();
+                    SettingsUtils.getInstance().putValue("sessionCountDown", "");
+                    SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
+
                     redirectLogin();
                 }
             });
@@ -352,19 +361,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void redirectLogin(){
+
+
         if (Build.VERSION.SDK_INT < 26) {
             stopService(new Intent(this, GeoUpdate.class));
         } else {
             new OreoLocation(this).stopOreoLocationUpdates();
         }
         new WorkerManager(this).stopWorker();
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        General.customToast("Session Time out",this);
-        finishAffinity();
+            General.hideloading();
+            General.customToast("Session Time out",this);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+
+
     }
 
 

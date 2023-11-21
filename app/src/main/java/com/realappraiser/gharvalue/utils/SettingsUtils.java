@@ -101,7 +101,7 @@ public class SettingsUtils {
     public static final String TYPE_OF_FOOTING = "/api/TypeOfFootingFoundation/GetAll";
     public static final String TYPE_OF_STEEL = "/api/TypeOfSteelGrade/GetAll";
 
-    public static final String CONVEYANCE_REPORT = "/api/FsConveyance/app_DailyConveyanceReportAsync";
+    public static final String CONVEYANCE_REPORT = "/api/FsConveyance/app_DailyConveyanceReport";
 
     public static final String WEEKLY_REPORT = "/api/FsConveyance/app_CustomConveyanceReport";
 
@@ -345,7 +345,10 @@ public class SettingsUtils {
     }
 
 
-    public static String convertLatLngToAddress(Context context, double latt, double longi) {
+    public static String convertLatLngToAddress(Context context) {
+      double latt = Double.parseDouble(SettingsUtils.getInstance().getValue("lat",""));
+      double longi = Double.parseDouble(SettingsUtils.getInstance().getValue("long",""));
+
         String address = "Address not found";
         Context context2 = context;
         try {

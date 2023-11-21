@@ -95,7 +95,6 @@ import com.realappraiser.gharvalue.utils.security.SafetyNetChecker;
 import com.realappraiser.gharvalue.worker.GeoUpdate;
 import com.realappraiser.gharvalue.worker.LocationTrackerApi;
 import com.realappraiser.gharvalue.worker.OreoLocation;
-import com.realappraiser.gharvalue.worker.SessionLogoutWorkerManager;
 import com.realappraiser.gharvalue.worker.WorkerManager;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -241,9 +240,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private static final String TAG = "HomeActivity";
     private int propertyId, bankId, caseAdminId, reportMakerId;
     private WorkerManager workManager;
-
-    private SessionLogoutWorkerManager sessionLogoutWorkerManager;
-
     private boolean isGPS = false;
     private LocationTrackerApi locationTrackerApi;
     private OreoLocation oreoLocation;
@@ -261,7 +257,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         SettingsUtils.init(this);
         real_appraiser_jaipur = SettingsUtils.getInstance().getValue(SettingsUtils.real_appraiser_jaipur, false);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        sessionLogoutWorkerManager = new SessionLogoutWorkerManager(MyApplication.getAppContext());
         if (real_appraiser_jaipur) {
             // Jaipur
             // Obtain the FirebaseAnalytics instance.
@@ -2914,10 +2909,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         sb.append("sendLocationUpdate: ");
         sb.append(latitude);
         Log.e("HomeActivity", sb.toString());
-        locationTrackerApi.shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Interval", latitude, longitude, "", 0);
+        locationTrackerApi.shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Interval",
+                Double.parseDouble(SettingsUtils.getInstance().getValue("lat","")),
+                Double.parseDouble(SettingsUtils.getInstance().getValue("long","")), "", 0);
         workManager.startWorker();
-        SettingsUtils.Latitudes = latitude;
-        SettingsUtils.Longitudes = longitude;
     }
 
     @Override
@@ -3178,6 +3173,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
+
                             general.LogoutDialog(HomeActivity.this, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
                         }
                     }

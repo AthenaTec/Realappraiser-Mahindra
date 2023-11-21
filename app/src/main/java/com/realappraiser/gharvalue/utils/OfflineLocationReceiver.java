@@ -44,6 +44,10 @@ public class OfflineLocationReceiver {
                     }
                     SettingsUtils.Latitudes = latitude;
                     SettingsUtils.Longitudes = longitude;
+
+                    SettingsUtils.getInstance().putValue("lat", String.valueOf(latitude));
+                    SettingsUtils.getInstance().putValue("long",String.valueOf(longitude));
+
                     locationInterface2.sendLocationUpdate(latitude, longitude);
                 }
 

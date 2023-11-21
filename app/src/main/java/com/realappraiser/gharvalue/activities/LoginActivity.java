@@ -82,6 +82,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -1022,16 +1023,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             general.CustomToast(getResources().getString(R.string.serverProblem));
         }
 
-        if (SettingsUtils.Latitudes > 0.0d) {
+        if (general.checkLatLong()) {
             if (general.isNetworkAvailable()) {
-               /* if(locationTrackerApi.shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Login", latt, longi, "", 3)){
-                   general.CustomToast("Login Successful");
-                   SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
-                   Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                   startActivity(intent);*/
-
                 general.showloading(this);
-                shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Login", latt, longi, "", 3);
+                shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Login",Double.parseDouble(SettingsUtils.getInstance().getValue("lat","")),
+                        Double.parseDouble(SettingsUtils.getInstance().getValue("long","")), "", 3);
               // }
             } else {
                 General.customToast("Please check your Internet Connection!", this);
@@ -1081,6 +1077,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         longi = longitude;
         SettingsUtils.Longitudes = longitude;
         SettingsUtils.Latitudes = latitude;
+
+        SettingsUtils.getInstance().putValue("lat", String.valueOf(latitude));
+        SettingsUtils.getInstance().putValue("long",String.valueOf(longitude));
+
     }
 
 
@@ -1153,18 +1153,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(SettingsUtils.Latitudes));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(SettingsUtils.Longitudes));
+
+
                             locationTrackerApi.shareLocation("",
                                     SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                                    "Login", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 3);
+                                    "Login", Double.parseDouble(SettingsUtils.getInstance().getValue("lat","")),
+                                    Double.parseDouble(SettingsUtils.getInstance().getValue("long","")), "", 3);
                             SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
-                            // startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            startActivity(intent);
+
+
                             if ((dialog != null) && dialog.isShowing()) {
                                 dialog.dismiss();
                             }
                             general.CustomToast("Login Successful");
                             general.hideloading();
+                            SettingsUtils.getInstance().putValue("sessionCountDown", "");
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            SettingsUtils.getInstance().putValue("fromLogin",true);
+                            startActivity(intent);
                         }
                     }
                 }, 1500);
@@ -1192,7 +1201,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                address = SettingsUtils.convertLatLngToAddress(LoginActivity.this, latitudes, longitudes);
+                address = SettingsUtils.convertLatLngToAddress(LoginActivity.this);
             }
         });
 
@@ -1235,7 +1244,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (!address.isEmpty()) {
                 requestData.setAddress(address);
             } else {
-                address = SettingsUtils.convertLatLngToAddress(this, latitudes, longitudes);
+                address = SettingsUtils.convertLatLngToAddress(this);
                 requestData.setAddress(address);
             }
 
@@ -1260,6 +1269,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     general.CustomToast("Login Successful");
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    SettingsUtils.getInstance().putValue("fromLogin",true);
                     startActivity(intent);
                 }
             });
@@ -1276,7 +1286,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
         if(branchPopup !=null){
-            branchPopup.cancel();
+            branchPopup.dismiss();
+        }
+        if(general!=null){
+            general.hideloading();
         }
     }
 }

@@ -19,6 +19,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 @SuppressWarnings("ALL")
 @SuppressLint("Registered")
@@ -75,6 +76,10 @@ public class GPSService extends Service implements LocationListener {
 					if (mLocation != null) {
 						mLatitude = mLocation.getLatitude();
 						mLongitude = mLocation.getLongitude();
+
+						SettingsUtils.getInstance().putValue("lat", String.valueOf(mLatitude));
+						SettingsUtils.getInstance().putValue("long",String.valueOf(mLongitude));
+
 						isLocationAvailable = true; // setting a flag that
 													// location is available
 						return mLocation;
@@ -98,6 +103,15 @@ public class GPSService extends Service implements LocationListener {
 					if (mLocation != null) {
 						mLatitude = mLocation.getLatitude();
 						mLongitude = mLocation.getLongitude();
+						SettingsUtils.getInstance().putValue("lat", String.valueOf(mLatitude));
+						SettingsUtils.getInstance().putValue("long",String.valueOf(mLongitude));
+						SettingsUtils.Latitudes = mLatitude;
+						SettingsUtils.Longitudes = mLongitude;
+
+						SettingsUtils.getInstance().putValue("lat", String.valueOf(mLatitude));
+						SettingsUtils.getInstance().putValue("long",String.valueOf(mLongitude));
+
+
 						isLocationAvailable = true; // setting a flag that
 													// location is available
 						Log.d("network enabled","true1"+mLongitude);

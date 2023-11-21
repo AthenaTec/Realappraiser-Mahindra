@@ -46,6 +46,8 @@ public class GeoUpdate extends Service implements LocationListener {
                         if (location.getLatitude() > 0.0d) {
                             SettingsUtils.Latitudes = location.getLatitude();
                             SettingsUtils.Longitudes = location.getLongitude();
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(location.getLatitude()));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(location.getLongitude()));
                         }
                     }
                 }

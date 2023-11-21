@@ -104,7 +104,7 @@ public class NonCaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (SettingsUtils.Latitudes > 0) {
+                if (general.checkLatLong()) {
                     shareLocation();
                 } else {
                     getCurrentLocation(NonCaseActivity.this);
@@ -181,6 +181,10 @@ public class NonCaseActivity extends AppCompatActivity {
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
+
                             shareLocation();
                         }
                     }
@@ -204,7 +208,7 @@ public class NonCaseActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                address = SettingsUtils.convertLatLngToAddress(NonCaseActivity.this, latitudes, longitudes);
+                address = SettingsUtils.convertLatLngToAddress(NonCaseActivity.this);
             }
         });
 
@@ -237,8 +241,8 @@ public class NonCaseActivity extends AppCompatActivity {
             requestData.setCaseId(caseId);
             requestData.setEmpId(fieldStaffId);
             requestData.setLocationType(interval);
-            requestData.setLatitude(String.valueOf(latitudes));
-            requestData.setLongitude(String.valueOf(longitudes));
+            requestData.setLatitude(SettingsUtils.getInstance().getValue("lat",""));
+            requestData.setLongitude(SettingsUtils.getInstance().getValue("long",""));
             requestData.setTrackerTime(time);
             requestData.setActivityType(String.valueOf(ActivityType));
             requestData.setComments(comments);
@@ -248,7 +252,7 @@ public class NonCaseActivity extends AppCompatActivity {
             if (!address.isEmpty()) {
                 requestData.setAddress(address);
             } else {
-                address = SettingsUtils.convertLatLngToAddress(NonCaseActivity.this, latitudes, longitudes);
+                address = SettingsUtils.convertLatLngToAddress(NonCaseActivity.this);
                 requestData.setAddress(address);
             }
 

@@ -602,6 +602,8 @@ public class PhotoLatLong extends Fragment implements
                            SettingsUtils.Longitudes = general.getcurrent_longitude(getActivity());
                            SettingsUtils.Latitudes = general.getcurrent_latitude(getActivity());
 
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(getActivity())));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(getActivity())));
 
                             create_marker(general.getcurrent_latitude(getActivity()), general.getcurrent_longitude(getActivity()));
                         }

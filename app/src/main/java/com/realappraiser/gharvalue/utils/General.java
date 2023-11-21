@@ -805,7 +805,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         btnCancel.setText("NO");
         savePopup.setCancelable(false);
         savePopup.setCanceledOnTouchOutside(false);
-        if(activity != null  && !activity.isFinishing() && !activity.isDestroyed()){
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
             savePopup.show();
         }
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -1215,7 +1215,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                     listPermissionsNeeded.add(p);
                 }
             }
-        }else {
+        } else {
             for (String p : androidHigherVersionPermission) {
                 result = ContextCompat.checkSelfPermission(mContext, p);
                 if (result != PackageManager.PERMISSION_GRANTED) {
@@ -1954,15 +1954,13 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
     public static void isShowDialog() {
 
-        if(savePopup != null){
+        if (savePopup != null) {
             savePopup.cancel();
         }
     }
 
 
-    public static void sessionLogout(Activity activity, double longitudes, double latitudes)
-
-    {
+    public static void sessionLogout(Activity activity, double longitudes, double latitudes) {
         Singleton.getInstance().longitude = 0.0;
         Singleton.getInstance().latitude = 0.0;
         Singleton.getInstance().aCase = new Case();
@@ -2019,25 +2017,22 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
       //  activity.finishAffinity();
 
 
+        boolean isSuccess = new LocationTrackerApi(activity).shareLocation("",
+                SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
+                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4);
 
+        SettingsUtils.getInstance().putValue("api_success", false);
 
-
-                boolean isSuccess = new LocationTrackerApi(activity).shareLocation("",
-                        SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                        "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4);
-
-                SettingsUtils.getInstance().putValue("api_success",false);
-
-                if(isSuccess){
-                    if (Build.VERSION.SDK_INT < 26) {
-                        activity.stopService(new Intent(activity, GeoUpdate.class));
-                    } else {
-                        new OreoLocation(activity).stopOreoLocationUpdates();
-                    }
-                    new WorkerManager(activity).stopWorker();
-                    SettingsUtils.getInstance().putValue("api_success",true);
-
+        if (isSuccess) {
+            if (Build.VERSION.SDK_INT < 26) {
+                activity.stopService(new Intent(activity, GeoUpdate.class));
+            } else {
+                new OreoLocation(activity).stopOreoLocationUpdates();
             }
+            new WorkerManager(activity).stopWorker();
+            SettingsUtils.getInstance().putValue("api_success", true);
+
+        }
 
 
 
@@ -2093,23 +2088,23 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         activity.finish();*/
     }
 
-    public void checkTimeOut(Activity activity,General general){
+    public void checkTimeOut(Activity activity, General general) {
         if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty()) {
             String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
             long currentVisitTime = System.currentTimeMillis();
             long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
-
-            if (minutes >= 1) {
+            //minutes >= 5
+            if (minutes >= 5) {
                 Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
-                if (SettingsUtils.Latitudes > 0) {
+                if (general.checkLatLong()) {
                     General.sessionLogout(activity, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
                 } else {
                     if (general.checkPermissions()) {
-                        getCurrentLocation(activity,general);
-                    }else{
-                        Log.e(TAG,"Permission DENied");
+                        getCurrentLocation(activity, general);
+                    } else {
+                        Log.e(TAG, "Permission DENied");
                     }
                 }
             }
@@ -2117,7 +2112,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
     }
 
-    private void getCurrentLocation(Activity activity,General general) {
+    private void getCurrentLocation(Activity activity, General general) {
 
         if (general.GPS_status()) {
             try {
@@ -2131,6 +2126,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
                             General.sessionLogout(activity, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
                         }
                     }
@@ -2140,4 +2137,22 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
             }
         }
     }
+
+    public boolean checkLatLong() {
+        if (SettingsUtils.getInstance().getValue("lat", "") != null &&
+                !SettingsUtils.getInstance().getValue("lat", "").isEmpty()
+
+        ) {
+            double latlong = Double.parseDouble(SettingsUtils.getInstance().getValue("lat", ""));
+            if (latlong > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
 }

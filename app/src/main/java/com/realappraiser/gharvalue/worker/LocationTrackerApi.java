@@ -37,7 +37,7 @@ public class LocationTrackerApi {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                address = SettingsUtils.convertLatLngToAddress(context, latitudes, longitudes);
+                address = SettingsUtils.convertLatLngToAddress(context);
             }
         });
 
@@ -69,8 +69,8 @@ public class LocationTrackerApi {
             requestData.setCaseId(caseId);
             requestData.setEmpId(fieldStaffId);
             requestData.setLocationType(interval);
-            requestData.setLatitude(String.valueOf(latitudes));
-            requestData.setLongitude(String.valueOf(longitudes));
+            requestData.setLatitude(SettingsUtils.getInstance().getValue("lat",""));
+            requestData.setLongitude(SettingsUtils.getInstance().getValue("long",""));
             requestData.setTrackerTime(time);
             requestData.setActivityType(String.valueOf(ActivityType));
             requestData.setComments(comments);
@@ -80,7 +80,7 @@ public class LocationTrackerApi {
             if (!address.isEmpty()) {
                 requestData.setAddress(address);
             } else {
-                address = SettingsUtils.convertLatLngToAddress(context, latitudes, longitudes);
+                address = SettingsUtils.convertLatLngToAddress(context);
                 requestData.setAddress(address);
             }
 

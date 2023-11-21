@@ -265,7 +265,16 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
         String firstname = SettingsUtils.getInstance().getValue(SettingsUtils.KEY_FIRSTNAME, "");
         String lastname = SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LASTNAME, "");
 
-        String fileName  = firstname+" " + lastname+ " Conveyance Report";
+        String fileName = "";
+        if(firstname != null){
+            fileName = firstname;
+        }
+
+        if(lastname != null){
+            fileName = fileName + " "+ lastname;
+        }
+
+        fileName = fileName + " Conveyance Report";
 
         if(checkPermissions()) {
             File file = new File(Environment.getExternalStorageDirectory() + "/" + Environment.DIRECTORY_DOWNLOADS + "/"+fileName+"_"+System.currentTimeMillis()+".pdf");
@@ -360,7 +369,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
 
     @Override
     public void onPDFDocumentClose(File file) {
-        Toast.makeText(getActivity(),"Conveyance Report Created",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),"Conveyance Report Downloaded",Toast.LENGTH_SHORT).show();
         getActivity().onBackPressed();
     }
     private List<String[]> getSampleData()

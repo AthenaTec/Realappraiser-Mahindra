@@ -970,11 +970,11 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             public void onClick(View v) {
                 UpdateStatusCaseIdWebservice(case_id, statusid); //Doesn't property exists or reject
                 dialog.dismiss();
-
-                if (SettingsUtils.Latitudes > 0.0) {
+                if (general.checkLatLong()) {
                     boolean shareLocation = locationTrackerApi.shareLocation(case_id,
                             SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                            "Field Inspection Finish", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
+                            "Field Inspection Finish",Double.parseDouble(SettingsUtils.getInstance().getValue("lat","")),
+                            Double.parseDouble(SettingsUtils.getInstance().getValue("long","")),"",1);
 
                 } else {
                     getCurrentLocation(mContext,"Field Inspection Finish");
@@ -2073,10 +2073,11 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             public void onClick(View v) {
                 if (general.isNetworkAvailable() & general.isLocationEnabled(mContext)) {
 
-                    if (SettingsUtils.Latitudes > 0.0) {
+                    if (general.checkLatLong()) {
                         boolean shareLocation = locationTrackerApi.shareLocation(case_id,
                                 SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                                "Field Inspection Start", SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
+                                "Field Inspection Start", Double.parseDouble(SettingsUtils.getInstance().getValue("lat","")),
+                                Double.parseDouble(SettingsUtils.getInstance().getValue("long","")),"",1);
 
                     } else {
                         getCurrentLocation(mContext, "Field Inspection Start");
@@ -3150,6 +3151,10 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
+
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
+
 
                             new LocationTrackerApi(activity).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
                                     , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), field_inspection_status, SettingsUtils.Latitudes, SettingsUtils.Longitudes,"",1);
