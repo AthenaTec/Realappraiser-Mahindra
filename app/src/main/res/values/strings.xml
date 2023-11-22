@@ -333,6 +333,7 @@
     <string name="carpet">Carpet</string>
     <string name="builtup" tools:ignore="UnusedResources">Built up</string>
     <string name="Saleable" tools:ignore="UnusedResources">Saleable</string>
+    <string name="permissible_area" tools:ignore="UnusedResources">Permissible</string>
     <string name="current_fair">*Current Fair Market Value:</string>
     <string name="permissible">Permissible</string>
     <string name="areatype">Area Type</string>

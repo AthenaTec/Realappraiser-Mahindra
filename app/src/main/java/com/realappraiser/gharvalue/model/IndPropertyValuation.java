@@ -167,6 +167,11 @@ public class IndPropertyValuation {
     @Expose
     @ColumnInfo(name = "carpetArea")
     private String carpetArea;
+
+    @SerializedName("PermissibleArea")
+    @Expose
+    @ColumnInfo(name = "permissibleArea")
+    private String permissibleArea;
     @SerializedName("BuildUpArea")
     @Expose
     @ColumnInfo(name = "buildUpArea")
@@ -1063,5 +1068,13 @@ public class IndPropertyValuation {
 
     public void setDistressValueAsOnDate(String distressValueAsOnDate) {
         DistressValueAsOnDate = distressValueAsOnDate;
+    }
+
+    public String getPermissibleArea() {
+        return permissibleArea;
+    }
+
+    public void setPermissibleArea(String permissibleArea) {
+        this.permissibleArea = permissibleArea;
     }
 }

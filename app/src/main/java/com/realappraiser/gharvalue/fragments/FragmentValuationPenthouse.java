@@ -134,6 +134,7 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
     public static EditText edittext_carpet_area;
     public static EditText edittext_builtup_area;
     public static EditText edittext_Saleable_area;
+    public static EditText edittext_permissible_area;
     public static TextView edittext_measurementunit;
     public static EditText edittext_realizable_value_total;
     public static EditText edittext_distress_total;
@@ -690,6 +691,11 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
                 Singleton.getInstance().areaType.add(getResources().getString(R.string.Saleable));
             }
 
+            if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getPermissibleArea())) {
+                setEdittextPermissibleArea(Singleton.getInstance().indPropertyValuation.getPermissibleArea());
+                Singleton.getInstance().areaType.add(getResources().getString(R.string.permissible_area));
+            }
+
             /*****Set spinner Area type as per the id*****/
             String carpetAreaid = Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId();
             if (!general.isEmpty(carpetAreaid)) {
@@ -878,6 +884,7 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
         edittext_carpet_area = (EditText) view.findViewById(R.id.edittext_carpet_area);
         edittext_builtup_area = (EditText) view.findViewById(R.id.edittext_builtup_area);
         edittext_Saleable_area = (EditText) view.findViewById(R.id.edittext_Saleable_area);
+        edittext_permissible_area = (EditText) view.findViewById(R.id.edittext_permissible_area);
         edittext_measurementunit = (EditText) view.findViewById(R.id.edittext_measurementunit);
         edittext_realizable_value_total = (EditText) view.findViewById(R.id.edittext_realizable_value_total);
         edittext_distress_total = (EditText) view.findViewById(R.id.edittext_distress_total);
@@ -909,6 +916,7 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
         edittext_carpet_area.setFocusable(false);
         edittext_builtup_area.setFocusable(false);
         edittext_Saleable_area.setFocusable(false);
+        edittext_permissible_area.setFocusable(false);
         edittext_type_area.setFocusable(false);
         edittext_insurance_area.setFocusable(false);
         edittext_governmentvalue_area.setFocusable(false);
@@ -960,6 +968,7 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
         edittext_carpet_area.setTypeface(general.regulartypeface());
         edittext_builtup_area.setTypeface(general.regulartypeface());
         edittext_Saleable_area.setTypeface(general.regulartypeface());
+        edittext_permissible_area.setTypeface(general.regulartypeface());
         edittext_measurementunit.setTypeface(general.regulartypeface());
         textview_type_of_area.setTypeface(general.regulartypeface());
         textview_areatypetvalue.setTypeface(general.regulartypeface());
@@ -999,6 +1008,15 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
     public void setEdittextSaleableArea(String setArea) {
         if (edittext_Saleable_area != null) {
             edittext_Saleable_area.setText(setArea);
+            edittext_type_area.setText(setArea);
+            edittext_insurance_area.setText(setArea);
+            edittext_governmentvalue_area.setText(setArea);
+        }
+    }
+
+    public void setEdittextPermissibleArea(String setArea) {
+        if (edittext_permissible_area != null) {
+            edittext_permissible_area.setText(setArea);
             edittext_type_area.setText(setArea);
             edittext_insurance_area.setText(setArea);
             edittext_governmentvalue_area.setText(setArea);
@@ -1059,7 +1077,17 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
                         areaTypeID = "3";
                     }
                 }
-            } else {
+            } else if (area_type.equalsIgnoreCase("Permissible")) {
+                for (int i = 0; i < areaType.size(); i++) {
+                    if (area_type.equalsIgnoreCase(areaType.get(i))) {
+                        spinnerAreaType.setSelection(i);
+                        areaTypeID = "4";
+                    }
+                }
+            }
+
+
+            else {
                 spinnerAreaType.setSelection(0);
                 areaTypeID = "0";
             }
@@ -1104,6 +1132,15 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
                             textview_type_of_area.setText(areaType.get(position));
 
                             areaTypeID = "3";
+                            if (property_type.equalsIgnoreCase("penthouse")) {
+                                PentHouseSpinnerCalculation();
+                            } else {
+                                FlatSpinnerCalculation();
+                            }
+                        } else if(areaType.get(position).equalsIgnoreCase("Permissible")){
+                            setEdittextPermissibleArea(edittext_permissible_area.getText().toString().trim());
+                            areaTypeID = "4";
+                            textview_type_of_area.setText(areaType.get(position));
                             if (property_type.equalsIgnoreCase("penthouse")) {
                                 PentHouseSpinnerCalculation();
                             } else {
