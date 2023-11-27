@@ -67,8 +67,6 @@ import com.realappraiser.gharvalue.worker.OreoLocation;
 import com.realappraiser.gharvalue.worker.WorkerManager;
 import com.shockwave.pdfium.PdfDocument;
 
-import org.w3c.dom.Text;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -103,6 +101,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     private String api_base_url;
     public static boolean isfirsttab_active = false;
     public static boolean issecondtab_active = false;
+
+    public static boolean isLogoutClicked = false;
 
 
     private static final String TAG = General.class.getSimpleName();
@@ -791,6 +791,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
     public void LogoutDialog(Activity activity, double longitudes, double latitudes)
     {
+        isLogoutClicked = true;
          View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
          AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.CustomDialog);
          builder.setView(view);
@@ -812,8 +813,9 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
          btnSubmit.setOnClickListener(
                  new View.OnClickListener() {
                      @Override
-                     public void onClick(View view) {
-                         Singleton.getInstance().longitude = 0.0;
+                     public void onClick(View view)
+                     {
+                         /*Singleton.getInstance().longitude = 0.0;
                          Singleton.getInstance().latitude = 0.0;
                          Singleton.getInstance().aCase = new Case();
                          Singleton.getInstance().property = new Property();
@@ -905,13 +907,16 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                         activity.startActivity(intent);
+                         activity.startActivity(intent);*/
+                         showloading(activity);
+                         getCurrentLocationOfUser(activity);
                      }
                  });
 
          btnCancel.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {
+                 isLogoutClicked = false;
                  savePopup.cancel();
              }
          });
@@ -1921,59 +1926,6 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
             SettingsUtils.getInstance().putValue("api_success", true);
 
         }
-
-
-
-
-
-
-
-
-        /*if (new LocationTrackerApi(activity).shareLocation("",
-                SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4)) {
-            if (Build.VERSION.SDK_INT < 26) {
-                activity.stopService(new Intent(activity, GeoUpdate.class));
-            } else {
-                new OreoLocation(activity).stopOreoLocationUpdates();
-            }
-            new WorkerManager(activity).stopWorker();
-
-
-            Intent intent = new Intent(activity, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(intent);
-
-           *//* activity.finishAffinity();
-            Intent intent = new Intent(activity, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(intent);
-            activity.finish();*//*
-
-
-
-            return;
-        }
-
-        if (Build.VERSION.SDK_INT < 26) {
-            activity.stopService(new Intent(activity, GeoUpdate.class));
-        } else {
-            new OreoLocation(activity).stopOreoLocationUpdates();
-        }
-        new WorkerManager(activity).stopWorker();
-        Intent intent = new Intent(activity, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);*/
-
-       /* activity.finishAffinity();
-        Intent intent = new Intent(activity, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);
-        activity.finish();*/
     }
 
 
@@ -2036,6 +1988,139 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
       return false;
 
+    }
+
+
+    private void Logout(Activity activity, double latitudes, double longitudes){
+        Singleton.getInstance().longitude = 0.0;
+        Singleton.getInstance().latitude = 0.0;
+        Singleton.getInstance().aCase = new Case();
+        Singleton.getInstance().property = new Property();
+        Singleton.getInstance().indProperty = new IndProperty();
+        Singleton.getInstance().indPropertyValuation = new IndPropertyValuation();
+        Singleton.getInstance().indPropertyFloors = new ArrayList<>();
+        Singleton.getInstance().proximities = new ArrayList<>();
+        Singleton.getInstance().openCaseList.clear();
+        Singleton.getInstance().closeCaseList.clear();
+        Singleton.getInstance().GetImage_list_flat.clear();
+//                        SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
+        AppDatabase appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
+        ArrayList<OfflineDataModel> oflineData = (ArrayList) appDatabase.interfaceOfflineDataModelQuery().getDataModal_offlinecase(true);
+        if (appDatabase == null) {
+            return;
+        }
+        if (oflineData.size() > 0) {
+            General.customToast("Please sync your offline documents before logout!", activity);
+            return;
+        } else
+            SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
+
+        // Total - 16 DB
+
+
+        // Delete - datamodel
+        appDatabase.interfaceDataModelQuery().deleteRow();
+        // Delete - offlinedatamodel
+        appDatabase.interfaceOfflineDataModelQuery().deleteRow();
+        // Delete - casemodal
+        appDatabase.interfaceCaseQuery().deleteRow();
+        // Delete - propertymodal
+        appDatabase.interfacePropertyQuery().deleteRow();
+        // Delete - indpropertymodal
+        appDatabase.interfaceIndpropertyQuery().deleteRow();
+        // Delete - IndPropertyValuationModal
+        appDatabase.interfaceIndPropertyValuationQuery().deleteRow();
+        // Delete - IndPropertyFloorModal
+        appDatabase.interfaceIndPropertyFloorsQuery().deleteRow();
+        // Delete - IndPropertyFloorsValuationModal
+        appDatabase.interfaceIndPropertyFloorsValuationQuery().deleteRow();
+        // Delete - ProximityModal
+        appDatabase.interfaceProximityQuery().deleteRow();
+        // Delete - GetPhotoModel
+        appDatabase.interfaceGetPhotoQuery().deleteRow();
+        // Delete - OflineCase
+        appDatabase.interfaceOfflineCaseQuery().deleteRow();
+        // Delete - Document_list
+        appDatabase.interfaceDocumentListQuery().deleteRow();
+        // Delete - LatLongDetails
+        appDatabase.interfaceLatLongQuery().deleteRow();
+        // Delete - typeofproperty
+        appDatabase.typeofPropertyQuery().deleteRow();
+        // Delete - casedetail
+        appDatabase.daoAccess().deleteRow();
+        // Delete - propertyupdateroomdb
+        appDatabase.propertyUpdateCategory().deleteRow();
+        // Delete - GetPhotoMeasurmentQuery
+        appDatabase.interfaceGetPhotoMeasurmentQuery().deleteRow();
+
+        activity.finishAffinity();
+
+        isLogoutClicked = false;
+
+        if (new LocationTrackerApi(activity).shareLocation("",
+                SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
+                "Logout", latitudes, longitudes, "", 4)) {
+            if (Build.VERSION.SDK_INT < 26) {
+                activity.stopService(new Intent(activity, GeoUpdate.class));
+            } else {
+                new OreoLocation(activity).stopOreoLocationUpdates();
+            }
+            new WorkerManager(activity).stopWorker();
+
+
+
+            General.hideloading();
+
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            return;
+        }
+
+        General.hideloading();
+
+        if (Build.VERSION.SDK_INT < 26) {
+            activity.stopService(new Intent(activity, GeoUpdate.class));
+        } else {
+            new OreoLocation(activity).stopOreoLocationUpdates();
+        }
+        new WorkerManager(activity).stopWorker();
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+    }
+
+    public void getCurrentLocationOfUser(Activity activity) {
+
+        if (GPS_status()) {
+            try {
+                GPSService gpsService = new GPSService(activity);
+                gpsService.getLocation();
+                new Handler().postDelayed(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        if (getcurrent_latitude(activity) != 0) {
+                            /*Here store current location of user latLong*/
+                            SettingsUtils.Longitudes = getcurrent_longitude(activity);
+                            SettingsUtils.Latitudes = getcurrent_latitude(activity);
+                            SettingsUtils.getInstance().putValue("lat", String.valueOf(getcurrent_latitude(activity)));
+                            SettingsUtils.getInstance().putValue("long",String.valueOf(getcurrent_longitude(activity)));
+                            Logout(activity,SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                           // general.LogoutDialog(HomeActivity.this, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
+                        }
+                    }
+                }, 1500);
+            } catch (Exception e) {
+                isLogoutClicked = false;
+                General.hideloading();
+                e.printStackTrace();
+            }
+        }
     }
 
 

@@ -90,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity{
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
             //minutes >= 1
-            if (minutes >= 2) {
+            if (minutes >= 120) {
                 Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
                 if (general.checkLatLong()) { //SettingsUtils.Latitudes > 0
                     General.showloading(this);

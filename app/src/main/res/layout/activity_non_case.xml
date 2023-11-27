@@ -85,7 +85,7 @@
             android:lineSpacingMultiplier="1.2"
             android:maxHeight="@dimen/_150sdp"
             android:minHeight="@dimen/_150sdp"
-            android:maxLength="200"
+            android:maxLength="300"
             android:singleLine="false"
             android:textColor="@color/black"
             android:textColorHint="@color/font_texthint"

@@ -708,6 +708,8 @@ public class FragmentValuationPenthouse extends Fragment implements RatePopupupI
                         area_type = "Built up";
                     } else if (carpetID == 3) {
                         area_type = "Saleable";
+                    } else if (carpetID == 4) {
+                        area_type = "Permissible";
                     } else {
                         area_type = "Select";
                     }

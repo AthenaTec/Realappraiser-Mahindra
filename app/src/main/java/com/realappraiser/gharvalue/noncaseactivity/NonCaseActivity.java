@@ -71,6 +71,8 @@ public class NonCaseActivity extends AppCompatActivity {
 
     private static final String TAG = NonCaseActivity.class.getName();
 
+    private static  boolean isButtonCliecked = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,11 +106,16 @@ public class NonCaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (general.checkLatLong()) {
-                    shareLocation();
-                } else {
-                    getCurrentLocation(NonCaseActivity.this);
+                if(!isButtonCliecked){
+                    isButtonCliecked = true;
+                    if (general.checkLatLong()) {
+                        shareLocation();
+                    } else {
+                        getCurrentLocation(NonCaseActivity.this);
+                    }
                 }
+
+
             }
         });
     }
@@ -190,6 +197,7 @@ public class NonCaseActivity extends AppCompatActivity {
                     }
                 }, 1500);
             } catch (Exception e) {
+                isButtonCliecked = false;
                 e.printStackTrace();
             }
         }
@@ -199,6 +207,7 @@ public class NonCaseActivity extends AppCompatActivity {
         if (general.isNetworkAvailable()) {
             shareLocation("", fieldStaffId, visitType, SettingsUtils.Latitudes, SettingsUtils.Longitudes, comments.getText().toString(), 2);
         } else {
+            isButtonCliecked = false;
             General.customToast("Please check your Internet Connection!", NonCaseActivity.this);
         }
     }
@@ -267,6 +276,7 @@ public class NonCaseActivity extends AppCompatActivity {
                     requestData, SettingsUtils.POST_TOKEN);
             webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
                 public void onTaskComplete(JsonRequestData requestData) {
+                    isButtonCliecked = false;
                     General.hideloading();
 
                     Log.e("Location Response", new Gson().toJson(requestData));
@@ -283,6 +293,7 @@ public class NonCaseActivity extends AppCompatActivity {
 
             webserviceTask.execute();
         } else {
+            isButtonCliecked =  false;
             General.customToast("Please check your Internet Connection!", NonCaseActivity.this);
         }
     }

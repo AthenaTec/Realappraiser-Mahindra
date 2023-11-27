@@ -587,12 +587,12 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
                 } else {
                     general.customToast("Please enable all permissions to complete access of this application", this);
 
-                    new Handler().postDelayed(new Runnable() {
+                   /* new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             general.checkPermissions();
                         }
-                    }, 500);
+                    }, 500);*/
 
                 }
         }
@@ -736,7 +736,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
             //minutes >= 1
-            if (minutes >= 2)
+            if (minutes >= 120)
             {
                 Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
                 if (general.checkLatLong()) { //SettingsUtils.Latitudes > 0

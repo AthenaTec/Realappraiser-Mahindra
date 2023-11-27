@@ -1170,6 +1170,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             }
                             general.CustomToast("Login Successful");
                             general.hideloading();
+                            general.isLogoutClicked = false;
                             SettingsUtils.getInstance().putValue("sessionCountDown", "");
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             SettingsUtils.getInstance().putValue("fromLogin",true);
@@ -1267,6 +1268,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         dialog.dismiss();
                     }
                     general.CustomToast("Login Successful");
+                    general.isLogoutClicked = false;
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     SettingsUtils.getInstance().putValue("fromLogin",true);
