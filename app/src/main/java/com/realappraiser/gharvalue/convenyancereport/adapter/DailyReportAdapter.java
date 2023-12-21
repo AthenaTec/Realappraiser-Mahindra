@@ -11,11 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.realappraiser.gharvalue.R;
-import com.realappraiser.gharvalue.convenyancereport.response.DailyActivityData;
+import com.realappraiser.gharvalue.model.DailyActivityData;
 import com.realappraiser.gharvalue.utils.General;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class DailyReportAdapter extends RecyclerView.Adapter<DailyReportAdapter.DailyReportViewHolder> {
 

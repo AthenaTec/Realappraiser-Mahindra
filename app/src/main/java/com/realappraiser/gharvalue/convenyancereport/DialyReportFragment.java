@@ -23,8 +23,8 @@ import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.convenyancereport.adapter.DailyReportAdapter;
-import com.realappraiser.gharvalue.convenyancereport.response.DailyActivityResponse;
-import com.realappraiser.gharvalue.convenyancereport.response.TodayActivityResponse;
+import com.realappraiser.gharvalue.model.DailyActivityResponse;
+import com.realappraiser.gharvalue.model.TodayActivityResponse;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
@@ -129,8 +129,20 @@ public class DialyReportFragment extends Fragment {
                     requestData, SettingsUtils.GET_TOKEN);
             webserviceTask.setFetchMyData((TaskCompleteListener<JsonRequestData>) dailyActivityResponse -> {
 
-                parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), TodayActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
-                Log.e(TAG, new Gson().toJson(dailyActivityResponse));
+                if (dailyActivityResponse.isSuccessful()) {
+                    try {
+                        parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), TodayActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
+                        Log.e(TAG, new Gson().toJson(dailyActivityResponse));
+                    } catch (Exception e) {
+                        General.customToastLong("Something went wrong", getActivity());
+                        General.hideloading();
+                        e.getMessage();
+                    }
+                } else {
+                    General.customToastLong("Something went wrong", getActivity());
+                    General.hideloading();
+                }
+
 
             });
             webserviceTask.execute();

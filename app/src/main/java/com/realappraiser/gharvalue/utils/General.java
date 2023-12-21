@@ -792,29 +792,28 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     public void LogoutDialog(Activity activity, double longitudes, double latitudes)
     {
         isLogoutClicked = true;
-         View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
-         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.CustomDialog);
-         builder.setView(view);
+        View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.CustomDialog);
+        builder.setView(view);
 
-         savePopup = builder.create();
-         savePopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        savePopup = builder.create();
+        savePopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-         TextView title = view.findViewById(R.id.title);
-         title.setText("Are you sure you want to Logout?");
-         Button btnSubmit = view.findViewById(R.id.btn_save);
-         btnSubmit.setText("YES");
-         Button btnCancel = view.findViewById(R.id.btn_no);
-         btnCancel.setText("NO");
-         savePopup.setCancelable(false);
-         savePopup.setCanceledOnTouchOutside(false);
-         if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
-             savePopup.show();
-         }
-         btnSubmit.setOnClickListener(
-                 new View.OnClickListener() {
-                     @Override
-                     public void onClick(View view)
-                     {
+        TextView title = view.findViewById(R.id.title);
+        title.setText("Are you sure you want to Logout?");
+        Button btnSubmit = view.findViewById(R.id.btn_save);
+        btnSubmit.setText("YES");
+        Button btnCancel = view.findViewById(R.id.btn_no);
+        btnCancel.setText("NO");
+        savePopup.setCancelable(false);
+        savePopup.setCanceledOnTouchOutside(false);
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
+            savePopup.show();
+        }
+        btnSubmit.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                          /*Singleton.getInstance().longitude = 0.0;
                          Singleton.getInstance().latitude = 0.0;
                          Singleton.getInstance().aCase = new Case();

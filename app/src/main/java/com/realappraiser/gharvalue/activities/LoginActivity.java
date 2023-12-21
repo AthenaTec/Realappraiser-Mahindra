@@ -184,7 +184,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             initValues();
         }*/
 
-        initValues();
+        if(General.rootAndEmulatorChecker(LoginActivity.this) == false){
+            initValues();
+        }
 
 
         passwordHide.setOnClickListener(new View.OnClickListener() {

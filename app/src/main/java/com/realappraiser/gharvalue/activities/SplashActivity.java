@@ -159,19 +159,23 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
         Translucent();
 
-       /* if (Connectivity.isConnected(this)) {
+        GPSService gpsService = new GPSService(this);
+        gpsService.getLocation();
+        setUpGClient();
+
+      /*  if (Connectivity.isConnected(this)) {
             SafetyNetChecker safetyNetChecker = new SafetyNetChecker(this, this, this);
         } else if (General.rootAndEmulatorChecker(SplashActivity.this) == false) {
             splashRunner();
         }*/
 
-        GPSService gpsService = new GPSService(this);
-        gpsService.getLocation();
-        setUpGClient();
+        if (General.rootAndEmulatorChecker(SplashActivity.this) == false) {
+            splashRunner();
+            setVersionDetails();
+        }
 
-        splashRunner();
-
-        setVersionDetails();
+       /* splashRunner();
+        setVersionDetails();*/
     }
 
     @Override

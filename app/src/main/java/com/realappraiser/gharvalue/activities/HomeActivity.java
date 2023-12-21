@@ -309,10 +309,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         } else if (General.rootAndEmulatorChecker(HomeActivity.this) == false) {
             initiateViewsAndData();
         }*/
-        initiateViewsAndData();
+
+        //initiateViewsAndData();
+        if (General.rootAndEmulatorChecker(HomeActivity.this) == false) {
+            initiateViewsAndData();
+        }
     }
 
     private void initiateViewsAndData() {
+
         InitialLoadOpenCase();
         InitialLoadClosedCase();
 

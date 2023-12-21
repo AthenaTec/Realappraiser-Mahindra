@@ -38,7 +38,7 @@ import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
-import com.realappraiser.gharvalue.convenyancereport.response.DailyActivityResponse;
+import com.realappraiser.gharvalue.model.DailyActivityResponse;
 import com.realappraiser.gharvalue.model.SubBranchModel;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
@@ -226,6 +226,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
                 try{
                     parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), DailyActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
                 }catch (Exception e){
+                    General.customToastLong("Something went wrong", getActivity());
                     General.hideloading();
                     e.getMessage();
                 }

@@ -1,9 +1,10 @@
-package com.realappraiser.gharvalue.convenyancereport.response;
+package com.realappraiser.gharvalue.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+
 
 public class TodayActivityResponse {
     @SerializedName("msg")
@@ -16,8 +17,7 @@ public class TodayActivityResponse {
 
     @SerializedName("data")
     @Expose
-    private DailyActivityResponse.Datum data = null;
-
+    private Datum data = null;
 
 
     public String getMsg() {
@@ -36,17 +36,18 @@ public class TodayActivityResponse {
         this.status = status;
     }
 
-    public DailyActivityResponse.Datum getData() {
+    public Datum getData() {
         return data;
     }
 
-    public void setData(DailyActivityResponse.Datum data) {
+    public void setData(Datum data) {
         this.data = data;
     }
 
-    public static class Datum { @SerializedName("DateofTravel")
-    @Expose
-    private String DateofTravel;
+    public static class Datum {
+        @SerializedName("DateofTravel")
+        @Expose
+        private String DateofTravel;
 
         @SerializedName("TotalDistance")
         @Expose

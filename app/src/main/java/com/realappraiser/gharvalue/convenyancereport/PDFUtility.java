@@ -22,7 +22,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.realappraiser.gharvalue.R;
-import com.realappraiser.gharvalue.convenyancereport.response.DailyActivityResponse;
+import com.realappraiser.gharvalue.model.DailyActivityResponse;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 
 import java.io.ByteArrayOutputStream;
