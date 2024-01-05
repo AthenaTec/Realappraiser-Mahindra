@@ -309,6 +309,12 @@
         <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
     </style>
 
+    <style name="raiseTicket" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowFullscreen">true</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    <item name="colorAccent">@color/colorAccent</item>
+</style>
+
     <style name="CustomDialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in_up</item>
         <item name="android:windowExitAnimation">@anim/slide_out_down</item>

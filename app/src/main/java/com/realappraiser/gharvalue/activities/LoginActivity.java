@@ -86,6 +86,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by kaptas on 15/12/17.
@@ -184,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             initValues();
         }*/
 
-        if(General.rootAndEmulatorChecker(LoginActivity.this) == false){
+        if (General.rootAndEmulatorChecker(LoginActivity.this) == false) {
             initValues();
         }
 
@@ -196,6 +197,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+    }
+
+
+    @OnClick(R.id.txt_raiseTicket)
+    void raiseTicket() {
+        final Dialog dialog = new Dialog(LoginActivity.this, R.style.raiseTicket);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        // dialog.setContentView(R.layout.view_ticket);
+        dialog.setContentView(R.layout.activity_ticket_raise_system);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
     private void onShowPassword() {
@@ -1289,10 +1303,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(branchPopup !=null){
+        if (branchPopup != null) {
             branchPopup.dismiss();
         }
-        if(general!=null){
+        if (general != null) {
             general.hideloading();
         }
     }

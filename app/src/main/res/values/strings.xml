@@ -496,6 +496,8 @@
     <string name="loc_updated">Location updated at</string>
     <string name="non_case_activity">NON CASE ACTIVITY</string>
     <string name="convenyance_report">CONVEYANCE REPORT</string>
+    <string name="raiseticketsystem">TICKET RAISE</string>
+    <string name="viewticket">VIEW TICKETS</string>
     <string name="visit_type">Please Select The Visit Type</string>
     <string name="builder_office_visit">Builder Office Visit</string>
     <string name="branch_training_visit">Branch/Traning Visit</string>
@@ -503,6 +505,8 @@
     <string name="collection_visit">Collection Visit</string>
     <string name="vendor_visit">Vendor Visit</string>
     <string name="apf_visit">APF Visit</string>
+
+    <string name="raiseTicket"><u>Click here to Raise Ticket</u></string>
 
     <array name="salution">
         <item>Mr.</item>

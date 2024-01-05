@@ -42,18 +42,15 @@
         tools:replace="android:allowBackup"
         tools:targetApi="m">
         <activity
-            android:name=".BaseActivity"
+            android:name=".viewtickets.view.ViewRaisedTicketsActivity"
+            android:exported="true" >
+        </activity>
+        <activity
+            android:name=".activities.BaseActivity"
             android:exported="false" />
         <activity
             android:name=".convenyancereport.ConvenyanceReport"
             android:exported="true">
-
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-
         </activity>
         <activity
             android:name=".noncaseactivity.NonCaseActivity"

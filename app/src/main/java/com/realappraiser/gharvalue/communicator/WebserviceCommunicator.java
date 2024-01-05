@@ -153,7 +153,6 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
 
             OkHttpClient client = null;
 
-           /*
            //SSL UNPIN
            client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
                     .addInterceptor(interceptor)
@@ -162,11 +161,11 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                     .cache(provideCache(context))
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS).build();*/
+                    .readTimeout(30, TimeUnit.SECONDS).build();
 
 
            //For SSL PIN
-            if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -184,7 +183,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                         .writeTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(30, TimeUnit.SECONDS)
                         .build();
-            }
+            }*/
 
 
             Request request = new Request.Builder()
@@ -230,18 +229,18 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
             OkHttpClient client = null;
 
            //For SSL UNPI
-          /* client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
+           client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
                     .addInterceptor(interceptor)
                     .addInterceptor(provideCacheInterceptor())
                     .addInterceptor(provideOfflineCacheInterceptor(context))
                     .cache(provideCache(context))
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS).build();*/
+                    .readTimeout(30, TimeUnit.SECONDS).build();
 
 
             //For SSL PIN
-            if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -259,7 +258,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                         .writeTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(30, TimeUnit.SECONDS)
                         .build();
-            }
+            }*/
 
             Request request = new Request.Builder()
                     .addHeader("Authorization", jsonRequestData.getAuthToken())
@@ -291,16 +290,16 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
 
             OkHttpClient client = null;
 
-            /*client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
+            client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
                     .addInterceptor(interceptor)
                     .addInterceptor(provideCacheInterceptor())
                     .addInterceptor(provideOfflineCacheInterceptor(context))
                     .cache(provideCache(context))
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS).build();*/
+                    .readTimeout(30, TimeUnit.SECONDS).build();
 
-            if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -318,7 +317,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                         .writeTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(30, TimeUnit.SECONDS)
                         .build();
-            }
+            }*/
 
             Request request = new Request.Builder()
                     .url(jsonRequestData.getUrl())
@@ -357,16 +356,16 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
 
             OkHttpClient client = null;
 
-            /*client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
+            client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
                     .addInterceptor(interceptor)
                     .addInterceptor(provideCacheInterceptor())
                     .addInterceptor(provideOfflineCacheInterceptor(context))
                     .cache(provideCache(context))
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS).build();*/
+                    .readTimeout(30, TimeUnit.SECONDS).build();
 
-            if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -384,7 +383,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                         .writeTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(30, TimeUnit.SECONDS)
                         .build();
-            }
+            }*/
 
             Request request = new Request.Builder()
                     .url(jsonRequestData.getUrl())
@@ -427,16 +426,16 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
 
             OkHttpClient client = null;
 
-            /*client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
+            client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
                     .addInterceptor(interceptor)
                     .addInterceptor(provideCacheInterceptor())
                     .addInterceptor(provideOfflineCacheInterceptor(context))
                     .cache(provideCache(context))
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS).build();*/
+                    .readTimeout(30, TimeUnit.SECONDS).build();
 
-            if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -454,7 +453,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                         .writeTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(30, TimeUnit.SECONDS)
                         .build();
-            }
+            }*/
 
 
             Request request = new Request.Builder()
@@ -493,16 +492,16 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
 
             OkHttpClient client = null;
 
-            /*client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
+            client = UnsafeOkHttpClient.getUnsafeOkHttpClient()
                     .addInterceptor(interceptor)
                     .addInterceptor(provideCacheInterceptor())
                     .addInterceptor(provideOfflineCacheInterceptor(context))
                     .cache(provideCache(context))
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS).build();*/
+                    .readTimeout(30, TimeUnit.SECONDS).build();
 
-            if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -520,7 +519,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                         .writeTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(30, TimeUnit.SECONDS)
                         .build();
-            }
+            }*/
             Request request = new Request.Builder()
                     .url(jsonRequestData.getUrl())
                     .method("PUT", RequestBody.create(null, new byte[0]))

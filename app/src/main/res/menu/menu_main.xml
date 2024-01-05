@@ -19,6 +19,11 @@
         app:showAsAction="always"
         tools:ignore="MenuTitle" />
     <item
+        android:id="@+id/filter"
+        android:icon="@drawable/filter_icon"
+        app:showAsAction="always"
+        tools:ignore="MenuTitle"/>
+    <item
         android:id="@+id/dropdown_menu"
         android:icon="@drawable/menu_version"
         android:theme="@style/OverflowMenu"
@@ -54,6 +59,19 @@
                 android:icon="@drawable/report"
                 android:theme="@style/OverflowMenu"
                 android:title="@string/convenyance_report"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/raiseticketsystem"
+                android:icon="@drawable/report"
+                android:theme="@style/OverflowMenu"
+                android:title="@string/raiseticketsystem"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/viewticket"
+                android:icon="@drawable/report"
+                android:theme="@style/OverflowMenu"
+                android:title="@string/viewticket"
                 app:showAsAction="ifRoom" />
         </menu>
     </item>

@@ -94,6 +94,7 @@ import com.realappraiser.gharvalue.utils.OfflineLocationReceiver;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 import com.realappraiser.gharvalue.utils.Singleton;
 import com.realappraiser.gharvalue.utils.security.SafetyNetChecker;
+import com.realappraiser.gharvalue.viewtickets.view.ViewRaisedTicketsActivity;
 import com.realappraiser.gharvalue.worker.GeoUpdate;
 import com.realappraiser.gharvalue.worker.LocationTrackerApi;
 import com.realappraiser.gharvalue.worker.OreoLocation;
@@ -1590,6 +1591,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         MenuItem item3 = menu.findItem(R.id.versionname);
         MenuItem item4 = menu.findItem(R.id.noncaseactivity);
         MenuItem item5 = menu.findItem(R.id.convyencereport);
+        MenuItem item6 = menu.findItem(R.id.raiseticketsystem);
+        MenuItem item7 = menu.findItem(R.id.viewticket);
+        MenuItem item8 = menu.findItem(R.id.filter);
 
         item.setVisible(true);
         item1.setVisible(true);
@@ -1597,6 +1601,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         item4.setVisible(true);
         item5.setVisible(true);
         item2.setVisible(false);
+        item8.setVisible(false);
         return true;
     }
 
@@ -1641,10 +1646,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 getConvyenceReport();
                 break;
 
+            case R.id.raiseticketsystem:
+                raiseTickerPopup();
+                break;
 
-           /* case R.id.ic_home:
-                OfflineCasePopup();
-                break;*/
+            case R.id.viewticket:
+                getViewTicketSystem();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -2920,8 +2928,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         sb.append(latitude);
         Log.e("HomeActivity", sb.toString());
         locationTrackerApi.shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Interval",
-                Double.parseDouble(SettingsUtils.getInstance().getValue("lat","")),
-                Double.parseDouble(SettingsUtils.getInstance().getValue("long","")), "", 0);
+                Double.parseDouble(SettingsUtils.getInstance().getValue("lat", "")),
+                Double.parseDouble(SettingsUtils.getInstance().getValue("long", "")), "", 0);
         workManager.startWorker();
     }
 
@@ -3203,6 +3211,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     private void getConvyenceReport() {
         Intent intent = new Intent(HomeActivity.this, ConvenyanceReport.class);
+        startActivity(intent);
+    }
+
+    private void raiseTickerPopup() {
+        final Dialog dialog = new Dialog(HomeActivity.this, R.style.raiseTicket);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setContentView(R.layout.activity_ticket_raise_system);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
+
+
+    private void getViewTicketSystem() {
+        Intent intent = new Intent(HomeActivity.this, ViewRaisedTicketsActivity.class);
         startActivity(intent);
     }
 
