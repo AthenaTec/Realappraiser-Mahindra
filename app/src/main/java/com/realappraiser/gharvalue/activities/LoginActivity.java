@@ -22,14 +22,12 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -44,12 +42,12 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.R;
+import com.realappraiser.gharvalue.alarm.LogOutScheduler;
 import com.realappraiser.gharvalue.communicator.DataModel;
 import com.realappraiser.gharvalue.communicator.DataResponse;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
@@ -82,7 +80,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Set;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -163,7 +161,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.login);
         ButterKnife.bind(this);
 
-        SettingsUtils.getInstance().putValue("sessionCountDown", "");
+        // SettingsUtils.getInstance().putValue("sessionCountDown", "");
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -707,7 +705,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setView(view);
-         branchPopup = builder.create();
+        branchPopup = builder.create();
         branchPopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         final Spinner spSalution = view.findViewById(R.id.spBranch);
@@ -1026,9 +1024,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (general.checkLatLong()) {
             if (general.isNetworkAvailable()) {
                 general.showloading(this);
-                shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Login",Double.parseDouble(SettingsUtils.getInstance().getValue("lat","")),
-                        Double.parseDouble(SettingsUtils.getInstance().getValue("long","")), "", 3);
-              // }
+                shareLocation("", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Login", Double.parseDouble(SettingsUtils.getInstance().getValue("lat", "")),
+                        Double.parseDouble(SettingsUtils.getInstance().getValue("long", "")), "", 3);
+                // }
             } else {
                 General.customToast("Please check your Internet Connection!", this);
             }
@@ -1079,7 +1077,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         SettingsUtils.Latitudes = latitude;
 
         SettingsUtils.getInstance().putValue("lat", String.valueOf(latitude));
-        SettingsUtils.getInstance().putValue("long",String.valueOf(longitude));
+        SettingsUtils.getInstance().putValue("long", String.valueOf(longitude));
 
     }
 
@@ -1155,13 +1153,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
 
                             SettingsUtils.getInstance().putValue("lat", String.valueOf(SettingsUtils.Latitudes));
-                            SettingsUtils.getInstance().putValue("long",String.valueOf(SettingsUtils.Longitudes));
+                            SettingsUtils.getInstance().putValue("long", String.valueOf(SettingsUtils.Longitudes));
 
 
                             locationTrackerApi.shareLocation("",
                                     SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                                    "Login", Double.parseDouble(SettingsUtils.getInstance().getValue("lat","")),
-                                    Double.parseDouble(SettingsUtils.getInstance().getValue("long","")), "", 3);
+                                    "Login", Double.parseDouble(SettingsUtils.getInstance().getValue("lat", "")),
+                                    Double.parseDouble(SettingsUtils.getInstance().getValue("long", "")), "", 3);
                             SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
 
 
@@ -1171,9 +1169,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             general.CustomToast("Login Successful");
                             general.hideloading();
                             general.isLogoutClicked = false;
-                            SettingsUtils.getInstance().putValue("sessionCountDown", "");
+                            if(checkSessionLogut()){
+                                LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
+                                //logOutScheduler.cancelAlarm();
+                                logOutScheduler.schedule();
+                            }
+
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            SettingsUtils.getInstance().putValue("fromLogin",true);
+                            SettingsUtils.getInstance().putValue("fromLogin", true);
                             startActivity(intent);
                         }
                     }
@@ -1187,18 +1190,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
-        SettingsUtils.getInstance().putValue("sessionCountDown", "");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        SettingsUtils.getInstance().putValue("sessionCountDown", "");
     }
 
 
     public void shareLocation(String caseId, String fieldStaffId, String interval, double latitudes, double longitudes
-            ,String comments,Integer ActivityType) {
+            , String comments, Integer ActivityType) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -1270,8 +1271,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     general.CustomToast("Login Successful");
                     general.isLogoutClicked = false;
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
+//                    LogoutWorkManager logoutWorkManager = new LogoutWorkManager(getApplicationContext());
+
+                    if(checkSessionLogut()){
+                        LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
+                        logOutScheduler.schedule();
+                    }
+
+
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    SettingsUtils.getInstance().putValue("fromLogin",true);
+                    SettingsUtils.getInstance().putValue("fromLogin", true);
+                    SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
                     startActivity(intent);
                 }
             });
@@ -1279,7 +1289,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         } else {
             general.hideloading();
-          General.customToast("Please check your Internet Connection!",LoginActivity.this);
+            General.customToast("Please check your Internet Connection!", LoginActivity.this);
 
         }
     }
@@ -1287,11 +1297,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(branchPopup !=null){
+        if (branchPopup != null) {
             branchPopup.dismiss();
         }
-        if(general!=null){
+        if (general != null) {
             general.hideloading();
+        }
+    }
+
+    private boolean checkSessionLogut(){
+        SimpleDateFormat formatMinutes = new SimpleDateFormat("mm");
+        String getMinutes = formatMinutes.format(new Date());
+        SimpleDateFormat formatHours = new SimpleDateFormat("HH");
+        String getHours = formatHours.format(new Date());
+        int hours  = Integer.parseInt(getHours);
+        if(hours <= 20 || hours >= 6){
+           return true;
+        }else{
+            return false;
         }
     }
 }

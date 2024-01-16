@@ -132,6 +132,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         //TODO - > For Bug and error report send to api
         General.report_bug(SplashActivity.this);
         setContentView(R.layout.splash_activity);
+        SettingsUtils.init(this);
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -261,9 +262,11 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             // Already Login
             if (Connectivity.isConnected(this)) {
                 // Get Drop down API
-                getSessionOut(true);
+              //  getSessionOut(true);
+                InitiateGetFieldDropDownTask();
             } else {
-                getSessionOut(false);
+                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                //getSessionOut(false);
             }
 
 
@@ -505,8 +508,8 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
     private void getLocationFetch(){
         if(general.checkLatLong()){
-            getSessionOut(false);
-           // startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+           // getSessionOut(false);
+              startActivity(new Intent(SplashActivity.this, HomeActivity.class));
         }else{
             if (general.checkPermissions()) {
                 getCurrentLocation(this);
@@ -567,8 +570,8 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
                             SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
                             SettingsUtils.getInstance().putValue("long", String.valueOf(general.getcurrent_longitude(activity)));
-                           // startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                            getSessionOut(false);
+                            startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                          //  getSessionOut(false);
                         }
                     }
                 }, 1500);

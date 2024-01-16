@@ -6,21 +6,25 @@ import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDex;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.realappraiser.gharvalue.utils.ConnectionReceiver;
+import com.realappraiser.gharvalue.utils.SettingsUtils;
 
 /**
  * Created by kaptas on 15/12/17.
  */
 
 @SuppressWarnings("ALL")
-public class MyApplication extends Application {
+public class MyApplication extends Application implements LifecycleObserver {
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
@@ -41,6 +45,7 @@ public class MyApplication extends Application {
 
         FirebaseApp.initializeApp(getApplicationContext());
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         context = this;
         mInstance = this;
@@ -69,5 +74,19 @@ public class MyApplication extends Application {
      * ********/
     public void setConnectionListener(ConnectionReceiver.ConnectionReceiverListener listener) {
         ConnectionReceiver.connectionReceiverListener = listener;
+    }
+
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    public void onStop() {
+        SettingsUtils.getInstance().putValue(SettingsUtils.APP_STATUS, false);
+        Log.e("MyApplication","APP in background");
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    public void onStart() {
+        // App in foreground
+        SettingsUtils.getInstance().putValue(SettingsUtils.APP_STATUS, true);
+        Log.e("MyApplication","APP in Foreground");
     }
 }

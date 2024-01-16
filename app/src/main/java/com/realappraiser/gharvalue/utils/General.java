@@ -2120,6 +2120,11 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                 General.hideloading();
                 e.printStackTrace();
             }
+        }else{
+            isLogoutClicked = false;
+            General.hideloading();
+            General.customToast("Please turn on your Location",mContext);
+
         }
     }
 

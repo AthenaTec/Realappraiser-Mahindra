@@ -48,16 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     private String  address = "";
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(general == null){
-            general = new General(BaseActivity.this);
-        }else{
-            general.checkPermissions();
-        }
 
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,56 +60,33 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     protected abstract int getLayoutResourceId();
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        SettingsUtils.getInstance().putValue("sessionCountDown", String.valueOf(System.currentTimeMillis()));
-        Log.e(TAG, String.valueOf(System.currentTimeMillis()));
-      /*  if(sessionCountDown!=null){
-            sessionCountDown.start();
-        }*/
-        Log.e(TAG, "OnPause");
-    }
 
-    @Override
+
+    /*@Override
     protected void onResume() {
         super.onResume();
-        if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty() && !general.getOfflineCase()) {
-            String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
-            long currentVisitTime = System.currentTimeMillis();
-            long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
-            long minutes = (totalVisitTime / 1000) / 60;
-            Log.e(TAG, "onResume: " + minutes);
-            //minutes >= 1
-            if (minutes >= 120) {
-                Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
-                if (general.checkLatLong()) { //SettingsUtils.Latitudes > 0
-                    General.showloading(this);
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            sessionLogout(BaseActivity.this);
-                        }
-                    }, 7000);
-                } else {
-                    if (general.checkPermissions()) {
-                        General.showloading(this);
-                        getCurrentLocation(this);
-
-                    } else {
-                        String str3 = "android.permission.ACCESS_COARSE_LOCATION";
-                        String str4 = "android.permission.ACCESS_FINE_LOCATION";
-                        if (!SettingsUtils.hasMultiplePermissions(this, str3) || !SettingsUtils.hasMultiplePermissions(this, str4)) {
-                            ActivityCompat.requestPermissions(this, new String[]{str3, str4}, REQUEST_ID_MULTIPLE_PERMISSIONS);
-                        }
-                    }
+        Log.e(TAG, "OnResume "+SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false));
+        if (!SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false)) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    redirectoLogin();
                 }
-            }
+            }, 500 );
         }
-        Log.e(TAG, "OnResume");
-
+    }*/
+    private void redirectoLogin(){
+        if (!SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false)){
+            finish();
+            Intent intent = new Intent(this, SplashActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
+
 
     @Override
     protected void onDestroy() {

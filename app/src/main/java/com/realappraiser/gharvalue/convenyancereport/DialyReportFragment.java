@@ -129,8 +129,9 @@ public class DialyReportFragment extends Fragment {
                     requestData, SettingsUtils.GET_TOKEN);
             webserviceTask.setFetchMyData((TaskCompleteListener<JsonRequestData>) dailyActivityResponse -> {
 
-                parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), TodayActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
                 Log.e(TAG, new Gson().toJson(dailyActivityResponse));
+                parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), TodayActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
+
 
             });
             webserviceTask.execute();
