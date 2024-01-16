@@ -101,16 +101,17 @@ public class LogOutReceiver extends BroadcastReceiver {
                 webserviceTask.setFetchMyData((TaskCompleteListener<JsonRequestData>) requestData1 -> {
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
 
-                    if(!SettingsUtils.getInstance().getValue(SettingsUtils.APP_STATUS, false)){
+                   /* if(!SettingsUtils.getInstance().getValue(SettingsUtils.APP_STATUS, false)){
 //                        System.exit(0);
 //                    }else{
                         redirectLogin();
-                    }
-                });
+                    }*/
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    AndroidAlarmScheduler.cancelAlarm();
-                }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        LogOutScheduler.cancelAlarm();
+                    }
+                    redirectLogin();
+                });
                 webserviceTask.execute();
             }
         });

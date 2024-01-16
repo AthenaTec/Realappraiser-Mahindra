@@ -1171,7 +1171,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             general.isLogoutClicked = false;
                             if(checkSessionLogut()){
                                 LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
-                                //logOutScheduler.cancelAlarm();
+                                logOutScheduler.cancelAlarm();
                                 logOutScheduler.schedule();
                             }
 
@@ -1275,6 +1275,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     if(checkSessionLogut()){
                         LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
+                        logOutScheduler.cancelAlarm();
                         logOutScheduler.schedule();
                     }
 
@@ -1308,14 +1309,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean checkSessionLogut(){
         SimpleDateFormat formatMinutes = new SimpleDateFormat("mm");
         String getMinutes = formatMinutes.format(new Date());
+        SimpleDateFormat formatSeconds = new SimpleDateFormat("ss");
+        String getSeconds = formatSeconds.format(new Date());
         SimpleDateFormat formatHours = new SimpleDateFormat("HH");
         String getHours = formatHours.format(new Date());
         int hours  = Integer.parseInt(getHours);
-        if(hours <= 20 || hours >= 6){
+        int minutes = Integer.parseInt(getMinutes);
+        int seconds = Integer.parseInt(getSeconds);
+
+        /* if(hours <= 20 || hours >= 6){
            return true;
         }else{
             return false;
+        }*/
+
+        if(hours == 13 && minutes <= 59){
+            return true;
+        }else{
+            return false;
         }
+
     }
 }
 

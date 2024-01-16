@@ -1,22 +1,26 @@
 package com.realappraiser.gharvalue.alarm;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+
 import androidx.annotation.RequiresApi;
+
 import java.util.Calendar;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class LogOutScheduler implements LogutSessionScheduler {
-    private final Context context;
-    private static  AlarmManager alarmManager;
+public class LogOutScheduler implements LogOutSessionScheduler {
+    private static Context context;
+    private static AlarmManager alarmManager;
 
     private static PendingIntent pendingIntent;
 
-    public LogOutScheduler(Context context) {
-        this.context = context;
+    public LogOutScheduler(Context mContext) {
+        context = mContext;
         alarmManager = context.getSystemService(AlarmManager.class);
     }
 
@@ -29,15 +33,15 @@ public class LogOutScheduler implements LogutSessionScheduler {
         /*calendar.set(Calendar.HOUR_OF_DAY, 21);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);*/
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
-        calendar.set(Calendar.MINUTE, 45);
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-         pendingIntent  =  PendingIntent.getBroadcast(
+        pendingIntent = PendingIntent.getBroadcast(
                 context,
-                101,
+                1,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE
         );
 
         alarmManager.setExactAndAllowWhileIdle(
@@ -47,8 +51,8 @@ public class LogOutScheduler implements LogutSessionScheduler {
         );
     }
 
-    public static void cancelAlarm(){
-        if(alarmManager!=null && pendingIntent != null ){
+    public static void cancelAlarm() {
+        if (alarmManager != null && pendingIntent != null) {
             alarmManager.cancel(pendingIntent);
         }
     }
