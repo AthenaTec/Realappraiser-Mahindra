@@ -33,8 +33,8 @@ public class LogOutScheduler implements LogOutSessionScheduler {
         /*calendar.set(Calendar.HOUR_OF_DAY, 21);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);*/
-        calendar.set(Calendar.HOUR_OF_DAY, 14);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 11);
+        calendar.set(Calendar.MINUTE, 15);
         calendar.set(Calendar.SECOND, 0);
 
         pendingIntent = PendingIntent.getBroadcast(

@@ -22,6 +22,7 @@ import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.model.OfflineDataModel;
+import com.realappraiser.gharvalue.sessiontimeout.LocationService;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
@@ -101,14 +102,11 @@ public class LogOutReceiver extends BroadcastReceiver {
                 webserviceTask.setFetchMyData((TaskCompleteListener<JsonRequestData>) requestData1 -> {
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
 
-                   /* if(!SettingsUtils.getInstance().getValue(SettingsUtils.APP_STATUS, false)){
-//                        System.exit(0);
-//                    }else{
-                        redirectLogin();
-                    }*/
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         LogOutScheduler.cancelAlarm();
+                        Intent intent = new Intent(MyApplication.getAppContext(), LocationService.class);
+                        intent.setAction(LocationService.ACTION_STOP);
+                        MyApplication.getAppContext().startService(intent);
                     }
                     redirectLogin();
                 });
@@ -138,7 +136,7 @@ public class LogOutReceiver extends BroadcastReceiver {
             return addres;
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("Alarm Receiver", "onRunJob: Could not get address..!");
+            Log.e("LogOut Receiver", "onRunJob: Could not get address..!");
             return address;
         }
     }

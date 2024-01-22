@@ -60,6 +60,7 @@ import com.realappraiser.gharvalue.model.GetStoreModel;
 import com.realappraiser.gharvalue.model.MultiBranchModel;
 import com.realappraiser.gharvalue.model.SafeNetModel;
 import com.realappraiser.gharvalue.model.SecurityToken;
+import com.realappraiser.gharvalue.sessiontimeout.LocationService;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
@@ -1173,6 +1174,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
                                 logOutScheduler.cancelAlarm();
                                 logOutScheduler.schedule();
+
+                                Intent intent = new Intent(getApplicationContext(), LocationService.class);
+                                intent.setAction(LocationService.ACTION_START);
+                                startService(intent);
                             }
 
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -1277,6 +1282,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
                         logOutScheduler.cancelAlarm();
                         logOutScheduler.schedule();
+                        Intent intent = new Intent(getApplicationContext(), LocationService.class);
+                        intent.setAction(LocationService.ACTION_START);
+                        startService(intent);
                     }
 
 
@@ -1317,13 +1325,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         int minutes = Integer.parseInt(getMinutes);
         int seconds = Integer.parseInt(getSeconds);
 
-        /* if(hours <= 20 || hours >= 6){
+         /*if(hours <= 20 || hours >= 6){
            return true;
         }else{
             return false;
         }*/
 
-        if(hours == 13 && minutes <= 59){
+        if(hours == 11 && minutes <= 15){
             return true;
         }else{
             return false;

@@ -2,6 +2,8 @@ package com.realappraiser.gharvalue;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
@@ -49,6 +51,18 @@ public class MyApplication extends Application implements LifecycleObserver {
 
         context = this;
         mInstance = this;
+
+
+        //For Location fetching
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "MyChannelId",
+                    "Location",
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
     public static MyApplication getApplication() {
         return (MyApplication) context;

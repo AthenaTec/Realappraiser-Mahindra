@@ -1605,10 +1605,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     if (general.checkPermissions()) {
                         // getCurrentLocation(this);
                         if (!general.isLogoutClicked) {
-                            general.LogoutDialog(this, SettingsUtils.Latitudes, SettingsUtils.Longitudes);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 LogOutScheduler.cancelAlarm();
                             }
+                            general.LogoutDialog(this, SettingsUtils.Latitudes, SettingsUtils.Longitudes);
                         }
                     } else Log.e(TAG, "permission denied");
                 } else {
