@@ -62,8 +62,11 @@ public class LogOutReceiver extends BroadcastReceiver {
     private void getLocation() {
         AsyncTask.execute(() -> {
             String address = convertLatLngToAddress(MyApplication.getAppContext());
-            @SuppressLint("SimpleDateFormat") String time =
+            /*@SuppressLint("SimpleDateFormat") String time =
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                            .format(Calendar.getInstance().getTime());*/
+            @SuppressLint("SimpleDateFormat") String time =
+                    new SimpleDateFormat("yyyy-MM-dd ")
                             .format(Calendar.getInstance().getTime());
 
             if (Connectivity.isConnected(MyApplication.getAppContext())) {
@@ -76,7 +79,11 @@ public class LogOutReceiver extends BroadcastReceiver {
                 requestData.setLocationType("Logout");
                 requestData.setLatitude(SettingsUtils.getInstance().getValue("lat", ""));
                 requestData.setLongitude(SettingsUtils.getInstance().getValue("long", ""));
+
+                time  = time  + "21:00:00";
+
                 requestData.setTrackerTime(time);
+
                 requestData.setActivityType("4");
                 requestData.setComments("");
                 requestData.setAgencyBId(SettingsUtils.getInstance().getValue(SettingsUtils.BranchId, ""));

@@ -1325,18 +1325,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         int minutes = Integer.parseInt(getMinutes);
         int seconds = Integer.parseInt(getSeconds);
 
-         if(hours <= 20 || hours >= 6){
+         if(hours <= 20 && hours >= 6){
            return true;
         }else{
             return false;
         }
-
-       /* if(hours == 11 && minutes <= 15){
-            return true;
-        }else{
-            return false;
-        }*/
-
     }
 }
 
