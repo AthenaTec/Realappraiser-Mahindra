@@ -124,6 +124,7 @@ public class SettingsUtils {
     public static final String KEY_URL_TYPE = "KEY_URL";
 
     public static final String KEY_LOGGED_IN = "KEY_LOGGED_IN";
+    public static final String APP_STATUS = "APP_STATUS";
     public static final String StatusId = "StatusId";
     public static final String KEY_EMPID = "KEY_EMPID";
     public static final String CASE_ID = "CASE_ID";

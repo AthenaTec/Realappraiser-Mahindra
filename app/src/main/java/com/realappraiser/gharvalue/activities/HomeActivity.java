@@ -61,6 +61,7 @@ import com.realappraiser.gharvalue.adapter.CloseCaseAdapter;
 import com.realappraiser.gharvalue.adapter.OfflineCaseAdapter;
 import com.realappraiser.gharvalue.adapter.OfflineCaseCheckboxAdapter;
 import com.realappraiser.gharvalue.adapter.OpenCaseAdapter;
+import com.realappraiser.gharvalue.alarm.LogOutScheduler;
 import com.realappraiser.gharvalue.communicator.DataModel;
 import com.realappraiser.gharvalue.communicator.DataResponse;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
@@ -1612,11 +1613,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.logout:
                 if (Connectivity.isConnected(this)) {
                     if (general.checkPermissions()) {
-                       // getCurrentLocation(this);
-                        if(!general.isLogoutClicked){
-                            general.LogoutDialog(this,SettingsUtils.Latitudes,SettingsUtils.Longitudes);
+                        // getCurrentLocation(this);
+                        if (!general.isLogoutClicked) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                LogOutScheduler.cancelAlarm();
+                            }
+                            general.LogoutDialog(this, SettingsUtils.Latitudes, SettingsUtils.Longitudes);
                         }
-                    }else Log.e(TAG,"permission denied");
+                    } else Log.e(TAG, "permission denied");
                 } else {
                     Connectivity.showNoConnectionDialog(this);
                 }
@@ -3192,7 +3196,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
                             SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
-                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
+                            SettingsUtils.getInstance().putValue("long", String.valueOf(general.getcurrent_longitude(activity)));
 
                             general.LogoutDialog(HomeActivity.this, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
                         }
@@ -3237,8 +3241,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 
-    public void LogoutDialog(Activity activity, double longitudes, double latitudes)
-    {
+    public void LogoutDialog(Activity activity, double longitudes, double latitudes) {
         View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.CustomDialog);
         builder.setView(view);
@@ -3260,8 +3263,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         btnSubmit.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick(View view)
-                    {
+                    public void onClick(View view) {
                          /*Singleton.getInstance().longitude = 0.0;
                          Singleton.getInstance().latitude = 0.0;
                          Singleton.getInstance().aCase = new Case();
