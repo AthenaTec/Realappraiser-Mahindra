@@ -474,8 +474,8 @@ public class FragmentValuationBuilding extends Fragment implements RatePopupupIn
                 hideSoftKeyboard(editText_guideline_rate);
 
                 RadioButton id_radiogenearal = (RadioButton) view.findViewById(group.getCheckedRadioButtonId());
-                if (id_radiogenearal.getText().toString().equalsIgnoreCase(getResources().getString(R.string.considerforvaluation_permissible))) {
-                    textview_permissiblearea_head.setText(getResources().getString(R.string.permissiblearea));
+                if (id_radiogenearal.getText().toString().equalsIgnoreCase("Sanctioned area")) {
+                    textview_permissiblearea_head.setText("Sanctioned area");
                     recyclerview_permissiblearea.setVisibility(View.VISIBLE);
                     recyclerview_actualarea.setVisibility(View.GONE);
                     TotalPermissibleValuationFloors();
@@ -537,7 +537,8 @@ public class FragmentValuationBuilding extends Fragment implements RatePopupupIn
                 permission_check_construction = 1;
                 id_radio_considerforvaluation_permissiblearea_construction.setChecked(true);
                 id_radio_considerforvaluation_actualarea_construction.setChecked(false);
-                textview_permissiblearea_head.setText(getResources().getString(R.string.permissiblearea));
+                //textview_permissiblearea_head.setText(getResources().getString(R.string.permissiblearea));
+                textview_permissiblearea_head.setText("Sanctioned area");
                 recyclerview_permissiblearea.setVisibility(View.VISIBLE);
                 recyclerview_actualarea.setVisibility(View.GONE);
             } else {

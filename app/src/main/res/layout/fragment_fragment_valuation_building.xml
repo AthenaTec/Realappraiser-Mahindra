@@ -521,8 +521,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="false"
-                    android:text="@string/considerforvaluation_permissible" />
-
+                    android:text="Sanctioned area" />
                 <RadioButton
                     android:id="@+id/id_radio_considerforvaluation_actualarea_construction"
                     android:layout_width="0dp"

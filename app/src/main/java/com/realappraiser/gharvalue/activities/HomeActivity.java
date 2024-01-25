@@ -490,7 +490,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         if (Singleton.getInstance().openCaseList != null) {
             if (Singleton.getInstance().openCaseList.size() > 0) {
 
-
+                shimmerHomeView.stopShimmer();
+                shimmerHomeView.setVisibility(View.GONE);
+                parentLayout.setVisibility(View.VISIBLE);
                 loadOpenCaseAdapter(Singleton.getInstance().openCaseList);
 
 
