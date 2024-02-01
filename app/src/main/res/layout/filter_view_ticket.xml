@@ -39,12 +39,27 @@
             android:textSize="@dimen/_13sdp" />
 
         <Spinner
-            android:id="@+id/spinner_measurement1"
+            android:id="@+id/spinner_filter"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             tools:ignore="InconsistentLayout"
             android:background="@drawable/spinner_status"
             android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+            android:spinnerMode="dropdown"
+            android:padding="@dimen/_10sdp"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_status"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            tools:ignore="InconsistentLayout"
+            android:background="@drawable/spinner_status"
+            android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+            android:spinnerMode="dropdown"
+            android:padding="@dimen/_10sdp"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_8sdp"
             />
 
         <EditText
@@ -56,7 +71,7 @@
             android:editable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="Search"
+            android:hint="Enter Ticket ID"
             android:lineSpacingExtra="2dp"
             android:lineSpacingMultiplier="1.2"
             android:padding="@dimen/_10sdp"
@@ -67,6 +82,8 @@
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginLeft="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_8sdp"
+            android:visibility="gone"
+            android:inputType="number"
             />
 
         <EditText
@@ -161,7 +178,7 @@
                 android:paddingTop="@dimen/_8sdp"
                 android:paddingEnd="@dimen/_18sdp"
                 android:paddingBottom="@dimen/_8sdp"
-                android:text="Clear"
+                android:text="Cancel"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 

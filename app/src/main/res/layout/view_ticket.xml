@@ -203,10 +203,11 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_weight="0.3"
             android:gravity="start"
+            android:layout_gravity="center"
             android:layout_marginRight="@dimen/_3sdp"
             >
 
@@ -214,12 +215,13 @@
                 <TextView
                     android:id="@+id/txt_ticket_status"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:fontFamily="@font/regular"
                     android:text="Inprogress"
                     android:textSize="@dimen/_16sdp"
                     android:textColor="@color/black"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     />
             <ImageView
                 android:id="@+id/txt_ticket_edit"
@@ -230,6 +232,7 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:layout_gravity="center_horizontal"
+                android:visibility="gone"
                 />
 
 

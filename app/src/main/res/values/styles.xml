@@ -311,7 +311,7 @@
 
     <style name="raiseTicket" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="android:windowFullscreen">true</item>
-    <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
     <item name="colorAccent">@color/colorAccent</item>
 </style>
 

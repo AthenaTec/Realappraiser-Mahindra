@@ -392,6 +392,7 @@
     <string name="err_msg_percentage_completion">Percentage Completion is mandatory</string>
     <string name="err_genea_floors_check">Kindly generate the floors as per Floor(s)</string>
     <string name="sizelimit">Photo Size exceeds limitation of 6 count</string>
+    <string name="tiket_raise_image_size_limit">Photo Size exceeds limitation of 2 count</string>
     <string name="imagelimit" tools:ignore="UnusedResources">Select 5 images at a time</string>
     <string name="selectmsg">Select atleast one image</string>
     <string name="samefloornumbers">Already the Generated floors list are equal</string>

@@ -35,13 +35,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
     private int selectedPhotoSize;
     private boolean photolanlat;
 
-    public ImageAdapter(Context context, ArrayList<String> imageList,int selectedPhotoSize,boolean photolanlat) {
+    private boolean isFromMultiPhotoPicker = false;
+
+    public ImageAdapter(Context context, ArrayList<String> imageList, int selectedPhotoSize, boolean photolanlat, boolean b) {
         mContext = context;
         mSparseBooleanArray = new SparseBooleanArray();
         mImagesList = new ArrayList<String>();
         this.mImagesList = imageList;
         this.selectedPhotoSize = selectedPhotoSize;
         this.photolanlat = photolanlat;
+        this.isFromMultiPhotoPicker = b;
     }
 
     public ArrayList<String> getCheckedItems() {
@@ -65,12 +68,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if(photolanlat){
-                photoLanlatImage(buttonView, isChecked);
-            }else{
-                mSparseBooleanArray.put((Integer) buttonView.getTag(), isChecked);
-            }
 
+            if(!isFromMultiPhotoPicker){
+                if(photolanlat){
+                    photoLanlatImage(buttonView, isChecked);
+                }else{
+                    mSparseBooleanArray.put((Integer) buttonView.getTag(), isChecked);
+                }
+            }else{
+                photoTicketImage(buttonView,isChecked);
+            }
         }
     };
 
@@ -84,6 +91,21 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
             mSparseBooleanArray.put((Integer) buttonView.getTag(), false);
             if ( numOfSelectedPhoto >= 6) {
                 Toast.makeText(buttonView.getContext(), "Please Upload Only 6 Pictures", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    private void photoTicketImage(CompoundButton buttonView, boolean isChecked){
+        int numOfSelectedPhoto = selectedPhotoSize + getCheckedItems().size();
+        if ( numOfSelectedPhoto <= 1) {
+            buttonView.setChecked(isChecked);
+            mSparseBooleanArray.put((Integer) buttonView.getTag(), isChecked);
+        } else {
+            buttonView.setChecked(false);
+            mSparseBooleanArray.put((Integer) buttonView.getTag(), false);
+            if ( numOfSelectedPhoto >= 2) {
+                Toast.makeText(buttonView.getContext(), "Please Upload Only 2 Pictures", Toast.LENGTH_SHORT).show();
             }
         }
     }

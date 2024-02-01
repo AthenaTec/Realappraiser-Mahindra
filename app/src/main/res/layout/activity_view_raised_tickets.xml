@@ -22,6 +22,11 @@
         app:titleTextColor="@color/White"
         tools:ignore="PrivateResource" />
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipeToRefresh"
+        >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_view_raised_ticket"
@@ -32,5 +37,14 @@
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <include android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/no_internet"
+        android:id="@+id/ll_no_internet"
+        android:visibility="gone"
+        />
 
 </LinearLayout>

@@ -233,6 +233,8 @@ dependencies {
 
     //for generate pdf
     implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.1'
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
 // ADD THIS AT THE BOTTOM
 apply plugin: 'com.google.firebase.crashlytics'

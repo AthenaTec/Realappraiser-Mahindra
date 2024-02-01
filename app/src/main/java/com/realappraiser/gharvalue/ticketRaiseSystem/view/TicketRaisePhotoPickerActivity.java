@@ -1,57 +1,41 @@
-package com.realappraiser.gharvalue.activities;
+package com.realappraiser.gharvalue.ticketRaiseSystem.view;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_MEDIA_IMAGES;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.iceteck.silicompressorr.SiliCompressor;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.adapter.ImageAdapter;
-import com.realappraiser.gharvalue.fragments.PhotoLatLong;
-import com.realappraiser.gharvalue.fragments.PhotoLatLong_ka;
-import com.realappraiser.gharvalue.model.GetPhoto;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.ItemOffsetDecoration;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.READ_MEDIA_IMAGES;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
-/**
- * @author Paresh Mayani (@pareshmayani)
- */
-@SuppressWarnings("ALL")
-public class MultiPhotoSelectActivity extends BaseActivity {
+public class TicketRaisePhotoPickerActivity extends AppCompatActivity {
 
     @SuppressLint("StaticFieldLeak")
     public static ImageAdapter imageAdapter;
@@ -61,20 +45,14 @@ public class MultiPhotoSelectActivity extends BaseActivity {
     private ArrayList<String> selectedItems;
     boolean is_fragment_flat_ka = false;
     boolean real_appraiser_jaipur = false;
-    private static final String TAG = "MultiPhotoSelectActivity";
+    private static final String TAG = "TicketRaisePhotoPicker";
     private int selectedPhotoSize;
     private boolean photolanlat;
 
     @Override
-    protected int getLayoutResourceId() {
-        return R.layout.activity_multi_photo_select;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_multi_photo_select);
-
+        setContentView(R.layout.activity_ticket_raise_photo_picker);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && !getIntent().hasExtra("photolanlat")) {
             String page_is = bundle.getString("page_is");
@@ -84,25 +62,19 @@ public class MultiPhotoSelectActivity extends BaseActivity {
                 page = getIntent().getStringExtra("page");
         } else {
             if (getIntent().hasExtra("available_photo_size"))
-            selectedPhotoSize = getIntent().getIntExtra("available_photo_size",0);
+                selectedPhotoSize = getIntent().getIntExtra("available_photo_size", 0);
 
-            if(getIntent().hasExtra("photolanlat")){
-                photolanlat = getIntent().getBooleanExtra("photolanlat",false);
+            if (getIntent().hasExtra("photolanlat")) {
+                photolanlat = getIntent().getBooleanExtra("photolanlat", false);
             }
-
-
             is_fragment_flat_ka = false;
         }
-
         real_appraiser_jaipur = SettingsUtils.getInstance().getValue(SettingsUtils.real_appraiser_jaipur, false);
-
-        general = new General(MultiPhotoSelectActivity.this);
+        general = new General(TicketRaisePhotoPickerActivity.this);
         populateImagesFromGallery();
     }
 
     public void btnChoosePhotosClick(final View v) {
-
-//        general.showloading(MultiPhotoSelectActivity.this);
         v.setVisibility(View.GONE);
 
         new Handler().postDelayed(new Runnable() {
@@ -111,52 +83,11 @@ public class MultiPhotoSelectActivity extends BaseActivity {
                 ArrayList<String> selectedItems = imageAdapter.getCheckedItems();
                 Log.e(TAG, "run: " + new Gson().toJson(selectedItems));
                 if (selectedItems != null && selectedItems.size() > 0) {
-
-                    if (is_fragment_flat_ka) {
-                        int new_addimage = selectedItems.size();
-                        if (new_addimage == 1) {
-                            v.setVisibility(View.VISIBLE);
-                            Intent intent = new Intent();
-                            intent.putStringArrayListExtra("multiple_photo", selectedItems);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        } else if (page != null && page.contains(PropertyDocumentsActivity.class.getSimpleName())) {
-                            general.hideloading();
-                            Intent intent = new Intent();
-                            intent.putStringArrayListExtra("multiple_photo", selectedItems);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        } else {
-                            general.hideloading();
-                            v.setVisibility(View.VISIBLE);
-                            general.CustomToast(getResources().getString(R.string.one_photo));
-                        }
-                    } else {
-                        String image = selectedItems.get(0);
-                        int old_imgresult = 0;
-                        if (real_appraiser_jaipur) {
-                            // Jaipur
-                            old_imgresult = PhotoLatLong.GetPhoto_list_response.size();
-                        } else {
-                            // Kakode
-                            old_imgresult = PhotoLatLong_ka.GetPhoto_list_response.size();
-                        }
-                        int new_addimage = selectedItems.size();
-                        int finalImagecount = old_imgresult + new_addimage;
-
-                        if (finalImagecount <= 22) {
-                            v.setVisibility(View.VISIBLE);
-                            Intent intent = new Intent();
-                            intent.putStringArrayListExtra("multiple_photo", selectedItems);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        } else {
-                            general.hideloading();
-                            v.setVisibility(View.VISIBLE);
-                            general.CustomToast(getResources().getString(R.string.sizelimit));
-                        }
-                    }
-
+                    v.setVisibility(View.GONE);
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra("multiple_photo", selectedItems);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 } else {
                     general.hideloading();
                     v.setVisibility(View.VISIBLE);
@@ -172,13 +103,10 @@ public class MultiPhotoSelectActivity extends BaseActivity {
         }
 
         ArrayList<String> imageUrls = new ArrayList<>();
-        if (page != null && page.contains(PropertyDocumentsActivity.class.getSimpleName()))
+        if (page != null && page.contains(TicketRaisePhotoPickerActivity.class.getSimpleName()))
             imageUrls = loadAllFiles();
         else
             imageUrls = loadPhotosFromNativeGallery();
-
-//        ArrayList<String> imageUrls = loadPhotosFromNativeGallery();
-
         initializeRecyclerView(imageUrls);
     }
 
@@ -188,34 +116,31 @@ public class MultiPhotoSelectActivity extends BaseActivity {
             return true;
         }
 
-        if(Build.VERSION.SDK_INT < 33){
+        if (Build.VERSION.SDK_INT < 33) {
             if (checkSelfPermission(READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 return true;
             }
-        }else{
+        } else {
             if (checkSelfPermission(READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
                 return true;
             }
         }
 
 
-
-        if(Build.VERSION.SDK_INT < 33){
+        if (Build.VERSION.SDK_INT < 33) {
             if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
                 //promptStoragePermission();
                 showPermissionRationaleSnackBar();
             } else {
                 requestPermissions(new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, REQUEST_FOR_STORAGE_PERMISSION);
             }
-        }else{
+        } else {
             if (shouldShowRequestPermissionRationale(READ_MEDIA_IMAGES)) {
                 showPermissionRationaleSnackBar();
             } else {
                 requestPermissions(new String[]{READ_MEDIA_IMAGES}, REQUEST_FOR_STORAGE_PERMISSION);
             }
         }
-
-
         return false;
     }
 
@@ -227,21 +152,18 @@ public class MultiPhotoSelectActivity extends BaseActivity {
                                            @NonNull int[] grantResults) {
 
         switch (requestCode) {
-
             case REQUEST_FOR_STORAGE_PERMISSION: {
-
                 if (grantResults.length > 0) {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         populateImagesFromGallery();
                     } else {
-
                         if (Build.VERSION.SDK_INT < 33) {
                             if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
                                 showPermissionRationaleSnackBar();
                             } else {
                                 Toast.makeText(this, "Go to settings and enable permission", Toast.LENGTH_LONG).show();
                             }
-                        }else{
+                        } else {
                             if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_MEDIA_IMAGES)) {
                                 showPermissionRationaleSnackBar();
                             } else {
@@ -251,7 +173,6 @@ public class MultiPhotoSelectActivity extends BaseActivity {
 
                     }
                 }
-
                 break;
             }
         }
@@ -272,7 +193,6 @@ public class MultiPhotoSelectActivity extends BaseActivity {
             imagecursor.moveToPosition(i);
             int dataColumnIndex = imagecursor.getColumnIndex(MediaStore.Images.Media.DATA);
             imageUrls.add(imagecursor.getString(dataColumnIndex));
-
             System.out.println("=====> Array path => " + imageUrls.get(i));
         }
         return imageUrls;
@@ -282,7 +202,6 @@ public class MultiPhotoSelectActivity extends BaseActivity {
     private ArrayList<String> loadDOCX() {
         ContentResolver cr = getContentResolver();
         Uri uri = MediaStore.Files.getContentUri("external");
-//        String[] projection = {MediaStore.Files.FileColumns._ID,MediaStore.Files.FileColumns.DISPLAY_NAME};
         String[] projection = null;
         final String orderBy = MediaStore.Files.FileColumns.DATE_TAKEN;
         String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
@@ -290,7 +209,6 @@ public class MultiPhotoSelectActivity extends BaseActivity {
         String selectionMimeType = MediaStore.Files.FileColumns.MIME_TYPE + "=?";
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("docx");
         Log.e("loadDOCX", "loadDOCX: " + mimeType);
-
         String[] selectionArgsPdf = new String[]{"application/vnd.openxmlformats-officedocument.wordprocessingml.document"};
         Cursor cursor = cr.query(uri, projection, selectionMimeType, selectionArgsPdf, orderBy + " DESC");
         assert cursor != null;
@@ -307,7 +225,6 @@ public class MultiPhotoSelectActivity extends BaseActivity {
     private ArrayList<String> loadDOC() {
         ContentResolver cr = getContentResolver();
         Uri uri = MediaStore.Files.getContentUri("external");
-//        String[] projection = {MediaStore.Files.FileColumns._ID,MediaStore.Files.FileColumns.DISPLAY_NAME};
         String[] projection = null;
         final String orderBy = MediaStore.Files.FileColumns.DATE_TAKEN;
         String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
@@ -340,17 +257,7 @@ public class MultiPhotoSelectActivity extends BaseActivity {
         String selectionMimeType = MediaStore.Files.FileColumns.MIME_TYPE + "=?";
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf");
         Log.e("loadPDF", "loadPDF: " + mimeType);
-
         String[] selectionArgsPdf = new String[]{"application/pdf"};
-
-        /*String[] selectionArgsPdf = new String[]{
-                "image/png",
-                "image/jpeg",
-                "application/pdf",
-                "application/msword",
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        };*/
-
         Cursor cursor = cr.query(uri, projection, selectionMimeType, selectionArgsPdf, orderBy + " DESC");
         assert cursor != null;
         ArrayList<String> imageUrls = new ArrayList<String>();
@@ -384,8 +291,7 @@ public class MultiPhotoSelectActivity extends BaseActivity {
     }
 
     private void initializeRecyclerView(ArrayList<String> imageUrls) {
-        imageAdapter = new ImageAdapter(this, imageUrls,selectedPhotoSize,photolanlat, false);
-
+        imageAdapter = new ImageAdapter(this, imageUrls, selectedPhotoSize, photolanlat, true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(layoutManager);
@@ -400,98 +306,16 @@ public class MultiPhotoSelectActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 // Request the permission
-                if(Build.VERSION.SDK_INT < 33){
-                    ActivityCompat.requestPermissions(MultiPhotoSelectActivity.this,
+                if (Build.VERSION.SDK_INT < 33) {
+                    ActivityCompat.requestPermissions(TicketRaisePhotoPickerActivity.this,
                             new String[]{READ_EXTERNAL_STORAGE},
                             REQUEST_FOR_STORAGE_PERMISSION);
-                }else{
-                    ActivityCompat.requestPermissions(MultiPhotoSelectActivity.this,
+                } else {
+                    ActivityCompat.requestPermissions(TicketRaisePhotoPickerActivity.this,
                             new String[]{READ_MEDIA_IMAGES},
                             REQUEST_FOR_STORAGE_PERMISSION);
                 }
-
-
             }
         }).show();
-
-    }
-
-
-    /*****
-     * Load the image from selected arraylist
-     * *******/
-    private void GetConvertedImage() {
-        general.showloading(MultiPhotoSelectActivity.this);
-        for (int i = 0; i < imageAdapter.getCheckedItems().size(); i++) {
-            //String realPath = imageAdapter.getCheckedItems().get(i);
-            String realPath = null;
-            realPath = SiliCompressor.with(MultiPhotoSelectActivity.this).compress(Integer.parseInt(imageAdapter.getCheckedItems().get(i)));
-            convertToBase64(realPath);
-
-            if (i == imageAdapter.getCheckedItems().size() - 1) {
-                general.hideloading();
-                general.CustomToast(",,Total photos Loaded: " + selectedItems.size());
-
-            }
-        }
-
-        int old_imgresult = PhotoLatLong.GetPhoto_list_response.size();
-        int new_addimage = selectedItems.size();
-        int finalImagecount = old_imgresult + new_addimage;
-        if (old_imgresult <= 22) {
-            Intent intent = new Intent();
-            intent.putStringArrayListExtra("multiple_photo", selectedItems);
-            setResult(RESULT_OK, intent);
-            finish();
-        } else {
-            general.CustomToast(getResources().getString(R.string.sizelimit));
-        }
-           /* }
-            else {
-                general.CustomToast(getResources().getString(R.string.imagelimit));
-            }*/
-    }
-
-    /*******
-     * Convert the image and add it to main photo adapter
-     * ******/
-    private String convertToBase64(String imagePath) {
-        Bitmap bmp = null;
-        ByteArrayOutputStream bos = null;
-        byte[] bt = null;
-        String encodedImage = null;
-        try {
-            bmp = BitmapFactory.decodeFile(imagePath);
-            bos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bt = bos.toByteArray();
-            encodedImage = Base64.encodeToString(bt, Base64.DEFAULT);
-            Log.d("base64image", encodedImage);
-
-            mBase64 = encodedImage;
-            if (mBase64 != null) {
-                GetPhoto getPhoto_new_image = new GetPhoto();
-                getPhoto_new_image.setNewimage(true);
-                getPhoto_new_image.setLogo(mBase64);
-                getPhoto_new_image.setId(0);
-                // TODO - we want to set property type in session and set it here
-
-                String PropertyId = SettingsUtils.getInstance().getValue(SettingsUtils.PropertyId, "");
-                if (!general.isEmpty(PropertyId)) {
-                    getPhoto_new_image.setPropertyId(Integer.valueOf(PropertyId));
-                } else {
-                    getPhoto_new_image.setPropertyId(0);
-                }
-
-                PhotoLatLong.GetPhoto_list_response.add(getPhoto_new_image);
-                // recycler_photo_adapter.setphoto_adapter(GetPhoto_list_response);
-
-            }
-
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-        return encodedImage;
     }
 }

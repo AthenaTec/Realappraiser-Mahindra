@@ -1670,7 +1670,8 @@ public class PhotoLatLong extends Fragment implements
             }
 
 
-        } else if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
+        }
+        else if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
 
             // hit_photo_api > true
             Singleton.getInstance().hit_photo_api = true;

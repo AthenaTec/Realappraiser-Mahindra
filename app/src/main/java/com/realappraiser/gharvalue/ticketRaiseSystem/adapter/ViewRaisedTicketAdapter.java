@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.realappraiser.gharvalue.R;
-import com.realappraiser.gharvalue.activities.HomeActivity;
-import com.realappraiser.gharvalue.viewtickets.model.ViewTicketData;
+import com.realappraiser.gharvalue.utils.General;
+import com.realappraiser.gharvalue.viewtickets.model.ViewTicketModel;
 
 import java.util.List;
 
@@ -22,11 +22,16 @@ public class ViewRaisedTicketAdapter extends RecyclerView.Adapter<ViewRaisedTick
 
     private Context context;
 
-    private List<ViewTicketData> viewTicketData;
+    private List<ViewTicketModel.Data> viewTicketData;
 
-    public ViewRaisedTicketAdapter(List<ViewTicketData> viewTicketData, Context context){
+    private String ticketStatus = "";
+
+    private ItemClickListener itemClickListener;
+
+    public ViewRaisedTicketAdapter(List<ViewTicketModel.Data> viewTicketData, Context context, ItemClickListener itemClickListener) {
         this.viewTicketData = viewTicketData;
         this.context = context;
+        this.itemClickListener = itemClickListener;
     }
 
 
@@ -59,34 +64,29 @@ public class ViewRaisedTicketAdapter extends RecyclerView.Adapter<ViewRaisedTick
     @Override
     public void onBindViewHolder(@NonNull ViewRaisedTicketAdapter.ViewTicketHolder holder, int position) {
 
-            holder.ticketQuery.setText(viewTicketData.get(position).getQuery());
-            holder.ticketRaisedDate.setText(viewTicketData.get(position).getDate());
-            holder.txt_ticket.setText(viewTicketData.get(position).getTicketID());
-            holder.ticketStatus.setText(viewTicketData.get(position).getStatus());
-            if(viewTicketData.get(position).isEdit()){
-                holder.imgEdit.setVisibility(View.VISIBLE);
-            }else{
-                holder.imgEdit.setVisibility(View.GONE);
-            }
+        holder.ticketQuery.setText(viewTicketData.get(position).getQuery());
+        holder.txt_ticket.setText( "Ticket ID #"+viewTicketData.get(position).getTicketId() + "");
+        holder.ticketStatus.setText(viewTicketData.get(position).getStatus());
+        holder.imgEdit.setVisibility(View.GONE);
+        String assigned_date = General.AssignedDate(viewTicketData.get(position).getDate());
+        String assigned_time = General.AssignedTime(viewTicketData.get(position).getDate());
 
-
-            holder.imgEdit.setOnClickListener(view -> {
-                updateTicketPopup();
-            });
+        holder.ticketRaisedDate.setText(assigned_date + " | " + assigned_time);
+        holder.itemView.setOnClickListener(view -> {
+            itemClickListener.onClick(position,viewTicketData);
+        });
     }
 
-    private void updateTicketPopup(){
-        final Dialog dialog = new Dialog(context, R.style.raiseTicket);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.update_ticket_raise_system);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
-    }
 
     @Override
     public int getItemCount() {
         return viewTicketData.size();
+    }
+
+    public void updateAdapter(List<ViewTicketModel.Data> viewTicketData) {
+        this.viewTicketData.clear();
+        this.viewTicketData = viewTicketData;
+        notifyDataSetChanged();
+
     }
 }

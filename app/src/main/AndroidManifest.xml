@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.realappraiser.gharvalue">
 
-
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -17,11 +16,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -46,19 +41,19 @@
         tools:replace="android:allowBackup"
         tools:targetApi="m">
         <activity
+            android:name=".ticketRaiseSystem.view.TicketRaisePhotoPickerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewtickets.view.ViewRaisedTicketsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activities.BaseActivity"
             android:exported="false" />
         <activity
             android:name=".convenyancereport.ConvenyanceReport"
-            android:exported="true">
-
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".noncaseactivity.NonCaseActivity"
             android:exported="false" />
@@ -159,9 +154,6 @@
             android:name="com.realappraiser.gharvalue.worker.LocationUpdatesIntentService"
             android:exported="false" />
 
-        <service android:name=".sessiontimeout.LocationService"
-            android:foregroundServiceType="location"/>
-
         <receiver
             android:name="com.realappraiser.gharvalue.worker.LocationUpdatesBroadcastReceiver"
             android:exported="false"
@@ -170,7 +162,6 @@
                 <action android:name="com.realappraiser.gharvalue.worker.locationupdatespendingintent.LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".alarm.LogOutReceiver"/>
     </application>
 
 </manifest>
