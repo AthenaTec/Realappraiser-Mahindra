@@ -104,7 +104,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
             Manifest.permission.READ_MEDIA_IMAGES};
 
 
-
+    private int count;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -245,6 +245,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
          data = fromJson.getData();
 
          if(data.size()>0){
+             count = data.size();
              createPdf();
              General.hideloading();
          }else{
@@ -374,7 +375,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
     }
     private List<String[]> getSampleData()
     {
-        int count = 20;
+        //int count = 60;
        /* if(!TextUtils.isEmpty(rowCount.getText()))
         {
             count = 20;
