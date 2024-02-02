@@ -62,14 +62,14 @@
                 app:showAsAction="ifRoom" />
             <item
                 android:id="@+id/raiseticketsystem"
-                android:icon="@drawable/report"
+                android:icon="@drawable/recreate_ticket"
                 android:theme="@style/OverflowMenu"
                 android:title="@string/raiseticketsystem"
                 app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/viewticket"
-                android:icon="@drawable/report"
+                android:icon="@drawable/view_tickets"
                 android:theme="@style/OverflowMenu"
                 android:title="@string/viewticket"
                 app:showAsAction="ifRoom" />

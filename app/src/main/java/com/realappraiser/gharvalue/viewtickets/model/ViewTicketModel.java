@@ -48,9 +48,17 @@ public class ViewTicketModel {
         @Expose
         private int ticketId;
 
+        @SerializedName("QueryType")
+        @Expose
+        private int QueryType;
+
         @SerializedName("Query")
         @Expose
         private String query;
+
+        @SerializedName("OtherQueries")
+        @Expose
+        private String OtherQueries;
 
         @SerializedName("Status")
         @Expose
@@ -91,7 +99,23 @@ public class ViewTicketModel {
         public void setTicketId(int ticketId) {
             this.ticketId = ticketId;
         }
-    }
+
+       public void setOtherQueries(String otherQueries) {
+           OtherQueries = otherQueries;
+       }
+
+       public String getOtherQueries() {
+           return OtherQueries;
+       }
+
+       public void setQueryType(int queryType) {
+           QueryType = queryType;
+       }
+
+       public int getQueryType() {
+           return QueryType;
+       }
+   }
 }
 
 

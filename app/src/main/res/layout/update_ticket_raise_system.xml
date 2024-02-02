@@ -88,6 +88,17 @@
                     android:hint=""
                     android:textColor="@color/Activite"
                     android:textSize="@dimen/_12sdp" />
+                <EditText
+                    android:id="@+id/et_other"
+                    style="@style/StyledTilEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:layout_marginRight="@dimen/height_2"
+                    android:hint="Enter Other Query"
+                    android:inputType="text"
+                    android:textSize="@dimen/font_samll"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -195,7 +206,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_image"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_250sdp"
+                    android:layout_height="@dimen/_150sdp"
                     android:divider="@null"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
                 </LinearLayout>

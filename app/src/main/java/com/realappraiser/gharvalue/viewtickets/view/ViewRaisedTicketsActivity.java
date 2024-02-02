@@ -105,33 +105,24 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
 
     private String ticketID = "";
 
+    private  Dialog ticketDialogPopup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_raised_tickets);
         ButterKnife.bind(this);
-
         general = new General(this);
         initToolBar();
-
         itemClickListener = (position, viewTicketData) -> updateTicketPopup(position, viewTicketData);
-
         getServerData();
-
         retry.setOnClickListener(view -> {
             getServerData();
         });
-
         swipeRefreshLayout.setOnRefreshListener(() -> {
-
             swipeRefreshLayout.setRefreshing(true);
             getServerData();
             swipeRefreshLayout.setRefreshing(false);
-
         });
-
-
-        // Initialize listener
     }
 
     private void updateTicketPopup(int position, List<ViewTicketModel.Data> viewTicketData) {
@@ -185,7 +176,21 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.filter) {
-            showFilterOption();
+            if (Connectivity.isConnected(ViewRaisedTicketsActivity.this)) {
+                String ticketQueryResponse = SettingsUtils.getInstance().getValue(SettingsUtils.FilterStatusQuery, "");
+                if (ticketQueryResponse == null || ticketQueryResponse.isEmpty()) {
+                    showFilterOption();
+                } else {
+                    String status = SettingsUtils.getInstance().getValue(SettingsUtils.FilterStatusQuery, "");
+                    TicketStatusInfo ticketStatusInfo = new Gson().fromJson(status, TicketStatusInfo.class);
+                    ticketStatus.clear();
+                    ticketStatus.add(0, new TicketStatusInfo.Status("Select"));
+                    ticketStatus.addAll(ticketStatusInfo.getDataList());
+                    showFilterDialog();
+                }
+            } else {
+                General.customToast("Internet Connection Is Required", ViewRaisedTicketsActivity.this);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -209,6 +214,8 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
 
                 TicketStatusInfo ticketStatusInfo = new Gson().fromJson(requestData1.getResponse(), TicketStatusInfo.class);
                 if (ticketStatusInfo.getStatus() == 1) {
+                    SettingsUtils.getInstance().putValue(SettingsUtils.FilterStatusQuery, requestData1.getResponse());
+                    ticketStatus.add(0, new TicketStatusInfo.Status("Select"));
                     ticketStatus.addAll(ticketStatusInfo.getDataList());
                     General.hideloading();
                     showFilterDialog();
@@ -316,9 +323,6 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
 
             }
         });
-
-
-        ticketStatus.add(0, new TicketStatusInfo.Status("Select"));
         ArrayAdapter<TicketStatusInfo.Status> ticketStatusSpinner = new ArrayAdapter<>(getApplicationContext(), R.layout.row_spinner_item_, ticketStatus);
         ticketStatusSpinner.setDropDownViewResource(R.layout.row_spinner_item_popup);
         spStatus.setAdapter(ticketStatusSpinner);
@@ -376,8 +380,8 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
         getRaisedTickets.setTicketId(null);
         getRaisedTickets.setStatus(null);
         //getRaisedTickets.setRoleId(4);
-        getRaisedTickets.setEmpId(Integer.parseInt(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, "")));
-        getTicket(getRaisedTickets, null, false);
+        getRaisedTickets.setEmpId(Integer.parseInt(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_EMPID, "")));
+         getTicket(getRaisedTickets, null, false);
     }
 
     private void customRaiseTicket(Dialog dialog) {
@@ -393,7 +397,7 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
             getRaisedTickets.setTicketId(ticketID);
             getRaisedTickets.setStatus(null);
         }
-        getRaisedTickets.setEmpId(Integer.parseInt(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, "")));
+        getRaisedTickets.setEmpId(Integer.parseInt(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_EMPID, "")));
         getTicket(getRaisedTickets, dialog, true);
     }
 
@@ -420,8 +424,11 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
             }
 
             try {
+
                 ViewTicketModel viewTicketModel = new Gson().fromJson(requestData1.getResponse(), ViewTicketModel.class);
                 if (viewTicketModel.getStatus() == 1 && viewTicketModel.getData().size() > 0) {
+                    rvViewRaisedTicket.setVisibility(View.VISIBLE);
+                    rl_no_internet.setVisibility(View.GONE);
                     dataModel = viewTicketModel.getData();
                     viewRaisedTicketAdapter.updateAdapter(dataModel);
                     General.hideloading();
@@ -431,9 +438,12 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
                     if (viewTicketModel.getStatus() == 2) {
                         General.customToast("Unable to reach Server", ViewRaisedTicketsActivity.this);
                     }
-
                     if (viewTicketModel.getData().size() == 0) {
-                        General.customToast("No Ticket Raised....", ViewRaisedTicketsActivity.this);
+                        dataModel.clear();
+                        viewRaisedTicketAdapter.updateAdapter(dataModel);
+                        rvViewRaisedTicket.setVisibility(View.GONE);
+                        rl_no_internet.setVisibility(View.GONE);
+                        General.customToast("No Ticket Found", ViewRaisedTicketsActivity.this);
                     }
                 }
             } catch (Exception e) {
@@ -469,12 +479,14 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
 
                 TicketInfo ticketInfo = new Gson().fromJson(requestData1.getResponse(), TicketInfo.class);
                 if (ticketInfo.getStatus() == 1) {
+                    General.hideloading();
                     ticketInfoList = ticketInfo.getData();
                     fetchTicketImage(itemPosition, ticketId, viewTicketData);
                 } else {
                     General.customToast("Unable to connect Server", ViewRaisedTicketsActivity.this);
+                    General.hideloading();
                 }
-                General.hideloading();
+
             } catch (Exception e) {
                 e.getMessage();
                 General.hideloading();
@@ -487,6 +499,8 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
 
     private void fetchTicketImage(int itemPosition, int ticketId, List<ViewTicketModel.Data> viewTicketData) {
 
+
+        General.showloading(this);
 
         String url = general.ApiBaseUrl() + SettingsUtils.fetchTicketImage;
         JsonRequestData requestData = new JsonRequestData();
@@ -509,6 +523,7 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
                 if (ticketImageModel.getStatus() == 1) {
 
                     if (ticketImageModel.getData() != null) {
+                        General.hideloading();
                         ticketImageModelData = ticketImageModel.getData();
                         showViewTicketPopup(itemPosition, ticketId, viewTicketData, ticketImageModelData, false);
                     } else {
@@ -532,48 +547,75 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
 
     private void showViewTicketPopup(int itemPosition, int ticketId, List<ViewTicketModel.Data> viewTicketData, List<TicketImageModel.Data> ticketModel, boolean showImage) {
         try {
-            final Dialog dialog = new Dialog(ViewRaisedTicketsActivity.this, R.style.raiseTicket);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.update_ticket_raise_system);
-            dialog.setCanceledOnTouchOutside(true);
-            if (viewTicketData.get(itemPosition).getStatus().equalsIgnoreCase("Completed")) {
-                dialog.findViewById(R.id.ll_ticket_status).setVisibility(View.VISIBLE);
-                dialog.findViewById(R.id.ll_comment).setVisibility(View.VISIBLE);
+
+            if( ticketDialogPopup !=null &&  ticketDialogPopup.isShowing()){
+                ticketDialogPopup.dismiss();
+            }
+
+            ticketDialogPopup = new Dialog(ViewRaisedTicketsActivity.this, R.style.raiseTicket);
+            ticketDialogPopup.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            ticketDialogPopup.setCancelable(false);
+            ticketDialogPopup.setCanceledOnTouchOutside(false);
+            ticketDialogPopup.setContentView(R.layout.update_ticket_raise_system);
+            ticketDialogPopup.setCanceledOnTouchOutside(true);
+
+            if (!showImage) {
+                ticketDialogPopup.findViewById(R.id.ll_ticketImage).setVisibility(View.VISIBLE);
+                initUpdateImageAdapter(ticketDialogPopup);
             } else {
-                dialog.findViewById(R.id.ll_ticket_status).setVisibility(View.GONE);
-                dialog.findViewById(R.id.ll_comment).setVisibility(View.GONE);
+                ticketDialogPopup.findViewById(R.id.ll_ticketImage).setVisibility(View.GONE);
             }
 
 
-            TextView title = dialog.findViewById(R.id.txt_title);
+            if (viewTicketData.get(itemPosition).getStatus().equalsIgnoreCase("Completed")) {
+                ticketDialogPopup.findViewById(R.id.ll_ticket_status).setVisibility(View.VISIBLE);
+                ticketDialogPopup.findViewById(R.id.ll_comment).setVisibility(View.VISIBLE);
+            } else {
+                ticketDialogPopup.findViewById(R.id.ll_ticket_status).setVisibility(View.GONE);
+                ticketDialogPopup.findViewById(R.id.ll_comment).setVisibility(View.GONE);
+            }
+
+
+            TextView title = ticketDialogPopup.findViewById(R.id.txt_title);
             title.setText("Ticket No #" + ticketId);
 
-            EditText etQuery = dialog.findViewById(R.id.etQuery);
+            EditText etQuery = ticketDialogPopup.findViewById(R.id.etQuery);
             etQuery.setText(viewTicketData.get(itemPosition).getQuery());
 
-            EditText desc = dialog.findViewById(R.id.etNotes);
-            EditText ll_comments = dialog.findViewById(R.id.et_comments);
+            final EditText etOther = ticketDialogPopup.findViewById(R.id.et_other);
+
+            etOther.setClickable(false);
+            etOther.setFocusable(false);
+            etOther.setFocusableInTouchMode(false);
+
+            if (ticketInfoList.getQueryType() == 10) {
+                etOther.setText(ticketInfoList.getOtherQueries());
+                etOther.setVisibility(View.VISIBLE);
+            } else {
+                etOther.setVisibility(View.GONE);
+            }
+
+            EditText desc = ticketDialogPopup.findViewById(R.id.etNotes);
+            EditText ll_comments = ticketDialogPopup.findViewById(R.id.et_comments);
             ll_comments.setText("");
-            EditText contactNumber = dialog.findViewById(R.id.et_contactNumber);
+            EditText contactNumber = ticketDialogPopup.findViewById(R.id.et_contactNumber);
             desc.setText(ticketInfoList.getDescription());
             contactNumber.setText(ticketInfoList.getContactNumber());
 
 
-            Button closeTicket = dialog.findViewById(R.id.closeTicket);
+            Button closeTicket = ticketDialogPopup.findViewById(R.id.closeTicket);
 
-            ImageView backBtn = dialog.findViewById(R.id.btn_back);
+            ImageView backBtn = ticketDialogPopup.findViewById(R.id.btn_back);
 
-            backBtn.setOnClickListener(view -> dialog.cancel());
+            backBtn.setOnClickListener(view -> ticketDialogPopup.cancel());
 
-            Button reCreateTicket = dialog.findViewById(R.id.btnSubmit);
+            Button reCreateTicket = ticketDialogPopup.findViewById(R.id.btnSubmit);
 
             reCreateTicket.setOnClickListener(view -> {
                 if (ll_comments.getText().toString().trim().isEmpty()) {
                     General.customToast("Please Enter Comments", ViewRaisedTicketsActivity.this);
                 } else {
-                    initReCreateTicket(ticketId, ll_comments.getText().toString().trim(),dialog,true);
+                    initReCreateTicket(ticketId, ll_comments.getText().toString().trim(), ticketDialogPopup, true);
                 }
             });
 
@@ -581,19 +623,18 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
                 if (ll_comments.getText().toString().trim().isEmpty()) {
                     General.customToast("Please Enter Comments", ViewRaisedTicketsActivity.this);
                 } else {
-                    initReCreateTicket(ticketId, ll_comments.getText().toString().trim(),dialog,false);
+                    initReCreateTicket(ticketId, ll_comments.getText().toString().trim(), ticketDialogPopup, false);
                 }
             });
+            ticketDialogPopup.show();
+            General.hideloading();
+           /* new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    General.hideloading();
+                }
+            }, 1000);*/
 
-            if (!showImage) {
-                dialog.findViewById(R.id.ll_ticketImage).setVisibility(View.VISIBLE);
-                initUpdateImageAdapter(dialog);
-            } else {
-                dialog.findViewById(R.id.ll_ticketImage).setVisibility(View.GONE);
-            }
-
-
-            dialog.show();
         } catch (Exception e) {
             General.hideloading();
             e.getMessage();
@@ -606,7 +647,6 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         recyclerView.setAdapter(ticketUpdateImageAdapter);
         ticketUpdateImageAdapter.notifyDataSetChanged();
-        General.hideloading();
     }
 
     private void showCalender(boolean isFromDate, EditText etFromDate, EditText etToDate) {
@@ -677,9 +717,9 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
         requestData.setInitQueryUrl(url);
         requestData.setTicketId(ticketId);
         requestData.setComments(comments);
-        if(b){
+        if (b) {
             requestData.setStatusId(1);
-        }else{
+        } else {
             requestData.setStatusId(6);
         }
 
@@ -693,7 +733,7 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
         Log.e("Update Ticket  Req", new Gson().toJson(requestData));
 
 
-        webserviceTask.setFetchMyData((TicketTaskCompleteListener <TicketJsonRequestData>) requestData1 -> {
+        webserviceTask.setFetchMyData((TicketTaskCompleteListener<TicketJsonRequestData>) requestData1 -> {
             try {
                 Log.e("close Ticket  Res", "onTaskComplete: " + new Gson().toJson(requestData1.getResponse()));
 

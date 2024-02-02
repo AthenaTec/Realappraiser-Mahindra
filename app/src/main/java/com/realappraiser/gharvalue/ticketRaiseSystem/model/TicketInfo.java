@@ -50,6 +50,14 @@ public class TicketInfo {
         @Expose
         private int QueryType;
 
+        @SerializedName("Query")
+        @Expose
+        private String query;
+
+        @SerializedName("OtherQueries")
+        @Expose
+        private String OtherQueries;
+
         @SerializedName("Description")
         @Expose
         private String Description;
@@ -106,6 +114,18 @@ public class TicketInfo {
 
         public String getSAPID() {
             return SAPID;
+        }
+
+        public void setOtherQueries(String otherQueries) {
+            OtherQueries = otherQueries;
+        }
+
+        public String getOtherQueries() {
+            return OtherQueries;
+        }
+
+        public void setQueryType(int queryType) {
+            QueryType = queryType;
         }
     }
 }

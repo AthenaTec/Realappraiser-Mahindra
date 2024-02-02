@@ -130,6 +130,7 @@ public class SettingsUtils {
     public static final String KEY_EMAIL = "KEY_EMAIL";
     public static final String DropDownSave = "DropDownSave";
     public static final String TicketQuery = "TicketQuery";
+    public static final String FilterStatusQuery = "FilterStatusQuery";
     public static final String KEY_DOCUMENT = "KEY_DOCUMENT";
     public static final String KEY_OFFLINECASE_COUNT = "KEY_OFFLINECASE_COUNT";
     public static final String KEY_ENABLE_OFFLINE = "KEY_ENABLE_OFFLINE";

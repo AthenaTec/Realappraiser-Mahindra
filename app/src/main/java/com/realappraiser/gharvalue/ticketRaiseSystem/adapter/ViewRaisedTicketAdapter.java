@@ -26,6 +26,8 @@ public class ViewRaisedTicketAdapter extends RecyclerView.Adapter<ViewRaisedTick
 
     private String ticketStatus = "";
 
+    private boolean isClicked = false;
+
     private ItemClickListener itemClickListener;
 
     public ViewRaisedTicketAdapter(List<ViewTicketModel.Data> viewTicketData, Context context, ItemClickListener itemClickListener) {
@@ -73,7 +75,13 @@ public class ViewRaisedTicketAdapter extends RecyclerView.Adapter<ViewRaisedTick
 
         holder.ticketRaisedDate.setText(assigned_date + " | " + assigned_time);
         holder.itemView.setOnClickListener(view -> {
-            itemClickListener.onClick(position,viewTicketData);
+
+            if(!isClicked){
+                isClicked = true;
+                itemClickListener.onClick(position,viewTicketData);
+                isClicked = false;
+            }
+
         });
     }
 
