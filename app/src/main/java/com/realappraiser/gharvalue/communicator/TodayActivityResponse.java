@@ -1,4 +1,4 @@
-package com.realappraiser.gharvalue.convenyancereport.response;
+package com.realappraiser.gharvalue.communicator;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
