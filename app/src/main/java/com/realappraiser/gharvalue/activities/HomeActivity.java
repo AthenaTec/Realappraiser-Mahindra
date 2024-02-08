@@ -78,6 +78,7 @@ import com.realappraiser.gharvalue.model.GetPhoto;
 import com.realappraiser.gharvalue.model.ImageBase64;
 import com.realappraiser.gharvalue.model.OfflineDataModel;
 import com.realappraiser.gharvalue.model.OflineCase;
+import com.realappraiser.gharvalue.model.RequestApiStatus;
 import com.realappraiser.gharvalue.model.SafeNetModel;
 import com.realappraiser.gharvalue.model.SubBranchModel;
 import com.realappraiser.gharvalue.model.TypeOfFooting;
@@ -1268,10 +1269,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         webserviceCommunicator.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
-
                 Log.e(TAG, "onTaskComplete: " + new Gson().toJson(requestData.getResponse()));
-
-                parserFlagResponse(new Gson().fromJson(requestData.getResponse(), UrlModel.class), requestData.isSuccessful(), requestData.getResponseCode());
+                try {
+                    parserFlagResponse(new Gson().fromJson(requestData.getResponse(), UrlModel.class), requestData.isSuccessful(), requestData.getResponseCode());
+                } catch (Exception e) {
+                    e.getMessage();
+                }
             }
         });
         webserviceCommunicator.execute();
@@ -1322,6 +1325,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
+                Log.e(TAG, ": " + requestData.getResponse());
                 dropDownResponse(requestData.getResponse(), requestData.getResponseCode(), requestData.isSuccessful());
             }
         });
@@ -1329,22 +1333,27 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void dropDownResponse(String response, int responseCode, boolean successful) {
-        if (successful) {
-            Log.e(TAG, "dropDownResponse: " + response);
-            TypeOfMortar typeOfMortar = new Gson().fromJson(response, TypeOfMortar.class);
-
-            List<TypeOfMortar.Datum> data = new ArrayList<>();
-            data.addAll(typeOfMortar.getData());
-            data.add(0, new TypeOfMortar.Datum("Select"));
-            Singleton.getInstance().typeOfMortarsList = data;
-
-            getMasonry();
-        } else if (!successful && (responseCode == 400 || responseCode == 401)) {
-            General.sessionDialog(HomeActivity.this);
+        RequestApiStatus requestApiStatus = new Gson().fromJson(response, RequestApiStatus.class);
+        if (requestApiStatus.getStatus() == 1) {
+            try {
+                Log.e(TAG, "dropDownResponse: " + response);
+                TypeOfMortar typeOfMortar = new Gson().fromJson(response, TypeOfMortar.class);
+                List<TypeOfMortar.Datum> data = new ArrayList<>();
+                data.addAll(typeOfMortar.getData());
+                data.add(0, new TypeOfMortar.Datum("Select"));
+                Singleton.getInstance().typeOfMortarsList = data;
+                getMasonry();
+            } catch (Exception e) {
+                getMasonry();
+            }
         } else {
-            getMasonry();
-            General.customToast(getString(R.string.something_wrong), HomeActivity.this);
+            if (!successful && (responseCode == 400 || responseCode == 401)) {
+                General.sessionDialog(HomeActivity.this);
+            } else {
+                getMasonry();
+            }
         }
+
     }
 
     private void getMasonry() {
@@ -1357,7 +1366,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
-                masonryResponse(requestData.getResponse(), requestData.getResponseCode(), requestData.isSuccessful());
+                try {
+                    masonryResponse(requestData.getResponse(), requestData.getResponseCode(), requestData.isSuccessful());
+                } catch (Exception e) {
+                    e.getMessage();
+                }
             }
         });
         webserviceTask.execute();
@@ -1397,19 +1410,23 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void footingResponse(String response, int responseCode, boolean successful) {
-        if (successful) {
-            Log.e(TAG, "dropDownResponse: " + response);
-            TypeOfFooting typeOfMortar = new Gson().fromJson(response, TypeOfFooting.class);
-            List<TypeOfFooting.Datum> data = new ArrayList<>();
-            data.addAll(typeOfMortar.getData());
-            data.add(0, new TypeOfFooting.Datum("Select"));
-            Singleton.getInstance().typeOfFootingList = data;
-            getSteel();
-        } else if (!successful && (responseCode == 400 || responseCode == 401)) {
-            General.sessionDialog(HomeActivity.this);
-        } else {
-            getSteel();
-            General.customToast(getString(R.string.something_wrong), HomeActivity.this);
+        try {
+            if (successful) {
+                Log.e(TAG, "dropDownResponse: " + response);
+                TypeOfFooting typeOfMortar = new Gson().fromJson(response, TypeOfFooting.class);
+                List<TypeOfFooting.Datum> data = new ArrayList<>();
+                data.addAll(typeOfMortar.getData());
+                data.add(0, new TypeOfFooting.Datum("Select"));
+                Singleton.getInstance().typeOfFootingList = data;
+                getSteel();
+            } else if (!successful && (responseCode == 400 || responseCode == 401)) {
+                General.sessionDialog(HomeActivity.this);
+            } else {
+                getSteel();
+                General.customToast(getString(R.string.something_wrong), HomeActivity.this);
+            }
+        } catch (Exception e) {
+            e.getMessage();
         }
     }
 
@@ -1423,7 +1440,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
-                steelResponse(requestData.getResponse(), requestData.getResponseCode(), requestData.isSuccessful());
+                try {
+                    steelResponse(requestData.getResponse(), requestData.getResponseCode(), requestData.isSuccessful());
+                } catch (Exception e) {
+                    e.getMessage();
+                }
             }
         });
         webserviceTask.execute();
