@@ -2,13 +2,9 @@ package com.realappraiser.gharvalue.convenyancereport;
 
 import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
 
-import static com.realappraiser.gharvalue.utils.General.REQUEST_ID_MULTIPLE_PERMISSIONS;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,8 +15,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
-import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,30 +22,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.R;
-import com.realappraiser.gharvalue.activities.PropertyDocumentsActivity;
+import com.realappraiser.gharvalue.communicator.DailyActivityResponse;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
-import com.realappraiser.gharvalue.model.DailyActivityResponse;
-import com.realappraiser.gharvalue.model.SubBranchModel;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -104,7 +92,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
             Manifest.permission.READ_MEDIA_IMAGES};
 
 
-
+    private int count;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -226,7 +214,6 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
                 try{
                     parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), DailyActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
                 }catch (Exception e){
-                    General.customToastLong("Something went wrong", getActivity());
                     General.hideloading();
                     e.getMessage();
                 }
@@ -246,6 +233,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
          data = fromJson.getData();
 
          if(data.size()>0){
+             count = data.size();
              createPdf();
              General.hideloading();
          }else{
@@ -375,7 +363,7 @@ public class WeeklyReportFragment extends Fragment implements  PDFUtility.OnDocu
     }
     private List<String[]> getSampleData()
     {
-        int count = 20;
+        //int count = 60;
        /* if(!TextUtils.isEmpty(rowCount.getText()))
         {
             count = 20;

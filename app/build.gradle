@@ -6,8 +6,8 @@ android {
         applicationId "com.realappraiser.gharvalue"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 23
-        versionName "2.1.7"
+        versionCode 26
+        versionName "2.2.0"
         resConfigs "en"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -41,7 +41,7 @@ android {
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'DATE', '"08-Oct-2023"'
+            buildConfigField 'String', 'DATE', '"08-Feb-2024"'
             signingConfig signingConfigs.release
 
         }
@@ -51,7 +51,7 @@ android {
 //            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'DATE', '"08-Oct-2023"'
+            buildConfigField 'String', 'DATE', '"08-Feb-2024"'
         }
     }
     packagingOptions {
@@ -143,8 +143,6 @@ android {
 }
 
 dependencies {
-    def work_version = "2.3.3"
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'

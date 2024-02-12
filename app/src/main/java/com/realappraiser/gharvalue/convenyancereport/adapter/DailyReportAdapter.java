@@ -11,16 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.realappraiser.gharvalue.R;
-import com.realappraiser.gharvalue.model.DailyActivityData;
+import com.realappraiser.gharvalue.communicator.DailyActivityData;
 import com.realappraiser.gharvalue.utils.General;
 
 import java.util.ArrayList;
 
-
 public class DailyReportAdapter extends RecyclerView.Adapter<DailyReportAdapter.DailyReportViewHolder> {
 
-    private ArrayList
-            <DailyActivityData> dataModels;
+    private ArrayList<DailyActivityData> dataModels;
     private final Activity mContext;
 
     private General general;

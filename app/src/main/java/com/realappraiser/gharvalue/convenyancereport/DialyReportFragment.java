@@ -23,7 +23,7 @@ import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.convenyancereport.adapter.DailyReportAdapter;
-import com.realappraiser.gharvalue.model.TodayActivityResponse;
+import com.realappraiser.gharvalue.communicator.TodayActivityResponse;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
