@@ -20,12 +20,13 @@ import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.R;
-import com.realappraiser.gharvalue.activities.HomeActivity;
-import com.realappraiser.gharvalue.activities.LoginActivity;
+import com.realappraiser.gharvalue.activities.BaseActivity;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
+import com.realappraiser.gharvalue.communicator.NonCaseApiResponse;
 import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
+import com.realappraiser.gharvalue.model.RequestApiStatus;
 import com.realappraiser.gharvalue.model.TypeOfMasonry;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.GPSService;
@@ -41,7 +42,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NonCaseActivity extends AppCompatActivity {
+public class NonCaseActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -76,10 +77,15 @@ public class NonCaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_non_case);
+        //setContentView(R.layout.activity_non_case);
         ButterKnife.bind(this);
         initToolBar();
         getTypeVisitList();
+    }
+
+    @Override
+    protected int getLayoutResourceId() {
+        return R.layout.activity_non_case;
     }
 
     private void initToolBar() {
@@ -281,13 +287,27 @@ public class NonCaseActivity extends AppCompatActivity {
 
                     Log.e("Location Response", new Gson().toJson(requestData));
 
-                    if (requestData.isSuccessful()) {
+                    RequestApiStatus requestApiStatus = new Gson().fromJson(requestData.getResponse(), RequestApiStatus.class);
+                    if (requestApiStatus.getStatus() == 1) {
+                        String sb = "Location updated sucessfully" +
+                                requestData.getResponse();
+                        Log.e(TAG, sb);
+                        NonCaseApiResponse nonCaseApiResponse  = new Gson().fromJson(requestData.getResponse(),NonCaseApiResponse.class);
+                        General.customToast(nonCaseApiResponse.getData(), NonCaseActivity.this);
+                       // General.customToast("Visit type data updated successfully", NonCaseActivity.this);
+                        onBackPressed();
+                    }else{
+                        General.customToast("Unable to update visit type data", NonCaseActivity.this);
+                    }
+
+
+                  /*  if (requestData.isSuccessful()) {
                         String sb = "Location updated sucessfully" +
                                 requestData.getResponse();
                         Log.e(TAG, sb);
                         General.customToast("Visit type data updated successfully", NonCaseActivity.this);
                         onBackPressed();
-                    }
+                    }*/
                 }
             });
 

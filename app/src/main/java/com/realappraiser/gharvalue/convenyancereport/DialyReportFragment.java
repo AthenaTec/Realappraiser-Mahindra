@@ -24,6 +24,7 @@ import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.convenyancereport.adapter.DailyReportAdapter;
 import com.realappraiser.gharvalue.communicator.TodayActivityResponse;
+import com.realappraiser.gharvalue.model.RequestApiStatus;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
@@ -129,7 +130,17 @@ public class DialyReportFragment extends Fragment {
             webserviceTask.setFetchMyData((TaskCompleteListener<JsonRequestData>) dailyActivityResponse -> {
 
                 Log.e(TAG, new Gson().toJson(dailyActivityResponse));
-                parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), TodayActivityResponse.class), dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
+
+                RequestApiStatus requestApiStatus = new Gson().fromJson(dailyActivityResponse.getResponse(), RequestApiStatus.class);
+
+                if(requestApiStatus.getStatus() == 1){
+                    parseDailyActivityResponse(new Gson().fromJson(dailyActivityResponse.getResponse(), TodayActivityResponse.class),
+                            dailyActivityResponse.getResponseCode(), dailyActivityResponse.isSuccessful());
+                }else{
+                    General.customToast("Unable to connect server",getActivity());
+                    General.hideloading();
+                }
+
 
 
             });

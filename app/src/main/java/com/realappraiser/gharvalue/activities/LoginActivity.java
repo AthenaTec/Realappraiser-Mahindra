@@ -1174,12 +1174,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
                                 logOutScheduler.cancelAlarm();
                                 logOutScheduler.schedule();
-
                                 Intent intent = new Intent(getApplicationContext(), LocationService.class);
                                 intent.setAction(LocationService.ACTION_START);
                                 startService(intent);
                             }
-
+                            SettingsUtils.getInstance().putValue("sessionCountDown", "");
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             SettingsUtils.getInstance().putValue("fromLogin", true);
                             startActivity(intent);
@@ -1286,8 +1285,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         intent.setAction(LocationService.ACTION_START);
                         startService(intent);
                     }
-
-
+                    SettingsUtils.getInstance().putValue("sessionCountDown", "");
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     SettingsUtils.getInstance().putValue("fromLogin", true);
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
@@ -1295,11 +1293,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             });
             webserviceTask.execute();
-
         } else {
             general.hideloading();
             General.customToast("Please check your Internet Connection!", LoginActivity.this);
-
         }
     }
 

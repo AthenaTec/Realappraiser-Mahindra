@@ -115,6 +115,7 @@ public class LogOutReceiver extends BroadcastReceiver {
                         intent.setAction(LocationService.ACTION_STOP);
                         MyApplication.getAppContext().startService(intent);
                     }
+                    SettingsUtils.getInstance().putValue("sessionCountDown", "");
                     redirectLogin();
                 });
                 webserviceTask.execute();
