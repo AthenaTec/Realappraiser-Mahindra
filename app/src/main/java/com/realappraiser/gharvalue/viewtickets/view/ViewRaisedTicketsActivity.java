@@ -615,6 +615,7 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
                 if (ll_comments.getText().toString().trim().isEmpty()) {
                     General.customToast("Please Enter Comments", ViewRaisedTicketsActivity.this);
                 } else {
+                    General.showloading(this);
                     initReCreateTicket(ticketId, ll_comments.getText().toString().trim(), ticketDialogPopup, true);
                 }
             });
@@ -623,6 +624,7 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
                 if (ll_comments.getText().toString().trim().isEmpty()) {
                     General.customToast("Please Enter Comments", ViewRaisedTicketsActivity.this);
                 } else {
+                    General.showloading(this);
                     initReCreateTicket(ticketId, ll_comments.getText().toString().trim(), ticketDialogPopup, false);
                 }
             });
@@ -739,8 +741,14 @@ public class ViewRaisedTicketsActivity extends AppCompatActivity {
 
                 TicketUpdateModel ticketUpdateModel = new Gson().fromJson(requestData1.getResponse(), TicketUpdateModel.class);
                 if (ticketUpdateModel != null && ticketUpdateModel.getStatus() == 1) {
-                    General.customToastLong("Status Updated Succesfullly", ViewRaisedTicketsActivity.this);
-                } else {
+
+                    if(b){
+                        General.customToastLong("Ticket Recreated Successfully!", ViewRaisedTicketsActivity.this);
+                    }else{
+                        General.customToastLong("Ticket Closed Successfully!", ViewRaisedTicketsActivity.this);
+                    }
+
+                    } else {
                     General.customToast("Unable to connect Server", ViewRaisedTicketsActivity.this);
                 }
 
