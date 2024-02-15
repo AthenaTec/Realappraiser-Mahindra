@@ -293,7 +293,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS).build();
 
-           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+            /*if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -359,7 +359,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS).build();
 
-           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+          /*  if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -429,7 +429,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS).build();
 
-           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+            /*if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())
@@ -558,7 +558,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS).build();
 
-          /*  client = new OkHttpClient.Builder()
+           /* client = new OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
@@ -659,7 +659,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                     .readTimeout(30, TimeUnit.SECONDS).build();
 
 
-           /* client = new OkHttpClient.Builder()
+          /*  client = new OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)

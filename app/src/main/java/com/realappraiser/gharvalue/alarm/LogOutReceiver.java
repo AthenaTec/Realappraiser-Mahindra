@@ -40,7 +40,9 @@ public class LogOutReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(isLocationEnabled(context) && Connectivity.isConnected(context)){
+        if(isLocationEnabled(context) &&
+                Connectivity.isConnected(context) &&
+                SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false)){
             AppDatabase appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
             ArrayList<OfflineDataModel> oflineData = (ArrayList) appDatabase.interfaceOfflineDataModelQuery().getDataModal_offlinecase(true);
             if (oflineData.size() > 0) {
@@ -115,6 +117,7 @@ public class LogOutReceiver extends BroadcastReceiver {
                         intent.setAction(LocationService.ACTION_STOP);
                         MyApplication.getAppContext().startService(intent);
                     }
+                    SettingsUtils.getInstance().putValue("sessionCountDown", "");
                     redirectLogin();
                 });
                 webserviceTask.execute();

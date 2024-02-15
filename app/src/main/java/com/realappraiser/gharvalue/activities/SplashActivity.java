@@ -54,6 +54,7 @@ import com.realappraiser.gharvalue.AppDatabase;
 import com.realappraiser.gharvalue.BuildConfig;
 import com.realappraiser.gharvalue.MyApplication;
 import com.realappraiser.gharvalue.R;
+import com.realappraiser.gharvalue.alarm.LogOutScheduler;
 import com.realappraiser.gharvalue.communicator.DataResponse;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.RequestParam;
@@ -66,6 +67,7 @@ import com.realappraiser.gharvalue.model.IndPropertyValuation;
 import com.realappraiser.gharvalue.model.OfflineDataModel;
 import com.realappraiser.gharvalue.model.Property;
 import com.realappraiser.gharvalue.model.SafeNetModel;
+import com.realappraiser.gharvalue.sessiontimeout.LocationService;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
@@ -266,11 +268,11 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             // Already Login
             if (Connectivity.isConnected(this)) {
                 // Get Drop down API
-              //  getSessionOut(true);
-                InitiateGetFieldDropDownTask();
+                getSessionOut(true);
+               // InitiateGetFieldDropDownTask();
             } else {
                 startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                //getSessionOut(false);
+                getSessionOut(false);
             }
 
 
@@ -735,17 +737,18 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
     }
 
     private void getSessionOut(boolean b){
-        if (!SettingsUtils.getInstance().getValue("sessionCountDown", "").isEmpty() && !general.getOfflineCase())
+        if (!String.valueOf(SettingsUtils.getInstance().getValue("sessionCountDown", "")).isEmpty() && !general.getOfflineCase())
         {
             String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
             long currentVisitTime = System.currentTimeMillis();
             long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
-            //minutes >= 1
+            //minutes >= 120
             if (minutes >= 120)
             {
-                Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
+                sessionLogout(this);
+               /* Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
                 if (general.checkLatLong()) { //SettingsUtils.Latitudes > 0
                     General.showloading(this);
                     sessionLogout(this);
@@ -762,9 +765,11 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
                             ActivityCompat.requestPermissions(this, new String[]{str3, str4}, REQUEST_ID_MULTIPLE_PERMISSIONS);
                         }
                     }
-                }
+                }*/
             }
-            else  startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+            else {
+                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+            }
         }else{
             if(b)InitiateGetFieldDropDownTask();
             else  startActivity(new Intent(SplashActivity.this, HomeActivity.class));
@@ -973,6 +978,12 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         new WorkerManager(this).stopWorker();
 
         General.hideloading();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LogOutScheduler.cancelAlarm();
+            Intent intent = new Intent(MyApplication.getAppContext(), LocationService.class);
+            intent.setAction(LocationService.ACTION_STOP);
+            MyApplication.getAppContext().startService(intent);
+        }
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

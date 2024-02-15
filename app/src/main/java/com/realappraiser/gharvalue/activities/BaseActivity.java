@@ -18,6 +18,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.AppDatabase;
 import com.realappraiser.gharvalue.MyApplication;
+import com.realappraiser.gharvalue.alarm.LogOutScheduler;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
@@ -26,6 +27,7 @@ import com.realappraiser.gharvalue.model.Case;
 import com.realappraiser.gharvalue.model.IndProperty;
 import com.realappraiser.gharvalue.model.IndPropertyValuation;
 import com.realappraiser.gharvalue.model.Property;
+import com.realappraiser.gharvalue.sessiontimeout.LocationService;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
@@ -39,15 +41,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public abstract class BaseActivity extends AppCompatActivity{
+public abstract class BaseActivity extends AppCompatActivity {
 
     private final int LOCATION_REQUEST = 12345;
     private String TAG = "BaseActivity";
 
     private General general;
 
-    private String  address = "";
-
+    private String address = "";
 
 
     @Override
@@ -55,29 +56,41 @@ public abstract class BaseActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         Log.e(TAG, "OnCreate");
         setContentView(getLayoutResourceId());
+        general = new General(this);
 
     }
 
     protected abstract int getLayoutResourceId();
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SettingsUtils.getInstance().putValue("sessionCountDown", String.valueOf(System.currentTimeMillis()));
+    }
 
-
-    /*@Override
+    @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "OnResume "+SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false));
-        if (!SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false)) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    redirectoLogin();
-                }
-            }, 500 );
+
+        if (!String.valueOf(SettingsUtils.getInstance().getValue("sessionCountDown", "")).isEmpty() && !general.getOfflineCase()) {
+            String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
+            long currentVisitTime = System.currentTimeMillis();
+            long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
+            long minutes = (totalVisitTime / 1000) / 60;
+            Log.e(TAG, "onResume: " + minutes);
+            //minutes >= 1
+            if (minutes >= 120) {
+                Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
+             /*  if(general.checkPermissions()){
+                   sessionLogout(this);
+               }*/
+                sessionLogout(this);
+            }
         }
-    }*/
-    private void redirectoLogin(){
-        if (!SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false)){
+    }
+
+    private void redirectoLogin() {
+        if (!SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false)) {
             finish();
             Intent intent = new Intent(this, SplashActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -108,10 +121,8 @@ public abstract class BaseActivity extends AppCompatActivity{
                             /*Here store current location of user latLong*/
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
-
                             SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
-                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
-
+                            SettingsUtils.getInstance().putValue("long", String.valueOf(general.getcurrent_longitude(activity)));
                             sessionLogout(activity);
                         }
                     }
@@ -130,7 +141,6 @@ public abstract class BaseActivity extends AppCompatActivity{
                     getCurrentLocation(this);
                 } else {
                     general.customToast("Please enable all permissions to complete access of this application", this);
-
                    /* new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -142,8 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity{
     }
 
 
-    public  void sessionLogout(Activity activity)
-    {
+    public void sessionLogout(Activity activity) {
         Singleton.getInstance().longitude = 0.0;
         Singleton.getInstance().latitude = 0.0;
         Singleton.getInstance().aCase = new Case();
@@ -212,10 +221,10 @@ public abstract class BaseActivity extends AppCompatActivity{
                     "") + SettingsUtils.LocationTracker;
             requestData.setUrl(url);
             requestData.setCaseId("");
-            requestData.setEmpId(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID,""));
+            requestData.setEmpId(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""));
             requestData.setLocationType("Logout");
-            requestData.setLatitude(SettingsUtils.getInstance().getValue("lat",""));
-            requestData.setLongitude(SettingsUtils.getInstance().getValue("long",""));
+            requestData.setLatitude(SettingsUtils.getInstance().getValue("lat", ""));
+            requestData.setLongitude(SettingsUtils.getInstance().getValue("long", ""));
             requestData.setTrackerTime(time);
             requestData.setActivityType(String.valueOf(4));
             requestData.setComments("");
@@ -230,7 +239,7 @@ public abstract class BaseActivity extends AppCompatActivity{
             }
 
             requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
-           requestData.setRequestBody(RequestParam.LocationTracker(requestData));
+            requestData.setRequestBody(RequestParam.LocationTracker(requestData));
 
             Log.e("Location Params", new Gson().toJson(requestData));
 
@@ -244,107 +253,32 @@ public abstract class BaseActivity extends AppCompatActivity{
                     General.hideloading();
                     SettingsUtils.getInstance().putValue("sessionCountDown", "");
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
-
                     redirectLogin();
                 }
             });
             webserviceTask.execute();
-
         } else {
             General.hideloading();
-            General.customToastLong("No Internet Connection found",this);
+            General.customToastLong("No Internet Connection found", this);
         }
-
-
-
-
-
-
-
-       /* SettingsUtils.getInstance().putValue("api_success",false);
-
-        if(isSuccess){
-            if (Build.VERSION.SDK_INT < 26) {
-                activity.stopService(new Intent(activity, GeoUpdate.class));
-            } else {
-                new OreoLocation(activity).stopOreoLocationUpdates();
-            }
-            new WorkerManager(activity).stopWorker();
-            SettingsUtils.getInstance().putValue("api_success",true);
-
-        }*/
-
-
-
-
-
-
-
-
-        /*if (new LocationTrackerApi(activity).shareLocation("",
-                SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
-                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4)) {
-            if (Build.VERSION.SDK_INT < 26) {
-                activity.stopService(new Intent(activity, GeoUpdate.class));
-            } else {
-                new OreoLocation(activity).stopOreoLocationUpdates();
-            }
-            new WorkerManager(activity).stopWorker();
-
-
-            Intent intent = new Intent(activity, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(intent);
-
-           *//* activity.finishAffinity();
-            Intent intent = new Intent(activity, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(intent);
-            activity.finish();*//*
-
-
-
-            return;
-        }
-
-        if (Build.VERSION.SDK_INT < 26) {
-            activity.stopService(new Intent(activity, GeoUpdate.class));
-        } else {
-            new OreoLocation(activity).stopOreoLocationUpdates();
-        }
-        new WorkerManager(activity).stopWorker();
-        Intent intent = new Intent(activity, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);*/
-
-       /* activity.finishAffinity();
-        Intent intent = new Intent(activity, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);
-        activity.finish();*/
     }
 
-    private void redirectLogin(){
-
-
+    private void redirectLogin() {
         if (Build.VERSION.SDK_INT < 26) {
             stopService(new Intent(this, GeoUpdate.class));
         } else {
             new OreoLocation(this).stopOreoLocationUpdates();
         }
         new WorkerManager(this).stopWorker();
-            General.hideloading();
-            General.customToast("Session Time out",this);
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-
-
+        General.hideloading();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LogOutScheduler.cancelAlarm();
+            Intent intent = new Intent(MyApplication.getAppContext(), LocationService.class);
+            intent.setAction(LocationService.ACTION_STOP);
+            MyApplication.getAppContext().startService(intent);
+        }
+        General.customToast("Session Time out", this);
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
-
-
-
 }
