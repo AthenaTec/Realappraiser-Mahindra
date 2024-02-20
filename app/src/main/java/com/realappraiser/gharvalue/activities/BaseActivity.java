@@ -78,7 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
-            //minutes >= 1
+            //minutes >= 120
             if (minutes >= 120) {
                 Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
              /*  if(general.checkPermissions()){
