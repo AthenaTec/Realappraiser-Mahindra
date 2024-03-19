@@ -37,8 +37,12 @@ public class JsonRequestData {
     private String endDate;
     private String initQueryUrl;
     private String CaseId;
+
+    private String CaseID;
     private String ApplicantName;
     private String ApplicantContactNo;
+
+    private String ApprovedPlanApprovingAuthority;
     private String PropertyAddress;
     private String ContactPersonName;
     private String ContactPersonNumber;
@@ -576,6 +580,14 @@ public class JsonRequestData {
         ApplicantContactNo = applicantContactNo;
     }
 
+    public String getApprovedPlanApprovingAuthority() {
+        return ApprovedPlanApprovingAuthority;
+    }
+
+    public void setApprovedPlanApprovingAuthority(String approvedPlanApprovingAuthority) {
+        ApprovedPlanApprovingAuthority = approvedPlanApprovingAuthority;
+    }
+
     public String getPropertyAddress() {
         return PropertyAddress;
     }
@@ -838,6 +850,14 @@ public class JsonRequestData {
 
     public void setTicketId(int ticketId) {
         TicketId = ticketId;
+    }
+
+    public String getCaseID() {
+        return CaseID;
+    }
+
+    public void setCaseID(String caseID) {
+        CaseID = caseID;
     }
 
     /*public DailyActivityDataResponse getData() {

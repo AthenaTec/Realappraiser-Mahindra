@@ -212,6 +212,7 @@
         <item name="android:imeOptions">actionNext|flagNoExtractUi</item>
         <item name="android:singleLine">true</item>
         <item name="android:background">@null</item>
+        <item name="android:minHeight">@dimen/_30sdp</item>
     </style> <style name="StyledTilText_multicheck_stage">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
@@ -237,6 +238,12 @@
 
     <style name="TextInputLayout_hint" parent="TextAppearance.Design.Hint">
         <item name="android:textSize">@dimen/font_very_small</item>
+    </style>
+
+    <style name="TextInputLayout_hint_general" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">@dimen/font_very_small</item>
+        <item name="android:fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/font_heading</item>
     </style>
 
 
@@ -350,6 +357,13 @@
 
     <style name="btn_style" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@null</item>
+    </style>
+
+    <style name="general_sub_section_txt_header" parent="Widget.MaterialComponents.TextView">
+       <item name="android:fontFamily">@font/regular</item>
+        <item name="android:textSize">@dimen/_13sdp</item>
+        <item name="android:textColor">@color/font_heading</item>
+        <item name="android:layout_marginBottom">@dimen/_4sdp</item>
     </style>
 
 </resources>

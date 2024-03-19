@@ -6054,7 +6054,8 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                     }
                     Log.e("interior_flooring_id", "::: " + Singleton.getInstance().interior_flooring_id);
                     Log.e("interior_flooring_name", ":: " + Singleton.getInstance().interior_flooring_name);
-                } else if (type_of_dialog.equalsIgnoreCase("roofing")) {
+                }
+                else if (type_of_dialog.equalsIgnoreCase("roofing")) {
                     // Type -> Roofing
                     if (Singleton.getInstance().interior_roofing_id.size() > 0) {
                         String interior_roofing_id = general.remove_array_brac_and_space(Singleton.getInstance().interior_roofing_id.toString());
@@ -6070,7 +6071,9 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                     }
                     Log.e("interior_roofing_id", "::: " + Singleton.getInstance().interior_roofing_id);
                     Log.e("interior_roofing_name", ":: " + Singleton.getInstance().interior_roofing_name);
-                } else if (type_of_dialog.equalsIgnoreCase("paint")) {
+                }
+
+                else if (type_of_dialog.equalsIgnoreCase("paint")) {
                     // Type -> paint
                     if (Singleton.getInstance().interior_paint_id.size() > 0) {
                         String interior_paint_id = general.remove_array_brac_and_space(Singleton.getInstance().interior_paint_id.toString());
@@ -6118,7 +6121,8 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                     }
                     Log.e("interior_window_id", "::: " + Singleton.getInstance().interior_window_id);
                     Log.e("interior_window_name", ":: " + Singleton.getInstance().interior_window_name);
-                } else if (type_of_dialog.equalsIgnoreCase("exter_stru")) {
+                }
+                else if (type_of_dialog.equalsIgnoreCase("exter_stru")) {
                     // Type -> door
                     if (Singleton.getInstance().exter_stru_id.size() > 0) {
                         String exter_stru_id = general.remove_array_brac_and_space(Singleton.getInstance().exter_stru_id.toString());
@@ -6134,7 +6138,10 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                     }
                     Log.e("exter_stru_id", "::: " + Singleton.getInstance().exter_stru_id);
                     Log.e("exter_stru_name", ":: " + Singleton.getInstance().exter_stru_name);
-                } else if (type_of_dialog.equalsIgnoreCase("exter_paint")) {
+                }
+
+
+                else if (type_of_dialog.equalsIgnoreCase("exter_paint")) {
                     // Type -> door
                     if (Singleton.getInstance().exter_paint_id.size() > 0) {
                         String exter_paint_id = general.remove_array_brac_and_space(Singleton.getInstance().exter_paint_id.toString());
@@ -6179,7 +6186,8 @@ public class OtherDetails extends Fragment implements View.OnClickListener, Othe
                         // setText to the floor text
                         String PresentlyOccupied_name = general.remove_array_brac_and_space(Singleton.getInstance().PresentlyOccupied_name.toString());
                         textview_persently_occupied_text.setText(PresentlyOccupied_name);
-                    } else {
+                    }
+                    else {
                         // clear all the ID and dummy data and clear the settext
                         Singleton.getInstance().property.setPresentlyOccupied("");
                         textview_persently_occupied_text.setText(getResources().getString(R.string.select));

@@ -63,6 +63,7 @@ public class SettingsUtils {
     public static final String GetFieldDropDowns = "/api/FieldManagement/app_GetFieldFormDropDowns";
     public static final String SaveCaseInspection = "/api/FieldManagement/app_InsertFieldEntryData";
     public static final String EditCaseInspection = "/api/FieldManagement/app_GetFieldEntryData";
+    public static final String ShowFSUIRequest = "/api/FieldAlignment/GetFieldData";
     public static final String GetCaseInspection = "/api/Case/app_GetById";
     public static final String RemoveProximity = "/api/ValuationMethod/app_Removeproxi";
     public static final String GetReportTypeProperty = "/api/ReportType/app_GetReportTypeByAgencyBranchBank";
@@ -100,6 +101,9 @@ public class SettingsUtils {
     public static final String TYPE_OF_MORTAR = "/api/TypeOfMortar/GetAll";
     public static final String TYPE_OF_FOOTING = "/api/TypeOfFootingFoundation/GetAll";
     public static final String TYPE_OF_STEEL = "/api/TypeOfSteelGrade/GetAll";
+
+    public static final String TYPE_OF_PURPOSE = "/api/Purposeofloan/LoadPurposeofloanType";
+
 
     public static final String CONVEYANCE_REPORT = "/api/FsConveyance/app_DailyConveyanceReport";
 

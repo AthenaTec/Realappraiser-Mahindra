@@ -172,13 +172,13 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             splashRunner();
         }*/
 
-        if (General.rootAndEmulatorChecker(SplashActivity.this) == false) {
+      /*  if (General.rootAndEmulatorChecker(SplashActivity.this) == false) {
             splashRunner();
             setVersionDetails();
-        }
+        }*/
 
-       /* splashRunner();
-        setVersionDetails();*/
+        splashRunner();
+        setVersionDetails();
     }
 
     @Override

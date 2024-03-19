@@ -343,6 +343,14 @@ public class RequestParam {
         return geturl;
     }
 
+    public static String FetchFSVisibleUI(JsonRequestData jsonRequestData) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
+        urlBuilder.addQueryParameter("CaseID", jsonRequestData.getCaseID());
+        String geturl = urlBuilder.build().toString();
+
+        return geturl;
+    }
+
     public static String getCaseInspectionRequestParams(JsonRequestData jsonRequestData) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("id", jsonRequestData.getId());

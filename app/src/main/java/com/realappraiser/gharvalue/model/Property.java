@@ -794,6 +794,12 @@ public class Property {
     private String coastalRegulatoryZone;
 
 
+    @SerializedName("PurposeofloanId")
+    @Expose
+    @ColumnInfo(name = "PurposeofloanId")
+    private Integer purposeofloanId;
+
+
 
 
     public String getCoastalRegulatoryZone() {
@@ -2318,5 +2324,13 @@ public class Property {
 
     public void setDemolitionListValue(String demolitionListValue) {
         this.demolitionListValue = demolitionListValue;
+    }
+
+    public void setPurposeofloanId(Integer purposeofloanId) {
+        this.purposeofloanId = purposeofloanId;
+    }
+
+    public Integer getPurposeofloanId() {
+        return purposeofloanId;
     }
 }

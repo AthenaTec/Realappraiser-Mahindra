@@ -1,5 +1,7 @@
 package com.realappraiser.gharvalue.model;
 
+import androidx.room.ColumnInfo;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -342,6 +344,56 @@ public class CaseOtherDetailsModel {
         @SerializedName("PercentageDepreciation")
         @Expose
         private String percentageDepreciation;
+
+        @SerializedName("ApprovedPlanApprovingAuthority")
+        @Expose
+        private String approvedPlanApprovingAuthority;
+
+        @SerializedName("ApprovedPlanPreparedBy")
+        @Expose
+        private String ApprovedPlanPreparedBy;
+
+
+        @SerializedName("ApprovedPlanNumber")
+        @Expose
+        private String ApprovedPlanNumber;
+
+        public String getApprovedPlanNumber() {
+            return ApprovedPlanNumber;
+        }
+
+        public void setApprovedPlanNumber(String approvedPlanNumber) {
+            ApprovedPlanNumber = approvedPlanNumber;
+        }
+
+        public String getApprovedPlanDate() {
+            return ApprovedPlanDate;
+        }
+
+        public void setApprovedPlanDate(String approvedPlanDate) {
+            ApprovedPlanDate = approvedPlanDate;
+        }
+
+        @SerializedName("ApprovedPlanDate")
+        @Expose
+        private String ApprovedPlanDate;
+
+        public String getApprovedPlanPreparedBy() {
+            return ApprovedPlanPreparedBy;
+        }
+
+        public void setApprovedPlanPreparedBy(String approvedPlanPreparedBy) {
+            ApprovedPlanPreparedBy = approvedPlanPreparedBy;
+        }
+
+
+        public String getApprovedPlanApprovingAuthority() {
+            return approvedPlanApprovingAuthority;
+        }
+
+        public void setApprovedPlanApprovingAuthority(String approvedPlanApprovingAuthority) {
+            this.approvedPlanApprovingAuthority = approvedPlanApprovingAuthority;
+        }
 
         public Object getAgencyBranch() {
             return agencyBranch;

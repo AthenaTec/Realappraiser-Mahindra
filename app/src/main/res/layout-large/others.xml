@@ -2905,7 +2905,8 @@
                         android:layout_height="wrap_content"
                         android:scrollbars="vertical"
                         android:visibility="visible"
-                        tools:ignore="InconsistentLayout"></androidx.recyclerview.widget.RecyclerView>
+                        tools:ignore="InconsistentLayout">
+                    </androidx.recyclerview.widget.RecyclerView>
 
                 </LinearLayout>
             </LinearLayout>

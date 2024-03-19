@@ -2707,7 +2707,9 @@
                                             android:paddingEnd="@dimen/_12sdp"
                                             android:singleLine="true"
                                             android:layout_marginTop="@dimen/_3sdp"
-                                            tools:ignore="InconsistentLayout,RtlHardcoded" />
+                                            tools:ignore="InconsistentLayout,RtlHardcoded"
+                                            android:minHeight="@dimen/_30sdp"
+                                            />
 
                                        <!-- <ImageView
                                             style="@style/StyledImagedown_large"
@@ -3821,6 +3823,15 @@
                                     android:maxLength="4000"
                                     />
                             </com.google.android.material.textfield.TextInputLayout>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/_8sdp"
+                                android:text="(Upto 4000characters)"
+                                />
+
+
+
                             <com.google.android.material.textfield.TextInputLayout
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                                 android:id="@+id/layout_special_remarks"

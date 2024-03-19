@@ -1908,7 +1908,13 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             Singleton.getInstance().indPropertyValuation = dataResponse.indPropertyValuation;
             Singleton.getInstance().indPropertyFloors = dataResponse.indPropertyFloors;
             Singleton.getInstance().proximities = dataResponse.proximities;
-            Log.e("Called Edit Inspection :", "Ok");
+            Log.e("Edit Inspection", "Success");
+            Log.e("Edit Inspection Case", new Gson().toJson(Singleton.getInstance().aCase));
+            Log.e("Edit Inspection property", new Gson().toJson(Singleton.getInstance().property));
+            Log.e("Edit Inspection indProperty", new Gson().toJson(Singleton.getInstance().indProperty));
+            Log.e("Edit Inspection indPropertyValuation", new Gson().toJson(Singleton.getInstance().indPropertyValuation));
+            Log.e("Edit Inspection indPropertyFloors", new Gson().toJson(Singleton.getInstance().indPropertyFloors));
+            Log.e("Edit Inspection proximities", new Gson().toJson(Singleton.getInstance().proximities));
             caseStatus = String.valueOf(dataResponse.aCase.getStatus());
             SettingsUtils.getInstance().putValue(SettingsUtils.StatusId, caseStatus);
         }
@@ -2113,10 +2119,17 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
 
         boolean is_valid = true;
 
-        if (general.isEmpty(Singleton.getInstance().aCase.getPropertyAddress()))
+
+
+        if(!fsBasicValidation()){
+            return false;
+        }
+
+
+        /*if (general.isEmpty(Singleton.getInstance().aCase.getPropertyAddress()))
             is_valid = true;
-        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
-            is_valid = true;*/
+        *//*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite()))
+            is_valid = true;*//*
 
         if (general.isEmpty(Singleton.getInstance().aCase.getSiteVisitDate()))
             is_valid = false;
@@ -2134,11 +2147,11 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             is_valid = false;
         }
         // PropertyAddressAtSite
-        /*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
+        *//*if (general.isEmpty(Singleton.getInstance().property.getPropertyAddressAtSite())) {
             Log.e(TAG, "building_validation: getPropertyAddressAtSite");
             // empty
             is_valid = false;
-        }*/
+        }*//*
         // DocumentLandArea (Compound)
         if (general.isEmpty(Singleton.getInstance().indProperty.getDocumentLandArea())) {
             Log.e(TAG, "building_validation: getDocumentLandArea");
@@ -2156,6 +2169,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
 
         if (general.isEmpty(Singleton.getInstance().aCase.getContactPersonNumber()))
             is_valid = false;
+*/
 
         for (IndPropertyFloor floor : Singleton.getInstance().indPropertyFloors) {
             if (general.isEmpty(floor.getMeasuredFloorArea())) {
@@ -2283,6 +2297,39 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
 
 
         return is_valid;
+    }
+
+    private boolean fsBasicValidation(){
+
+        boolean is_valid = true;
+
+        /*if(Singleton.getInstance().property.getPurposeofloanId() == null ||
+                Singleton.getInstance().property.getPurposeofloanId() == 0){
+            is_valid = false;
+        }else if(Singleton.getInstance().aCase.getLoanType().equalsIgnoreCase("0")){
+            is_valid = false;
+        }else*/ if(general.isEmpty(Singleton.getInstance().aCase.getApplicantName())){
+            return false;
+        }else if(general.isEmpty(Singleton.getInstance().property.getNameOfPurchaser())){
+            return false;
+        }else if(general.isEmpty(Singleton.getInstance().aCase.getContactPersonName())){
+            return false;
+        }else if(general.isEmpty(Singleton.getInstance().aCase.getContactPersonNumber())){
+            return false;
+        }else if(general.isEmpty(Singleton.getInstance().aCase.getBankReferenceNO())){
+            return false;
+        }else if(general.isEmpty(Singleton.getInstance().aCase.getSiteVisitDate())){
+            return false;
+        } else if (general.isEmpty(Singleton.getInstance().aCase.getPropertyAddress())) {
+            return false;
+        }else if (general.isEmpty(Singleton.getInstance().property.getSurveyNo())) {
+            return false;
+        }else if (Singleton.getInstance().caseOtherDetailsModel.getData() == null ||Singleton.getInstance().caseOtherDetailsModel.getData().get(0) == null
+                || general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority()) ) {
+            return false;
+        }
+
+        return true;
     }
 
     private void HitImageAPI() {

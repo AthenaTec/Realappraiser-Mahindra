@@ -3,6 +3,8 @@ package com.realappraiser.gharvalue.utils;
 import android.content.Context;
 
 import com.realappraiser.gharvalue.communicator.DataModel;
+import com.realappraiser.gharvalue.communicator.DropDownResponse;
+import com.realappraiser.gharvalue.communicator.ShowFSUIResponse;
 import com.realappraiser.gharvalue.model.AmenityQuality;
 import com.realappraiser.gharvalue.model.ApproachRoadCondition;
 import com.realappraiser.gharvalue.model.Bath;
@@ -216,6 +218,9 @@ public class Singleton {
     public List<TypeOfMortar.Datum> typeOfMortarsList = new ArrayList<>();
     public List<TypeOfFooting.Datum> typeOfFootingList = new ArrayList<>();
     public List<TypeOfSteel.Datum> typeOfSteelList = new ArrayList<>();
+    public List<DropDownResponse.Datum> purposeOfList = new ArrayList<>();
+    public List<DropDownResponse.Datum> typeOfProperty = new ArrayList<>();
+    public List<DropDownResponse.Datum> loanType = new ArrayList<>();
 
     public List<ConcreteGrade.ConcreteGradeData> concreteGrade = new ArrayList<>();
     public List<EnvExposureCondition.EnvExposureConditionData> envExposureConditionData = new ArrayList<>();
@@ -343,6 +348,6 @@ public class Singleton {
 
     public ArrayList<GetPhoto_measurment> GetImage_list_flat = new ArrayList<>();
 
-
+    public ArrayList<ShowFSUIResponse.Datum> uiData = new ArrayList<>();
 
 }

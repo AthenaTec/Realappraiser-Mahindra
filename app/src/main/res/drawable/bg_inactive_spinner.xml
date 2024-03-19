@@ -9,7 +9,8 @@
                 <shape>
                     <gradient android:angle="90" android:endColor="@color/white"  android:startColor="@color/white" android:type="linear" />
 
-                    <stroke android:width="0.33dp" android:color="@color/Gray" />
+                    <!--stroke android:width="0.33dp"-->
+                    <stroke android:width="@dimen/_1sdp" android:color="@color/Gray" />
 
                     <corners android:radius="@dimen/_3sdp" />
 

@@ -358,10 +358,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             initiateViewsAndData();
         }*/
 
-        //initiateViewsAndData();
-        if (General.rootAndEmulatorChecker(HomeActivity.this) == false) {
+        initiateViewsAndData();
+       /* if (General.rootAndEmulatorChecker(HomeActivity.this) == false) {
             initiateViewsAndData();
-        }
+        }*/
     }
 
     private void initiateViewsAndData() {
@@ -1509,6 +1509,41 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             data.addAll(typeOfMortar.getData());
             data.add(0, new TypeOfSteel.Datum("Select"));
             Singleton.getInstance().typeOfSteelList = data;
+            //getPurpose();
+        } else if (!successful && (responseCode == 400 || responseCode == 401)) {
+            General.sessionDialog(HomeActivity.this);
+        } else {
+            General.customToast(getString(R.string.something_wrong), HomeActivity.this);
+        }
+    }
+
+    private void getPurpose(){
+        String url = general.ApiBaseUrl() + SettingsUtils.TYPE_OF_PURPOSE;
+        JsonRequestData requestData = new JsonRequestData();
+        requestData.setUrl(url);
+        requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
+        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(HomeActivity.this, requestData, SettingsUtils.GET_TOKEN);
+        webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+            @Override
+            public void onTaskComplete(JsonRequestData requestData) {
+                try {
+                    purposeResponse(requestData.getResponse(), requestData.getResponseCode(), requestData.isSuccessful());
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+            }
+        });
+        webserviceTask.execute();
+    }
+
+    private void purposeResponse(String response, int responseCode, boolean successful){
+        if (successful) {
+            Log.e(TAG, "dropDownResponse: Purpose" + response);
+            TypeOfSteel typeOfMortar = new Gson().fromJson(response, TypeOfSteel.class);
+            List<TypeOfSteel.Datum> data = new ArrayList<>();
+            data.addAll(typeOfMortar.getData());
+            data.add(0, new TypeOfSteel.Datum("Select"));
+           // Singleton.getInstance().purposeOfList = data;
         } else if (!successful && (responseCode == 400 || responseCode == 401)) {
             General.sessionDialog(HomeActivity.this);
         } else {

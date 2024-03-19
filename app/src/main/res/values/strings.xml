@@ -364,6 +364,7 @@
     <string name="session_error">Your session has been expired.Please login again</string>
     <string name="err_lat_long" tools:ignore="UnusedResources">Enter the Latitude and Longitude</string>
     <string name="nameof_seller">Name of Seller</string>
+    <string name="nameof_Borrower">Name of Borrower</string>
     <string name="save_message">Would you like to?</string>
     <string name="brokerdetails">BROKER DETAILS</string>
     <string name="brokername">Broker Name</string>

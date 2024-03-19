@@ -5,6 +5,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 @Entity(tableName = "CaseModal")
 public class Case {
 
@@ -142,6 +145,42 @@ public class Case {
 
     @ColumnInfo(name = "SiteVisitDate")
     private String SiteVisitDate;
+
+    @ColumnInfo(name = "ApprovedPlanApprovingAuthority")
+    private String approvedPlanApprovingAuthority;
+
+    @ColumnInfo(name = "ApprovedPlanPreparedBy")
+    private String ApprovedPlanPreparedBy;
+
+    @ColumnInfo(name ="ApprovedPlanNumber")
+    private String ApprovedPlanNumber;
+
+    @ColumnInfo(name ="ApprovedPlanDate")
+    private String ApprovedPlanDate;
+
+    public String getApprovedPlanNumber() {
+        return ApprovedPlanNumber;
+    }
+
+    public void setApprovedPlanNumber(String approvedPlanNumber) {
+        ApprovedPlanNumber = approvedPlanNumber;
+    }
+
+    public String getApprovedPlanDate() {
+        return ApprovedPlanDate;
+    }
+
+    public void setApprovedPlanDate(String approvedPlanDate) {
+        ApprovedPlanDate = approvedPlanDate;
+    }
+
+    public String getApprovedPlanPreparedBy() {
+        return ApprovedPlanPreparedBy;
+    }
+
+    public void setApprovedPlanPreparedBy(String approvedPlanPreparedBy) {
+        ApprovedPlanPreparedBy = approvedPlanPreparedBy;
+    }
 
     public int getCaseId() {
         return CaseId;
@@ -661,5 +700,13 @@ public class Case {
 
     public void setSiteVisitDate(String siteVisitDate) {
         SiteVisitDate = siteVisitDate;
+    }
+
+    public String getApprovedPlanApprovingAuthority() {
+        return approvedPlanApprovingAuthority;
+    }
+
+    public void setApprovedPlanApprovingAuthority(String approvedPlanApprovingAuthority) {
+        this.approvedPlanApprovingAuthority = approvedPlanApprovingAuthority;
     }
 }

@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.realappraiser.gharvalue.FieldsInspection.FieldsInspectionDetails;
 import com.realappraiser.gharvalue.R;
+import com.realappraiser.gharvalue.bankTemplate.ui.FieldStaffInspectionFragment;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 
 /**
@@ -29,8 +31,10 @@ public class OtherDetailsFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                OtherDetails fragment_design = new OtherDetails();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.tabcontent, fragment_design).commitAllowingStateLoss();
+                //OtherDetails fragment_design = new OtherDetails();
+               // FieldStaffInspectionFragment fragment_design = new FieldStaffInspectionFragment();
+                FieldsInspectionDetails  fieldsInspectionDetails = new FieldsInspectionDetails();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.tabcontent, fieldsInspectionDetails).commitAllowingStateLoss();
             }
         }, 100);
 

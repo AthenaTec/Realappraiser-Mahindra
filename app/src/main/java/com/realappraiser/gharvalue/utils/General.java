@@ -56,6 +56,7 @@ import com.realappraiser.gharvalue.AppDatabase;
 import com.realappraiser.gharvalue.MyApplication;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.activities.LoginActivity;
+import com.realappraiser.gharvalue.communicator.ShowFSUIResponse;
 import com.realappraiser.gharvalue.model.Case;
 import com.realappraiser.gharvalue.model.GetPhoto;
 import com.realappraiser.gharvalue.model.IndProperty;
@@ -97,6 +98,9 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
     private Activity mContext;
     private Context mcontext;
+
+    public static int uiVisiblityCount = 0;
+
     @SuppressLint("StaticFieldLeak")
     private static Activity Context;
     @SuppressLint("StaticFieldLeak")
@@ -2181,6 +2185,18 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         gson_dummy_gallery.toJson(dummy_galleryImage);
         createPhotoList.add(dummy_galleryImage);
         return createPhotoList;
+    }
+
+
+    public boolean getUIVisibility(String fieldUI) {
+        for (ShowFSUIResponse.Datum datum : Singleton.getInstance().uiData) {
+            if (datum.getFieldinUI().equals(fieldUI)) {
+                uiVisiblityCount = uiVisiblityCount + 1;
+                Log.e("uiVisiblityCount == ",String.valueOf(uiVisiblityCount));
+                return true;
+            }
+        }
+        return false;
     }
 
 

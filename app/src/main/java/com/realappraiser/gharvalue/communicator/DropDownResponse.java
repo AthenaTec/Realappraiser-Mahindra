@@ -1,18 +1,19 @@
-package com.realappraiser.gharvalue.model;
+package com.realappraiser.gharvalue.communicator;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.realappraiser.gharvalue.model.TypeOfSteel;
 
 import java.util.List;
 
-public class TypeOfSteel {
+public class DropDownResponse {
 
     @SerializedName("status")
     @Expose
     private Integer status;
     @SerializedName("data")
     @Expose
-    private List<Datum> data = null;
+    private List<TypeOfSteel.Datum> data = null;
     @SerializedName("msg")
     @Expose
     private String msg;
@@ -25,11 +26,11 @@ public class TypeOfSteel {
         this.status = status;
     }
 
-    public List<Datum> getData() {
+    public List<TypeOfSteel.Datum> getData() {
         return data;
     }
 
-    public void setData(List<Datum> data) {
+    public void setData(List<TypeOfSteel.Datum> data) {
         this.data = data;
     }
 
@@ -42,17 +43,21 @@ public class TypeOfSteel {
     }
     public static class Datum {
 
-        public Datum(String name) {
-            this.name = name;
+        public Datum() {
+
         }
 
         @SerializedName("PurposeofloanId")
         @Expose
         private Integer PurposeofloanId;
 
-        @SerializedName("typeofsteelgradeId")
+        @SerializedName("TypeOfPropertyId")
         @Expose
-        private Integer typeofsteelgradeId;
+        private Integer TypeOfPropertyId;
+
+        @SerializedName("LoanTypeId")
+        @Expose
+        private Integer LoanTypeId;
         @SerializedName("Name")
         @Expose
         private String name;
@@ -68,14 +73,6 @@ public class TypeOfSteel {
         @SerializedName("ModifiedBy")
         @Expose
         private Object modifiedBy;
-
-        public Integer getTypeofsteelgradeId() {
-            return typeofsteelgradeId;
-        }
-
-        public void setTypeofsteelgradeId(Integer typeofsteelgradeId) {
-            this.typeofsteelgradeId = typeofsteelgradeId;
-        }
 
         public String getName() {
             return name;
@@ -117,6 +114,10 @@ public class TypeOfSteel {
             this.modifiedBy = modifiedBy;
         }
 
+        public Integer getTypeOfPropertyId() {
+            return TypeOfPropertyId;
+        }
+
         @Override
         public String toString() {
             return name ;
@@ -128,6 +129,18 @@ public class TypeOfSteel {
 
         public Integer getPurposeofloanId() {
             return PurposeofloanId;
+        }
+
+        public void setTypeOfPropertyId(Integer typeOfPropertyId) {
+            TypeOfPropertyId = typeOfPropertyId;
+        }
+
+        public void setLoanTypeId(Integer loanTypeId) {
+            LoanTypeId = loanTypeId;
+        }
+
+        public Integer getLoanTypeId() {
+            return LoanTypeId;
         }
     }
 }

@@ -1,5 +1,21 @@
 package com.realappraiser.gharvalue.adapter;
 
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.aspercompletion_val;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.constrction_actual;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.constrction_measurment;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.internalfloorlistAdapter;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.listActualAdapter;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.listAdapter;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_actual_total;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_comp;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_comp_total;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_doc_total;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_floor_name;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_stage;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.txt_permissiable_area_value;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.txt_total_actual_area;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.txt_total_sanctioned_area;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,8 +46,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.R;
-import com.realappraiser.gharvalue.fragments.FragmentBuilding;
-import com.realappraiser.gharvalue.fragments.FragmentValuationBuilding;
 import com.realappraiser.gharvalue.fragments.OtherDetails;
 import com.realappraiser.gharvalue.model.FloorUsage;
 import com.realappraiser.gharvalue.model.IndPropertyFloor;
@@ -147,8 +161,8 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (getAdapterPosition() != -1) {
                         //clear the error
-                        if (FragmentBuilding.textview_floor_name != null) {
-                            FragmentBuilding.textview_floor_name.setError(null);
+                        if (textview_floor_name != null) {
+                            textview_floor_name.setError(null);
                         }
                         String toString = edittext_general_floor_name.getText().toString();
                         IndPropertyFloor stepsModel = steps.get(getAdapterPosition());
@@ -160,19 +174,19 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                         steps.set(getAdapterPosition(), stepsModel);
                         Singleton.getInstance().indPropertyFloors.set(getAdapterPosition(), stepsModel);
                         // PropertyFloorInternalAdapter
-                        if (FragmentBuilding.internalfloorlistAdapter != null) {
-                            FragmentBuilding.internalfloorlistAdapter.steps.set(getAdapterPosition(), stepsModel);
-                            FragmentBuilding.internalfloorlistAdapter.notifyItemChanged(getAdapterPosition());
+                        if (internalfloorlistAdapter != null) {
+                            internalfloorlistAdapter.steps.set(getAdapterPosition(), stepsModel);
+                            internalfloorlistAdapter.notifyItemChanged(getAdapterPosition());
                         }
                         // ValuationPermissibleAreaAdapter
-                        if (FragmentValuationBuilding.listAdapter != null) {
-                            FragmentValuationBuilding.listAdapter.steps.set(getAdapterPosition(), stepsModel);
-                            FragmentValuationBuilding.listAdapter.notifyItemChanged(getAdapterPosition());
+                        if (listAdapter != null) {
+                            steps.set(getAdapterPosition(), stepsModel);
+                            //listAdapter.notifyItemChanged(getAdapterPosition());
                         }
                         // ValuationActualAreaAdapter
-                        if (FragmentValuationBuilding.listActualAdapter != null) {
-                            FragmentValuationBuilding.listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
-                            FragmentValuationBuilding.listActualAdapter.notifyItemChanged(getAdapterPosition());
+                        if (listActualAdapter != null) {
+                            listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
+                            listActualAdapter.notifyItemChanged(getAdapterPosition());
                         }
                     }
                 }
@@ -192,8 +206,8 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                         Log.e("onFocus_coming", "onFocus_coming" + hasFocus);
                         if (getAdapterPosition() != -1) {
                             //clear the error
-                            if (FragmentBuilding.textview_comp != null) {
-                                FragmentBuilding.textview_comp.setError(null);
+                            if (textview_comp != null) {
+                                textview_comp.setError(null);
                             }
                             String toString = edittext_general_comp.getText().toString();
                             IndPropertyFloor stepsModel = steps.get(getAdapterPosition());
@@ -207,34 +221,14 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
                             int average_total = general.getCompletedSumValue(steps);
                             // set Average
-                            if (FragmentBuilding.textview_comp_total != null) {
-                                FragmentBuilding.textview_comp_total.setText("" + average_total);
+                            if (textview_comp_total != null) {
+                                textview_comp_total.setText("" + average_total);
                             }
-                            // set Aspercom
-                            FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
-                            fragmentValuationBuilding.aspercompletion_val("" + average_total);
+
+                            aspercompletion_val("" + average_total);
 
 
-                            // is_new_floor_created - > New rows are created by user
-                            /*if (Singleton.getInstance().is_new_floor_created) {
-                                if (steps.size() > 0) {
-                                    boolean is_not_null = true;
-                                    for (int x = 0; x < steps.size(); x++) {
-                                        if (general.isEmpty(String.valueOf(steps.get(x).getPercentageCompletion()))) {
-                                            // If Empty come in
-                                            is_not_null = false;
-                                        }
-                                    }
-                                    if (is_not_null) {
-                                        // Old condtion
-                                        if (Singleton.getInstance().as_per_com) {
-                                            FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
-                                            fragmentValuationBuilding.aspercompletion_val("" + average_total);
-                                            Singleton.getInstance().as_per_com = false;
-                                        }
-                                    }
-                                }
-                            }*/
+
 
 
                         }
@@ -466,14 +460,14 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                             Singleton.getInstance().indPropertyFloors.set(getAdapterPosition(), stepsModel);
                                         }
                                         // ValuationPermissibleAreaAdapter
-                                        if (FragmentValuationBuilding.listAdapter != null) {
-                                            FragmentValuationBuilding.listAdapter.steps.set(getAdapterPosition(), stepsModel);
-                                            FragmentValuationBuilding.listAdapter.notifyItemChanged(getAdapterPosition());
+                                        if (listAdapter != null) {
+                                            listAdapter.steps.set(getAdapterPosition(), stepsModel);
+                                            listAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                         // ValuationActualAreaAdapter
-                                        if (FragmentValuationBuilding.listActualAdapter != null) {
-                                            FragmentValuationBuilding.listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
-                                            FragmentValuationBuilding.listActualAdapter.notifyItemChanged(getAdapterPosition());
+                                        if (listActualAdapter != null) {
+                                            listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
+                                            listActualAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                     } else {
                                         stepsModel.setPropertyAge(null);
@@ -484,14 +478,14 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                         steps.set(getAdapterPosition(), stepsModel);
                                         Singleton.getInstance().indPropertyFloors.set(getAdapterPosition(), stepsModel);
                                         // ValuationPermissibleAreaAdapter
-                                        if (FragmentValuationBuilding.listAdapter != null) {
-                                            FragmentValuationBuilding.listAdapter.steps.set(getAdapterPosition(), stepsModel);
-                                            FragmentValuationBuilding.listAdapter.notifyItemChanged(getAdapterPosition());
+                                        if (listAdapter != null) {
+                                            listAdapter.steps.set(getAdapterPosition(), stepsModel);
+                                            listAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                         // ValuationActualAreaAdapter
-                                        if (FragmentValuationBuilding.listActualAdapter != null) {
-                                            FragmentValuationBuilding.listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
-                                            FragmentValuationBuilding.listActualAdapter.notifyItemChanged(getAdapterPosition());
+                                        if (listActualAdapter != null) {
+                                            listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
+                                            listActualAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                     }
                                 }
@@ -527,8 +521,8 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 @Override
                 public void onClick(View view) {
                     //clear the error
-                    if (FragmentBuilding.textview_stage != null) {
-                        FragmentBuilding.textview_stage.setError(null);
+                    if (textview_stage != null) {
+                        textview_stage.setError(null);
                     }
                     hideSoftKeyboard(spinner_stage);
                     if (getAdapterPosition() != -1) {
@@ -1026,25 +1020,25 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 // Total Doc Area
                 int total_documentarea = general.getDocSumValue(steps);
                 float total_documentarea_float = general.getDocSumValue_float(steps);
-                //FragmentValuationBuilding fragmentValuationBuilding_is = new FragmentValuationBuilding();
-                if (FragmentBuilding.textview_doc_total != null) {
-                    //FragmentBuilding.textview_doc_total.setText("" + total_documentarea);
-                    FragmentBuilding.textview_doc_total.setText("" + total_documentarea_float);
-                    if (FragmentBuilding.txt_total_sanctioned_area != null)
-                    FragmentBuilding.txt_total_sanctioned_area.setText(""+total_documentarea_float);
-                    FragmentValuationBuilding.constrction_measurment(String.valueOf(total_documentarea));
+                // _is = new ();
+                if (textview_doc_total != null) {
+                    //textview_doc_total.setText("" + total_documentarea);
+                    textview_doc_total.setText("" + total_documentarea_float);
+                    if (txt_total_sanctioned_area != null)
+                    txt_total_sanctioned_area.setText(""+total_documentarea_float);
+                    constrction_measurment(String.valueOf(total_documentarea));
                 } else {
-                    FragmentValuationBuilding.constrction_measurment("");
+                    constrction_measurment("");
                 }
                 // ValuationPermissibleAreaAdapter
-                if (FragmentValuationBuilding.listAdapter != null) {
-                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                if (listAdapter != null) {
+                    listAdapter.steps.set(adapterposition, stepsModel);
+                    listAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
-                if (FragmentValuationBuilding.listActualAdapter != null) {
-                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                if (listActualAdapter != null) {
+                    listActualAdapter.steps.set(adapterposition, stepsModel);
+                    listActualAdapter.notifyItemChanged(adapterposition);
                 }
             } else {
                 String docinit = null;
@@ -1054,25 +1048,25 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 // Total Doc Area
                 int total_documentarea = general.getDocSumValue(steps);
                 float total_documentarea_float = general.getDocSumValue_float(steps);
-                //FragmentValuationBuilding fragmentValuationBuilding_is = new FragmentValuationBuilding();
-                if (FragmentBuilding.textview_doc_total != null) {
-                    //FragmentBuilding.textview_doc_total.setText("" + total_documentarea);
-                    FragmentBuilding.textview_doc_total.setText("" + total_documentarea_float);
-                    if (FragmentBuilding.txt_total_sanctioned_area != null)
-                    FragmentBuilding.txt_total_sanctioned_area.setText(""+ total_documentarea_float);
-                    FragmentValuationBuilding.constrction_measurment(String.valueOf(total_documentarea));
+                // _is = new ();
+                if (textview_doc_total != null) {
+                    //textview_doc_total.setText("" + total_documentarea);
+                    textview_doc_total.setText("" + total_documentarea_float);
+                    if (txt_total_sanctioned_area != null)
+                    txt_total_sanctioned_area.setText(""+ total_documentarea_float);
+                    constrction_measurment(String.valueOf(total_documentarea));
                 } else {
-                    FragmentValuationBuilding.constrction_measurment("");
+                    constrction_measurment("");
                 }
                 // ValuationPermissibleAreaAdapter
-                if (FragmentValuationBuilding.listAdapter != null) {
-                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                if (listAdapter != null) {
+                    listAdapter.steps.set(adapterposition, stepsModel);
+                    listAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
-                if (FragmentValuationBuilding.listActualAdapter != null) {
-                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                if (listActualAdapter != null) {
+                    listActualAdapter.steps.set(adapterposition, stepsModel);
+                    listActualAdapter.notifyItemChanged(adapterposition);
                 }
             }
         }
@@ -1091,34 +1085,34 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 // Total Doc Area
                 int total_actualarea = general.getMeasureSumValue(steps);
                 float total_actualarea_float = general.getMeasureSumValue_float(steps);
-                //FragmentValuationBuilding fragmentValuationBuilding_is = new FragmentValuationBuilding();
-                if (FragmentBuilding.textview_actual_total != null) {
-                    //FragmentBuilding.textview_actual_total.setText("" + total_actualarea);
-                    FragmentBuilding.textview_actual_total.setText("" + total_actualarea_float);
-                    if (FragmentBuilding.txt_total_actual_area != null)
-                    FragmentBuilding.txt_total_actual_area.setText("" + total_actualarea_float);
-                    FragmentValuationBuilding.constrction_actual(String.valueOf(total_actualarea));
+                // _is = new ();
+                if (textview_actual_total != null) {
+                    //textview_actual_total.setText("" + total_actualarea);
+                    textview_actual_total.setText("" + total_actualarea_float);
+                    if (txt_total_actual_area != null)
+                       txt_total_actual_area.setText("" + total_actualarea_float);
+                    constrction_actual(String.valueOf(total_actualarea));
                 } else {
-                    FragmentValuationBuilding.constrction_actual("");
+                    constrction_actual("");
                 }
 
                 float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
-                if(FragmentBuilding.txt_permissiable_area_value!=null){
-                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                if(txt_permissiable_area_value!=null){
+                    txt_permissiable_area_value.setText("" + total_permissiblearea_float);
                 }else{
-                    FragmentBuilding.txt_permissiable_area_value.setText("");
+                    txt_permissiable_area_value.setText("");
                 }
 
 
                 // ValuationPermissibleAreaAdapter
-                if (FragmentValuationBuilding.listAdapter != null) {
-                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                if (listAdapter != null) {
+                    listAdapter.steps.set(adapterposition, stepsModel);
+                    listAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
-                if (FragmentValuationBuilding.listActualAdapter != null) {
-                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                if (listActualAdapter != null) {
+                    listActualAdapter.steps.set(adapterposition, stepsModel);
+                    listActualAdapter.notifyItemChanged(adapterposition);
                 }
             } else {
                 //  Save Doc Area to modal
@@ -1129,35 +1123,35 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 // Total Doc Area
                 int total_actualarea = general.getMeasureSumValue(steps);
                 float total_actualarea_float = general.getMeasureSumValue_float(steps);
-                //FragmentValuationBuilding fragmentValuationBuilding_is = new FragmentValuationBuilding();
-                if (FragmentBuilding.textview_actual_total != null) {
-                    //FragmentBuilding.textview_actual_total.setText("" + total_actualarea);
-                    FragmentBuilding.textview_actual_total.setText("" + total_actualarea_float);
-                    if (FragmentBuilding.txt_total_actual_area != null)
-                    FragmentBuilding.txt_total_actual_area.setText("" + total_actualarea_float);
-                    FragmentValuationBuilding.constrction_actual(String.valueOf(total_actualarea));
+                // _is = new ();
+                if (textview_actual_total != null) {
+                    //textview_actual_total.setText("" + total_actualarea);
+                    textview_actual_total.setText("" + total_actualarea_float);
+                    if (txt_total_actual_area != null)
+                    txt_total_actual_area.setText("" + total_actualarea_float);
+                    constrction_actual(String.valueOf(total_actualarea));
                 } else {
-                    FragmentValuationBuilding.constrction_actual("");
+                    constrction_actual("");
                 }
 
 
                 float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
-                if(FragmentBuilding.txt_permissiable_area_value!=null){
-                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                if(txt_permissiable_area_value!=null){
+                    txt_permissiable_area_value.setText("" + total_permissiblearea_float);
                 }else{
-                    FragmentBuilding.txt_permissiable_area_value.setText("");
+                    txt_permissiable_area_value.setText("");
                 }
 
 
                 // ValuationPermissibleAreaAdapter
-                if (FragmentValuationBuilding.listAdapter != null) {
-                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                if (listAdapter != null) {
+                    listAdapter.steps.set(adapterposition, stepsModel);
+                    listAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
-                if (FragmentValuationBuilding.listActualAdapter != null) {
-                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                if (listActualAdapter != null) {
+                    listActualAdapter.steps.set(adapterposition, stepsModel);
+                    listActualAdapter.notifyItemChanged(adapterposition);
                 }
             }
         }
@@ -1174,22 +1168,22 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 steps.set(adapterposition, stepsModel);
                 Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
                 float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
-                if(FragmentBuilding.txt_permissiable_area_value!=null){
-                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                if(txt_permissiable_area_value!=null){
+                   txt_permissiable_area_value.setText("" + total_permissiblearea_float);
                 }else{
-                    FragmentBuilding.txt_permissiable_area_value.setText("");
+                    txt_permissiable_area_value.setText("");
                 }
 
 
                 // ValuationPermissibleAreaAdapter
-                if (FragmentValuationBuilding.listAdapter != null) {
-                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                if (listAdapter != null) {
+                    listAdapter.steps.set(adapterposition, stepsModel);
+                    listAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
-                if (FragmentValuationBuilding.listActualAdapter != null) {
-                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                if (listActualAdapter != null) {
+                    listActualAdapter.steps.set(adapterposition, stepsModel);
+                    listActualAdapter.notifyItemChanged(adapterposition);
                 }
             } else {
                 //  Save Doc Area to modal
@@ -1201,22 +1195,22 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
 
                 float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
-                if(FragmentBuilding.txt_permissiable_area_value!=null){
-                    FragmentBuilding.txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                if(txt_permissiable_area_value!=null){
+                    txt_permissiable_area_value.setText("" + total_permissiblearea_float);
                 }else{
-                    FragmentBuilding.txt_permissiable_area_value.setText("");
+                    txt_permissiable_area_value.setText("");
                 }
 
 
                 // ValuationPermissibleAreaAdapter
-                if (FragmentValuationBuilding.listAdapter != null) {
-                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                if (listAdapter != null) {
+                    listAdapter.steps.set(adapterposition, stepsModel);
+                    listAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
-                if (FragmentValuationBuilding.listActualAdapter != null) {
-                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                if (listActualAdapter != null) {
+                    listActualAdapter.steps.set(adapterposition, stepsModel);
+                    listActualAdapter.notifyItemChanged(adapterposition);
                 }
             }
         }
@@ -1343,14 +1337,14 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
                 }
                 // ValuationPermissibleAreaAdapter
-                if (FragmentValuationBuilding.listAdapter != null) {
-                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                if (listAdapter != null) {
+                    listAdapter.steps.set(adapterposition, stepsModel);
+                    listAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
-                if (FragmentValuationBuilding.listActualAdapter != null) {
-                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                if (listActualAdapter != null) {
+                    listActualAdapter.steps.set(adapterposition, stepsModel);
+                    listActualAdapter.notifyItemChanged(adapterposition);
                 }
             } else {
                 stepsModel.setPropertyAge(null);
@@ -1362,14 +1356,14 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 steps.set(adapterposition, stepsModel);
                 Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
                 // ValuationPermissibleAreaAdapter
-                if (FragmentValuationBuilding.listAdapter != null) {
-                    FragmentValuationBuilding.listAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterposition);
+                if (listAdapter != null) {
+                    listAdapter.steps.set(adapterposition, stepsModel);
+                    listAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
-                if (FragmentValuationBuilding.listActualAdapter != null) {
-                    FragmentValuationBuilding.listActualAdapter.steps.set(adapterposition, stepsModel);
-                    FragmentValuationBuilding.listActualAdapter.notifyItemChanged(adapterposition);
+                if (listActualAdapter != null) {
+                    listActualAdapter.steps.set(adapterposition, stepsModel);
+                    listActualAdapter.notifyItemChanged(adapterposition);
                 }
             }
         }
@@ -1435,15 +1429,15 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 Singleton.getInstance().indPropertyFloors.set(AdapterPosition, stepsModel);
             }
             // ValuationPermissibleAreaAdapter
-            if (FragmentValuationBuilding.listAdapter != null) {
-                FragmentValuationBuilding.listAdapter.steps.set(AdapterPosition, stepsModel);
-                FragmentValuationBuilding.listAdapter.notifyItemChanged(AdapterPosition);
+            if (listAdapter != null) {
+                listAdapter.steps.set(AdapterPosition, stepsModel);
+                listAdapter.notifyItemChanged(AdapterPosition);
                 Log.e("ListAdater :", new Gson().toJson(steps));
             }
             // ValuationActualAreaAdapter
-            if (FragmentValuationBuilding.listActualAdapter != null) {
-                FragmentValuationBuilding.listActualAdapter.steps.set(AdapterPosition, stepsModel);
-                FragmentValuationBuilding.listActualAdapter.notifyItemChanged(AdapterPosition);
+            if (listActualAdapter != null) {
+                listActualAdapter.steps.set(AdapterPosition, stepsModel);
+                listActualAdapter.notifyItemChanged(AdapterPosition);
                 Log.e("ListActualAdapter :", new Gson().toJson(steps));
             }
         } else {
@@ -1454,14 +1448,14 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             steps.set(AdapterPosition, stepsModel);
             Singleton.getInstance().indPropertyFloors.set(AdapterPosition, stepsModel);
             // ValuationPermissibleAreaAdapter
-            if (FragmentValuationBuilding.listAdapter != null) {
-                FragmentValuationBuilding.listAdapter.steps.set(AdapterPosition, stepsModel);
-                FragmentValuationBuilding.listAdapter.notifyItemChanged(AdapterPosition);
+            if (listAdapter != null) {
+                listAdapter.steps.set(AdapterPosition, stepsModel);
+                listAdapter.notifyItemChanged(AdapterPosition);
             }
             // ValuationActualAreaAdapter
-            if (FragmentValuationBuilding.listActualAdapter != null) {
-                FragmentValuationBuilding.listActualAdapter.steps.set(AdapterPosition, stepsModel);
-                FragmentValuationBuilding.listActualAdapter.notifyItemChanged(AdapterPosition);
+            if (listActualAdapter != null) {
+                listActualAdapter.steps.set(AdapterPosition, stepsModel);
+                listActualAdapter.notifyItemChanged(AdapterPosition);
             }
         }
     }
@@ -1509,8 +1503,8 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     textView.setText(context.getResources().getString(R.string.complete));
                     spinner_position = 1;
                     //clear the error
-                    if (FragmentBuilding.textview_comp != null) {
-                        FragmentBuilding.textview_comp.setError(null);
+                    if (textview_comp != null) {
+                        textview_comp.setError(null);
                     }
                 } else {
                     Log.e("stage_is", "undercomplete");
@@ -1545,39 +1539,37 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             Singleton.getInstance().indPropertyFloors.set(pos, stepsModel);
 
                             // ValuationPermissibleAreaAdapter PercentageDepreciation
-                            if (FragmentValuationBuilding.listAdapter != null) {
-                                FragmentValuationBuilding.listAdapter.steps.set(x, stepsModel);
-                                FragmentValuationBuilding.listAdapter.notifyItemChanged(x);
+                            if (listAdapter != null) {
+                                listAdapter.steps.set(x, stepsModel);
+                                listAdapter.notifyItemChanged(x);
                             }
                             // ValuationActualAreaAdapter PercentageDepreciation
-                            if (FragmentValuationBuilding.listActualAdapter != null) {
-                                FragmentValuationBuilding.listActualAdapter.steps.set(x, stepsModel);
-                                FragmentValuationBuilding.listActualAdapter.notifyItemChanged(x);
+                            if (listActualAdapter != null) {
+                                listActualAdapter.steps.set(x, stepsModel);
+                                listActualAdapter.notifyItemChanged(x);
                             }
                         }
                     }
                     if (is_not_null) {
                         int average_total = 100;
-                        if (FragmentBuilding.textview_comp_total != null) {
-                            FragmentBuilding.textview_comp_total.setText("" + average_total);
+                        if (textview_comp_total != null) {
+                            textview_comp_total.setText("" + average_total);
                         }
                         // Old condtion
                         /*if ((Singleton.getInstance().is_new_floor_created) && (Singleton.getInstance().as_per_com)) {
-                            FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
-                            fragmentValuationBuilding.aspercompletion_val("" + average_total);
+                              = new ();
+                            aspercompletion_val("" + average_total);
                             Singleton.getInstance().as_per_com = false;
                         }*/
                         // Added in new feature
-                        FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
-                        fragmentValuationBuilding.aspercompletion_val("" + average_total);
+                        aspercompletion_val("" + average_total);
                     } else {
                         int average_total = 0;
-                        if (FragmentBuilding.textview_comp_total != null) {
-                            FragmentBuilding.textview_comp_total.setText("" + average_total);
+                        if (textview_comp_total != null) {
+                            textview_comp_total.setText("" + average_total);
                         }
                         // Added in new feature
-                        FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
-                        fragmentValuationBuilding.aspercompletion_val("" + average_total);
+                        aspercompletion_val("" + average_total);
                     }
                     hideSoftKeyboard(textView);
                     notifyDataSetChanged();
@@ -1613,26 +1605,25 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                         Singleton.getInstance().indPropertyFloors.set(pos, stepsModel);
 
                                         // ValuationPermissibleAreaAdapter PercentageDepreciation
-                                        if (FragmentValuationBuilding.listAdapter != null) {
-                                            FragmentValuationBuilding.listAdapter.steps.set(x, stepsModel);
-                                            FragmentValuationBuilding.listAdapter.notifyItemChanged(x);
+                                        if (listAdapter != null) {
+                                            listAdapter.steps.set(x, stepsModel);
+                                            listAdapter.notifyItemChanged(x);
                                         }
                                         // ValuationActualAreaAdapter PercentageDepreciation
-                                        if (FragmentValuationBuilding.listActualAdapter != null) {
-                                            FragmentValuationBuilding.listActualAdapter.steps.set(x, stepsModel);
-                                            FragmentValuationBuilding.listActualAdapter.notifyItemChanged(x);
+                                        if (listActualAdapter != null) {
+                                            listActualAdapter.steps.set(x, stepsModel);
+                                            listActualAdapter.notifyItemChanged(x);
                                         }
 
                                     }
                                 }
                             }
                             int average_total = general.getCompletedSumValue(steps);
-                            if (FragmentBuilding.textview_comp_total != null) {
-                                FragmentBuilding.textview_comp_total.setText("" + average_total);
+                            if (textview_comp_total != null) {
+                                textview_comp_total.setText("" + average_total);
                             }
                             // set Aspercom
-                            FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
-                            fragmentValuationBuilding.aspercompletion_val("" + average_total);
+                            aspercompletion_val("" + average_total);
                             hideSoftKeyboard(textView);
                             notifyDataSetChanged();
                         } else {
@@ -1673,22 +1664,21 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                 edittext_general_life.setText("");
                             }
                             int average_total = general.getCompletedSumValue(steps);
-                            if (FragmentBuilding.textview_comp_total != null) {
-                                FragmentBuilding.textview_comp_total.setText("" + average_total);
+                            if (textview_comp_total != null) {
+                                textview_comp_total.setText("" + average_total);
                             }
                             // set Aspercom
-                            FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
-                            fragmentValuationBuilding.aspercompletion_val("" + average_total);
+                            aspercompletion_val("" + average_total);
 
                             // ValuationPermissibleAreaAdapter PercentageDepreciation
-                            if (FragmentValuationBuilding.listAdapter != null) {
-                                FragmentValuationBuilding.listAdapter.steps.set(pos, stepsModel);
-                                FragmentValuationBuilding.listAdapter.notifyItemChanged(pos);
+                            if (listAdapter != null) {
+                                listAdapter.steps.set(pos, stepsModel);
+                                listAdapter.notifyItemChanged(pos);
                             }
                             // ValuationActualAreaAdapter PercentageDepreciation
-                            if (FragmentValuationBuilding.listActualAdapter != null) {
-                                FragmentValuationBuilding.listActualAdapter.steps.set(pos, stepsModel);
-                                FragmentValuationBuilding.listActualAdapter.notifyItemChanged(pos);
+                            if (listActualAdapter != null) {
+                                listActualAdapter.steps.set(pos, stepsModel);
+                                listActualAdapter.notifyItemChanged(pos);
                             }
 
                         }

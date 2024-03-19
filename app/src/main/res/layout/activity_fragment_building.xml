@@ -641,155 +641,8 @@
         </LinearLayout>
 
 
-        <!-- Proposed Area - with Calc icon -->
 
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/height_0"
-            android:layout_marginTop="@dimen/height_5"
-            android:orientation="horizontal"
-            android:weightSum="7"
-            tools:ignore="RtlHardcoded">
 
-            <TextView
-                android:id="@+id/textview_floor_name"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="0.6"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_1"
-                android:text="@string/floor_"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/very_miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_stage"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="0.5"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_1"
-                android:text="@string/stage"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/very_miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_comp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="0.5"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_1"
-                android:text="@string/comp"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/very_miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_progress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="0.7"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_1"
-                android:text="@string/progress"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_pros_area"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="1.1"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_4"
-                android:text="@string/pros_area"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_doc_area"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="1.1"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_4"
-                android:text="@string/per_area"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_actual_area"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="1.1"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_1"
-                android:text="@string/actual_area"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_age"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="0.5"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_4"
-                android:text="@string/age"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_life"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_marginRight="@dimen/height_2"
-                android:layout_weight="0.4"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_4"
-                android:text="@string/life"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/textview_floor_usage"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/height_2"
-                android:layout_weight="0.5"
-                android:gravity="left"
-                android:paddingLeft="@dimen/height_1"
-                android:text="@string/floor_usage"
-                android:textColor="@color/font_text_minor_heading"
-                android:textSize="@dimen/miniut_small"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
-        </LinearLayout>-->
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -1033,10 +886,13 @@
         android:background="@color/line"></View>-->
 
         <LinearLayout
+            android:id="@+id/ll_internal_composition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="@dimen/_5sdp">
+            android:layout_margin="@dimen/_5sdp"
+            android:visibility="gone"
+            >
 
     <TextView
         android:id="@+id/textview_internal_composition"

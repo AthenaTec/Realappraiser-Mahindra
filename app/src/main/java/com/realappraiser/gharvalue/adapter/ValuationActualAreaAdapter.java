@@ -1,5 +1,14 @@
 package com.realappraiser.gharvalue.adapter;
 
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.editText_aspercompletion;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.editText_total_actualarea;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.editText_total_permissiblearea;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.permission_check;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_aspercompletion_result;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_insurancevaluepe_result;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_totalpropertyvalue_result;
+import static com.realappraiser.gharvalue.fragments.FragmentValuationBuilding.textview_totalconstructionvalue_result;
+
 import android.annotation.SuppressLint;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -273,54 +282,54 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
 
                 /*****total construction*****/
                 int total_construction = general.getTotalConstructionActualValue(stepsValuation);
-                if (FragmentValuationBuilding.textview_totalconstructionvalue_result != null)
-                    FragmentValuationBuilding.textview_totalconstructionvalue_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(total_construction)));
+                if (textview_totalconstructionvalue_result != null)
+                    textview_totalconstructionvalue_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(total_construction)));
 
-                //  FragmentValuationBuilding.textview_totalconstructionvalue_result.setText("" + total_construction);
+                //  textview_totalconstructionvalue_result.setText("" + total_construction);
 
-                if (FragmentValuationBuilding.textview_insurancevaluepe_result != null)
-                    FragmentValuationBuilding.textview_insurancevaluepe_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(total_construction)));
-                //    FragmentValuationBuilding.textview_insurancevaluepe_result.setText("" + total_construction);
+                if (textview_insurancevaluepe_result != null)
+                    textview_insurancevaluepe_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(total_construction)));
+                //    textview_insurancevaluepe_result.setText("" + total_construction);
 
                 /******total property********/
 
                 String totalland = "0";
-                if (FragmentValuationBuilding.permission_check == 1) {
-                    totalland = FragmentValuationBuilding.editText_total_permissiblearea.getText().toString();
-                } else if (FragmentValuationBuilding.permission_check == 2) {
-                    totalland = FragmentValuationBuilding.editText_total_actualarea.getText().toString();
+                if (permission_check == 1) {
+                    totalland = editText_total_permissiblearea.getText().toString();
+                } else if (permission_check == 2) {
+                    totalland = editText_total_actualarea.getText().toString();
                 }
 
                 //String totalland = Singleton.getInstance().indPropertyValuation.getMeasuredLandValue();
                 if (!general.isEmpty(totalland)) {
                     float property = (general.convertTofloat(totalland)) + general.convertTofloat(String.valueOf(total_construction));
                     int total_property = general.convertToRoundoff(property);
-                    if (FragmentValuationBuilding.textview_totalpropertyvalue_result != null)
-                        FragmentValuationBuilding.textview_totalpropertyvalue_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(total_property)));
+                    if (textview_totalpropertyvalue_result != null)
+                        textview_totalpropertyvalue_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(total_property)));
 
-                    //  FragmentValuationBuilding.textview_totalpropertyvalue_result.setText("" + total_property);
+                    //  textview_totalpropertyvalue_result.setText("" + total_property);
                 } else {
                     float property = 0 + general.convertTofloat(String.valueOf(total_construction));
                     int total_property = general.convertToRoundoff(property);
-                    if (FragmentValuationBuilding.textview_totalpropertyvalue_result != null)
-                        FragmentValuationBuilding.textview_totalpropertyvalue_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(total_property)));
-                    //FragmentValuationBuilding.textview_totalpropertyvalue_result.setText("" + total_property);
+                    if (textview_totalpropertyvalue_result != null)
+                        textview_totalpropertyvalue_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(total_property)));
+                    //textview_totalpropertyvalue_result.setText("" + total_property);
                 }
 
                 /****As per Completion result value******/
                 float percentageCompletetotal = 0;
                 int percentageComplete_total = 0;
-                String asperCompletepercentage = FragmentValuationBuilding.editText_aspercompletion.getText().toString();
+                String asperCompletepercentage = editText_aspercompletion.getText().toString();
                 if (!General.isEmpty(asperCompletepercentage)) {
-                    String total_property = FragmentValuationBuilding.textview_totalpropertyvalue_result.getText().toString();
+                    String total_property = textview_totalpropertyvalue_result.getText().toString();
                     if (!general.isEmpty(total_property)) {
                         percentageCompletetotal = (general.convertTofloat(total_property) * ((general.convertTofloat(asperCompletepercentage)) / 100));
                         percentageComplete_total = general.convertToRoundoff(percentageCompletetotal);
-                        FragmentValuationBuilding.textview_aspercompletion_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(percentageComplete_total)));
+                        textview_aspercompletion_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(percentageComplete_total)));
 
-                        //   FragmentValuationBuilding.textview_aspercompletion_result.setText("" + percentageComplete_total);
+                        //   textview_aspercompletion_result.setText("" + percentageComplete_total);
                     } else {
-                        FragmentValuationBuilding.textview_aspercompletion_result.setText("");
+                        textview_aspercompletion_result.setText("");
                     }
                 }
 
@@ -343,21 +352,21 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
 
                 }
 
-                FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterPosition);
+                //notifyItemChanged(adapterPosition);
 
             }else {
-                FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterPosition);
+               // notifyItemChanged(adapterPosition);
             }
 
         } else {
             String initval = "0";
             textview_actual_value.setText("");
-            if (FragmentValuationBuilding.textview_totalconstructionvalue_result != null)
-                FragmentValuationBuilding.textview_totalconstructionvalue_result.setText("");
-            if (FragmentValuationBuilding.textview_insurancevaluepe_result != null)
-                FragmentValuationBuilding.textview_insurancevaluepe_result.setText("");
-            if (FragmentValuationBuilding.textview_totalpropertyvalue_result != null)
-                FragmentValuationBuilding.textview_totalpropertyvalue_result.setText("");
+            if (textview_totalconstructionvalue_result != null)
+                textview_totalconstructionvalue_result.setText("");
+            if (textview_insurancevaluepe_result != null)
+                textview_insurancevaluepe_result.setText("");
+            if (textview_totalpropertyvalue_result != null)
+                textview_totalpropertyvalue_result.setText("");
 
 
         }

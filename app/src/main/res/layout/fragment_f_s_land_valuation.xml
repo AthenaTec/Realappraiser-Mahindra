@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/div_property_land"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:context=".FieldsInspection.FSLandValuation"
+    android:background="@android:color/white"
+    >
+
+
+    <!--Land Measurement-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:orientation="vertical"
+        >
+
+
+
+        <TextView
+            android:id="@+id/textview_land_measurement_land"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/height_3"
+            android:layout_marginTop="@dimen/height_3"
+            android:text="@string/land_measurement"
+            android:textColor="@color/font_heading"
+            android:textSize="@dimen/font_samll"
+            android:textStyle="normal" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/height_2"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:weightSum="1">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_compound_permissiblearea_land"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    app:hintTextAppearance="@style/TextInputLayout_hint"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_2sdp"
+                    android:layout_marginRight="@dimen/_2sdp"
+                    android:layout_weight="0.8">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_compound_permissiblearea_land"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/compound_permissiblearea"
+                        android:inputType="numberDecimal"
+                        android:maxLength="10"
+                        android:textSize="@dimen/_11sdp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/open_calc_compound"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/icon_calculator" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:weightSum="1">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_land_measurement_land"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:textColorHint="@color/font_texthint">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_land_measurement_land"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/as_per_measurement"
+                        android:inputType="numberDecimal"
+                        android:maxLength="10"
+                        android:textSize="@dimen/_11sdp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/open_calc_measurment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/icon_calculator" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_115sdp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_3sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_measurement_doc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/height_3"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:gravity="left"
+                android:text="Measurement Unit"
+                android:textColor="@color/font_text_minor_heading"
+                android:textSize="@dimen/miniut_small" />
+
+            <Spinner
+                android:id="@+id/spinner_measurementland"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spinner_status" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+    <!--Land Valuation-->
+    <TextView
+        android:id="@+id/textview_landvaluation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="@dimen/height_3"
+        android:layout_marginTop="@dimen/height_3"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:text="@string/landvaluation"
+        android:textColor="@color/font_heading"
+        android:textSize="@dimen/font_samll"
+        android:textStyle="normal"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/height_2"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCompareRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/compare_property_rate"
+                android:textColor="@color/blue_link"
+                android:textSize="@dimen/_8sdp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:paddingRight="@dimen/height_10"
+                app:hintTextAppearance="@style/TextInputLayout_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_guideline_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/guideline_rate"
+                    android:inputType="number"
+                    android:maxLength="10" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            >
+
+            <TextView
+                android:id="@+id/textview_unit_land"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/height_3"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:gravity="left"
+                android:text="@string/unit"
+                android:textColor="@color/font_text_minor_heading"
+                android:textSize="@dimen/miniut_small" />
+
+            <Spinner
+                android:id="@+id/spinner_ft_meter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spinner_status"
+                android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+                />
+
+            <!-- <ImageView
+                 style="@style/StyledImagedown_large"
+                 android:layout_marginTop="@dimen/height_6" />-->
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/height_10"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_weight="1.2"
+            android:textColorHint="@color/font_texthint"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_guideline_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:hint="@string/guideline_value" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioGroup
+            android:id="@+id/id_radiogroup_considerforvaluation_land"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RadioButton
+                android:id="@+id/id_radio_considerforvaluation_permissiblearea_land"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/documentarea" />
+
+            <RadioButton
+                android:id="@+id/id_radio_considerforvaluation_actualarea_land"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/height_15"
+                android:layout_weight="1"
+                android:text="@string/considerforvaluation_actual" />
+        </RadioGroup>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_permissiblearea"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="@dimen/height_2"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingRight="@dimen/height_5"
+            app:hintTextAppearance="@style/TextInputLayout_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_permissiblearea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="@string/documentarea"
+                android:inputType="numberDecimal"
+                android:maxLength="10" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_5"
+            android:paddingRight="@dimen/height_5"
+            app:hintTextAppearance="@style/TextInputLayout_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_unit_permissiblearea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="@string/unit"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_rate_permissiblearea"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="@string/rate"
+                android:inputType="number"
+                android:maxLength="10"
+                android:textColorHint="@color/font_texthint"
+                />
+
+            <TextView
+                android:id="@+id/tvRatePopup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/red_error"
+                android:textSize="@dimen/_7sdp" />
+
+        </LinearLayout>
+        <!-- <com.google.android.material.textfield.TextInputLayout
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="1"
+             android:paddingLeft="@dimen/height_5"
+             android:paddingRight="@dimen/height_5"
+             app:hintTextAppearance="@style/TextInputLayout_hint">
+
+
+         </com.google.android.material.textfield.TextInputLayout>-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_5"
+            app:hintTextAppearance="@style/TextInputLayout_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_total_permissiblearea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:hint="@string/total" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_actualarea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/height_2"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="4">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/height_5"
+            android:paddingRight="@dimen/height_5"
+            android:layout_weight="1"
+            app:hintTextAppearance="@style/TextInputLayout_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_actualarea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="@string/actualarea"
+                android:inputType="numberDecimal"
+                android:maxLength="10" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_5"
+            android:paddingRight="@dimen/height_5"
+            app:hintTextAppearance="@style/TextInputLayout_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_unit_actualarea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="@string/unit"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_5"
+            android:paddingRight="@dimen/height_5"
+            app:hintTextAppearance="@style/TextInputLayout_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_rate_actualarea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/rate"
+                android:inputType="number"
+                android:maxLength="10" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_5"
+            app:hintTextAppearance="@style/TextInputLayout_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_total_actualarea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:hint="@string/total" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/height_3"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <TextView
+            android:id="@+id/textview_realizable"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/height_5"
+            android:layout_marginRight="@dimen/height_5"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_3"
+            android:text="@string/realizable_value"
+            android:textColor="@color/font_text_minor_heading"
+            android:textSize="@dimen/miniut_small"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/textview_realizable_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/height_5"
+            android:layout_marginRight="@dimen/height_5"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_3"
+            android:text="@string/value"
+            android:textColor="@color/font_text_minor_heading"
+            android:textSize="@dimen/miniut_small"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/textview_distress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/height_5"
+            android:layout_marginRight="@dimen/height_5"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_3"
+            android:text="@string/distress_value"
+            android:textColor="@color/font_text_minor_heading"
+            android:textSize="@dimen/miniut_small"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/textview_distress_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/height_5"
+            android:layout_marginRight="@dimen/height_5"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/height_3"
+            android:text="@string/value"
+            android:textColor="@color/font_text_minor_heading"
+            android:textSize="@dimen/miniut_small"
+            android:textStyle="normal" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/height_5"
+            android:layout_marginRight="@dimen/height_5"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:id="@+id/spinner_realizable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/height_2"
+                android:textSize="@dimen/font_very_small"
+                android:paddingLeft="@dimen/height_3"
+                android:singleLine="true"
+                android:imeOptions="actionNext|flagNoExtractUi"
+                android:layout_gravity="left|center_vertical"
+                android:gravity="left|center_vertical"
+                android:textColor="@color/font_text"
+                android:text="Select"
+                android:background="@drawable/spinner_status"
+                />
+
+            <!--  <ImageView
+                  style="@style/StyledImagedown_large"
+                  android:layout_marginTop="@dimen/height_6" />-->
+
+        </LinearLayout>
+
+
+        <EditText
+            android:background="@drawable/curve_grey_layout"
+            android:id="@+id/edittext_realizable_value_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:inputType="number"
+            android:maxLength="15"
+            android:paddingLeft="@dimen/height_5"
+            android:paddingRight="@dimen/height_5"
+            android:textSize="@dimen/height_12" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/height_5"
+            android:layout_marginRight="@dimen/height_5"
+            android:layout_weight="1"
+            android:background="@drawable/box_grey_layout">
+
+            <TextView
+                android:id="@+id/spinner_distress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_very_small"
+                android:textColor="@color/font_text"
+                android:layout_gravity="left|center_vertical"
+                android:gravity="left|center_vertical"
+                android:text="Select"
+                android:background="@drawable/spinner_status"
+                />
+
+            <!-- <ImageView
+                 style="@style/StyledImagedown_large"
+                 android:layout_marginTop="@dimen/height_6" />-->
+
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/edittext_distress_total"
+            android:background="@drawable/curve_grey_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:inputType="number"
+            android:maxLength="15"
+            android:paddingLeft="@dimen/height_5"
+            android:paddingRight="@dimen/height_5"
+            android:textSize="@dimen/height_12"
+            android:textColorHint="@color/font_texthint"
+            android:textColor="@color/font_text"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/height_15"
+        android:layout_marginBottom="@dimen/height_2"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/height_6"
+
+
+            android:paddingRight="@dimen/height_20"
+            android:layout_marginBottom="@dimen/_10sdp"
+            >
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/height_2"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/textview_totalpropertyvalue"
+                    style="@style/StyledTilEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:inputType="text"
+                    android:maxLines="3"
+                    android:paddingRight="@dimen/height_10"
+                    android:text="@string/totalpropertyvalue"
+                    android:textSize="@dimen/font_very_small" />
+
+                <TextView
+                    android:id="@+id/textview_totalpropertyvalue_result"
+                    style="@style/StyledTilEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:maxLines="3"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:inputType="text"
+                    android:paddingLeft="@dimen/height_10"
+                    android:paddingRight="@dimen/height_2"
+                    android:text="0"
+                    android:textSize="@dimen/_11sdp" />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/height_3"
+                android:visibility="gone"
+                app:hintTextAppearance="@style/TextInputLayout_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_remarks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:hint="@string/remarks"
+                    android:inputType="textMultiLine|textCapWords"
+                    android:lines="2" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/height_3"
+        android:background="@color/line"/>
+
+</LinearLayout>

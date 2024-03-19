@@ -2987,4 +2987,6 @@ public class FragmentValuationPenthouse_ka extends Fragment {
             OtherDetails.my_focuslayout.requestFocus();
         }
     }
+
+
 }

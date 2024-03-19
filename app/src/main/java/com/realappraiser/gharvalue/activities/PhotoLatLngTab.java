@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.AppDatabase;
+import com.realappraiser.gharvalue.FieldsInspection.FieldsInspectionDetails;
 import com.realappraiser.gharvalue.MyApplication;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.adapter.CustomViewPager;
@@ -42,7 +43,6 @@ import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.ResponseParser;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
-import com.realappraiser.gharvalue.fragments.OtherDetails;
 import com.realappraiser.gharvalue.fragments.OtherDetails_ka;
 import com.realappraiser.gharvalue.fragments.PhotoLatLong_ka;
 import com.realappraiser.gharvalue.model.GetPhoto;
@@ -360,8 +360,8 @@ public class PhotoLatLngTab extends BaseActivity implements TabLayout.OnTabSelec
             @Override
             public void onClick(View view) {
                 SettingsUtils.getInstance().putValue(SettingsUtils.is_local, false);
-                OtherDetails.save_type = "savego";
-                OtherDetails.getInstance().SaveFormDetails();
+                FieldsInspectionDetails.save_type = "savego";
+                FieldsInspectionDetails.getInstance().SaveFormDetails();
             }
         });
 
@@ -373,38 +373,7 @@ public class PhotoLatLngTab extends BaseActivity implements TabLayout.OnTabSelec
         });
 
         savePopup.show();
-//        builder.setMessage(getResources().getString(R.string.nochanges))
-//                .setCancelable(false)
-//                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-////                        if(SettingsUtils.getInstance().getValue(SettingsUtils.is_local, false)){
-//                       SettingsUtils.getInstance().putValue(SettingsUtils.is_local, false);
-//                        OtherDetails.save_type = "savego";
-//                        OtherDetails.getInstance().SaveFormDetails();
-////                        }else {
-////                            Singleton.getInstance().longitude = 0.0;
-////                            Singleton.getInstance().latitude = 0.0;
-////                            Singleton.getInstance().aCase = new Case();
-////                            Singleton.getInstance().property = new Property();
-////                            Singleton.getInstance().indProperty = new IndProperty();
-////                            Singleton.getInstance().indPropertyValuation = new IndPropertyValuation();
-////                            Singleton.getInstance().indPropertyFloors = new ArrayList<>();
-////                            Singleton.getInstance().proximities = new ArrayList<>();
-////                            Singleton.getInstance().is_new_floor_created = false;
-////                            Singleton.getInstance().openCaseList.clear();
-////                            Singleton.getInstance().closeCaseList.clear();
-////                            /* finish();*/
-////                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-////                        }
-//                    }
-//                })
-//                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.cancel();
-//                    }
-//                });
-//        AlertDialog alert = builder.create();
-//        alert.show();
+
     }
 
     public void savechangesDialog() {
@@ -434,25 +403,9 @@ public class PhotoLatLngTab extends BaseActivity implements TabLayout.OnTabSelec
             @Override
             public void onClick(View view) {
                 {
-//                        if(SettingsUtils.getInstance().getValue(SettingsUtils.is_local, false)){
                     SettingsUtils.getInstance().putValue(SettingsUtils.is_local, false);
-                    OtherDetails.save_type = "savego";
-                    OtherDetails.getInstance().SaveFormDetails();
-//                        }else {
-//                            Singleton.getInstance().longitude = 0.0;
-//                            Singleton.getInstance().latitude = 0.0;
-//                            Singleton.getInstance().aCase = new Case();
-//                            Singleton.getInstance().property = new Property();
-//                            Singleton.getInstance().indProperty = new IndProperty();
-//                            Singleton.getInstance().indPropertyValuation = new IndPropertyValuation();
-//                            Singleton.getInstance().indPropertyFloors = new ArrayList<>();
-//                            Singleton.getInstance().proximities = new ArrayList<>();
-//                            Singleton.getInstance().is_new_floor_created = false;
-//                            Singleton.getInstance().openCaseList.clear();
-//                            Singleton.getInstance().closeCaseList.clear();
-//                            /* finish();*/
-//                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-//                        }
+                    FieldsInspectionDetails.save_type = "savego";
+                    FieldsInspectionDetails.getInstance().SaveFormDetails();
                 }
             }
         });
@@ -463,43 +416,6 @@ public class PhotoLatLngTab extends BaseActivity implements TabLayout.OnTabSelec
                 savePopup.dismiss();
             }
         });
-
-
-//        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
-//        builder.setMessage(getResources().getString(R.string.nochanges))
-//                .setCancelable(false)
-//                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id)
-//
-//                    {
-////                        if(SettingsUtils.getInstance().getValue(SettingsUtils.is_local, false)){
-//                        SettingsUtils.getInstance().putValue(SettingsUtils.is_local, false);
-//                        OtherDetails.save_type = "savego";
-//                        OtherDetails.getInstance().SaveFormDetails();
-////                        }else {
-////                            Singleton.getInstance().longitude = 0.0;
-////                            Singleton.getInstance().latitude = 0.0;
-////                            Singleton.getInstance().aCase = new Case();
-////                            Singleton.getInstance().property = new Property();
-////                            Singleton.getInstance().indProperty = new IndProperty();
-////                            Singleton.getInstance().indPropertyValuation = new IndPropertyValuation();
-////                            Singleton.getInstance().indPropertyFloors = new ArrayList<>();
-////                            Singleton.getInstance().proximities = new ArrayList<>();
-////                            Singleton.getInstance().is_new_floor_created = false;
-////                            Singleton.getInstance().openCaseList.clear();
-////                            Singleton.getInstance().closeCaseList.clear();
-////                            /* finish();*/
-////                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-////                        }
-//                    }
-//                })
-//                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.cancel();
-//                    }
-//                });
-//        AlertDialog alert = builder.create();
-//        alert.show();
     }
 
 

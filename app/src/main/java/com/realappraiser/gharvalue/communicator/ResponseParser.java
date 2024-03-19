@@ -1485,6 +1485,57 @@ public class ResponseParser {
                         Singleton.getInstance().floors_list = floors_list;
 
 
+                        /* Json array for Purposeofloan*/
+                        ArrayList<DropDownResponse.Datum> purposeList = new ArrayList<>();
+                        DropDownResponse.Datum datum = new DropDownResponse.Datum();
+                        datum.setName("Select");
+                        datum.setPurposeofloanId(0);
+                        purposeList.add(0,datum);
+                        JSONArray Purposeofloan_array = jsonObject.getJSONArray("Purposeofloan");
+                        for (int p = 0; p < Purposeofloan_array.length(); p++) {
+                            JSONObject interviewobj = Purposeofloan_array.getJSONObject(p);
+                            Gson gson = new Gson();
+                            DropDownResponse.Datum obj = null;
+                            obj = new DropDownResponse.Datum();
+                            obj = gson.fromJson(interviewobj.toString(), DropDownResponse.Datum.class);
+                            purposeList.add(obj);
+                        }
+                        Singleton.getInstance().purposeOfList = purposeList;
+
+
+                        /* Json array for Loantype*/
+                        ArrayList<DropDownResponse.Datum> loanTypeList = new ArrayList<>();
+                        DropDownResponse.Datum loanTypeData = new DropDownResponse.Datum();
+                        loanTypeData.setName("Select");
+                        loanTypeData.setLoanTypeId(0);
+                        loanTypeList.add(0,loanTypeData);
+
+                        JSONArray jsLoanType = jsonObject.getJSONArray("Loantype");
+                        for (int p = 0; p < jsLoanType.length(); p++) {
+                            JSONObject interviewobj = jsLoanType.getJSONObject(p);
+                            Gson gson = new Gson();
+                            DropDownResponse.Datum obj = null;
+                            obj = new DropDownResponse.Datum();
+                            obj = gson.fromJson(interviewobj.toString(), DropDownResponse.Datum.class);
+                            loanTypeList.add(obj);
+                        }
+                        Singleton.getInstance().loanType = loanTypeList;
+
+                        /* Json array for Type Of Property*/
+                        ArrayList<DropDownResponse.Datum> propertyTypeList = new ArrayList<>();
+                        JSONArray jsPropertyType = jsonObject.getJSONArray("TypeofProperty");
+                        for (int p = 0; p < jsPropertyType.length(); p++) {
+                            JSONObject interviewobj = jsPropertyType.getJSONObject(p);
+                            Gson gson = new Gson();
+                            DropDownResponse.Datum obj = null;
+                            obj = new DropDownResponse.Datum();
+                            obj = gson.fromJson(interviewobj.toString(), DropDownResponse.Datum.class);
+                            propertyTypeList.add(obj);
+                        }
+                        Singleton.getInstance().typeOfProperty = propertyTypeList;
+
+
+
                         /* ******Set Kitchenshape Dummy Data*******/
                         ArrayList<Kitchen> kitchens_shape_list = new ArrayList<>();
                         Kitchen dummy_Kitchenshape = new Kitchen();
