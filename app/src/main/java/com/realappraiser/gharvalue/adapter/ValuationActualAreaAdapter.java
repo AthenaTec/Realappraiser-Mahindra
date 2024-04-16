@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.realappraiser.gharvalue.Interface.AverageComPerInterface;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.fragments.FragmentValuationBuilding;
 import com.realappraiser.gharvalue.model.IndPropertyFloor;
@@ -32,6 +33,8 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
 
     public FragmentActivity mContext;
     public ArrayList<IndPropertyFloor> steps;
+
+    AverageComPerInterface averageComPerInterface;
     public ArrayList<IndPropertyFloorsValuation> stepsValuation;
     @SuppressLint("StaticFieldLeak")
     public static General general;
@@ -63,18 +66,7 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
             textview_actual_value.setTypeface(General.regularTypeface());
             textview_actual_dep_value.setTypeface(General.regularTypeface());
 
-           /* edittext_actual_rate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        // code to execute when EditText loses focus
-                        Log.e("onFocus_coming", "onFocus_coming" + hasFocus);
-                        // Copy the value to aspercompletion_val
-                        String toString = edittext_actual_rate.getText().toString();
-                        getMeasuredCalculation(toString, textview_actual_value, textview_actual_dep_value, getAdapterPosition());
-                    }
-                }
-            });*/
+
 
 
             edittext_actual_rate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -137,12 +129,15 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
     }
 
 
-    public ValuationActualAreaAdapter(ArrayList<IndPropertyFloorsValuation> stepsValuation, ArrayList<IndPropertyFloor> steps, FragmentActivity context) {
+    public ValuationActualAreaAdapter(ArrayList<IndPropertyFloorsValuation> stepsValuation, ArrayList<IndPropertyFloor> steps,
+                                      FragmentActivity context,AverageComPerInterface averageComPerInterface) {
         this.steps = steps;
         this.stepsValuation = stepsValuation;
         this.mContext = context;
         general = new General(mContext);
         // propertyFloorInternalAdapter = new PropertyFloorInternalAdapter((Activity)context);
+
+        this.averageComPerInterface = averageComPerInterface;
     }
 
     @Override
@@ -269,6 +264,7 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
                 stepsModel.setMeasuredConstrValue("" + act_total);
                 stepsValuation.set(adapterPosition, stepsModel);
                 Singleton.getInstance().indPropertyFloorsValuations.set(adapterPosition, stepsModel);
+                averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,true);
 
 
                 /*****total construction*****/
@@ -349,9 +345,19 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
                 FragmentValuationBuilding.listAdapter.notifyItemChanged(adapterPosition);
             }
 
-        } else {
+        }
+        else {
             String initval = "0";
             textview_actual_value.setText("");
+
+            final IndPropertyFloorsValuation stepsModel = stepsValuation.get(adapterPosition);
+            stepsModel.setDocumentConstrValue("");
+            stepsModel.setMeasuredConstrValue("");
+            stepsValuation.set(adapterPosition, stepsModel);
+            Singleton.getInstance().indPropertyFloorsValuations.set(adapterPosition, stepsModel);
+
+
+            averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,true);
             if (FragmentValuationBuilding.textview_totalconstructionvalue_result != null)
                 FragmentValuationBuilding.textview_totalconstructionvalue_result.setText("");
             if (FragmentValuationBuilding.textview_insurancevaluepe_result != null)
@@ -425,6 +431,9 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
             steps.set(adapterPosition, stepsmodelfloor);
         }
     }
+
+
+
 
 
 }

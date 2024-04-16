@@ -966,7 +966,8 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
             if (Singleton.getInstance().indPropertyFloors.size() > 0) {
                 int average_total = general.getCompletedSumValue(Singleton.getInstance().indPropertyFloors);
                 if (FragmentBuilding.textview_comp_total != null) {
-                    FragmentBuilding.textview_comp_total.setText("" + average_total);
+                    //FragmentBuilding.textview_comp_total.setText("" + average_total);
+                    FragmentBuilding.textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
                     // set Aspercom
                     FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
                     fragmentValuationBuilding.aspercompletion_val("" + average_total);

@@ -2,6 +2,10 @@ package com.realappraiser.gharvalue.communicator;
 
 import android.util.Log;
 
+import com.realappraiser.gharvalue.utils.SettingsUtils;
+
+import org.json.JSONObject;
+
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -88,6 +92,21 @@ public class RequestParam {
         return requestBody;
     }
 
+    public static RequestBody forgetPassword(JsonRequestData jsonRequestData){
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("Email",jsonRequestData.getEmail()).build();
+        return requestBody;
+    }
+
+    public static RequestBody resetPassword(JsonRequestData jsonRequestData,JSONObject jsonObject){
+
+       RequestBody requestBody = new FormBody.Builder().
+               add("loginDetails", String.valueOf(jsonObject)).
+               build();
+       return requestBody;
+    }
+
     public static String PropertyTypeListRequestParams(JsonRequestData jsonRequestData) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("Bid", jsonRequestData.getBankId());
@@ -154,6 +173,23 @@ public class RequestParam {
         urlBuilder.addQueryParameter("CaseId", jsonRequestData.getCaseId());
         String geturl = urlBuilder.build().toString();
         return geturl;
+    }
+
+
+    public static String forgetQuaryURl(JsonRequestData jsonRequestData) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
+        urlBuilder.addQueryParameter("active", "0");
+        urlBuilder.addQueryParameter("password", "undefined");
+        String geturl = urlBuilder.build().toString();
+        return geturl;
+    }
+
+    public static String resetPasswordUrl(JsonRequestData jsonRequestData, String encryptionOldPwd){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
+        urlBuilder.addQueryParameter("active","1");
+        urlBuilder.addQueryParameter("password",encryptionOldPwd);
+        String getUrl = urlBuilder.build().toString();
+        return getUrl;
     }
 
     public static RequestBody TransferCase(JsonRequestData jsonRequestData) {
@@ -325,7 +361,6 @@ public class RequestParam {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("caseId", jsonRequestData.getCaseId());
         String geturl = urlBuilder.build().toString();
-
         return geturl;
     }
 

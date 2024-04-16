@@ -47,6 +47,9 @@ public class SettingsUtils {
     public static final String SecurityToken = "/api/security/token";
     public static final String EmployeeBranches = "/Api/Login/app_GetEmployeeBranches";
     public static final String AgencySubBranches = "/Api/BankBranch/app_GetSubBranches";
+    public static final String ForgetPassword = "/api/Login/ForgetPassword";
+
+    public static final String ResetPassword = "/api/Login/ResetPassword";
 
     public static final String CurrentServer = "/api/Utililty/app_AuthenticateAPI";
     public static final String Login = "/api/Login/app_AuthenticateUser"; // for kakode

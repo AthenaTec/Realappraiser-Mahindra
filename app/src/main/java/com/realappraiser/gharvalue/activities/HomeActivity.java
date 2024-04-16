@@ -1609,12 +1609,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         MenuItem item3 = menu.findItem(R.id.versionname);
         MenuItem item4 = menu.findItem(R.id.noncaseactivity);
         MenuItem item5 = menu.findItem(R.id.convyencereport);
+        MenuItem item6 = menu.findItem(R.id.changepassword);
 
         item.setVisible(true);
         item1.setVisible(true);
         item3.setVisible(true);
         item4.setVisible(true);
         item5.setVisible(true);
+        item6.setVisible(true);
         item2.setVisible(false);
         return true;
     }
@@ -1662,6 +1664,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.convyencereport:
                 getConvyenceReport();
                 break;
+            case R.id.changepassword:
+                 general.getChangePassword(this);
+                 break;
 
 
            /* case R.id.ic_home:
@@ -3227,6 +3232,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         Intent intent = new Intent(HomeActivity.this, ConvenyanceReport.class);
         startActivity(intent);
     }
+
+
+
 
 
     @Override

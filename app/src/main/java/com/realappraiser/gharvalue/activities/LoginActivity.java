@@ -1,6 +1,7 @@
 package com.realappraiser.gharvalue.activities;
 
 import static com.realappraiser.gharvalue.utils.General.REQUEST_ID_MULTIPLE_PERMISSIONS;
+import static com.realappraiser.gharvalue.utils.General.hideloading;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -22,12 +23,14 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -42,6 +45,7 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -58,6 +62,7 @@ import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.model.ConfigData;
 import com.realappraiser.gharvalue.model.GetStoreModel;
 import com.realappraiser.gharvalue.model.MultiBranchModel;
+import com.realappraiser.gharvalue.model.RequestApiStatus;
 import com.realappraiser.gharvalue.model.SafeNetModel;
 import com.realappraiser.gharvalue.model.SecurityToken;
 import com.realappraiser.gharvalue.sessiontimeout.LocationService;
@@ -82,6 +87,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -113,6 +120,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Dialog dialog;
 
     private AlertDialog urlAlertDialog;
+    private AlertDialog forgetPopup;
+
+
 
     private String msg = "", info = "";
     private String lemail = "", lpwd = "";
@@ -317,6 +327,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         txt.setTypeface(general.regulartypeface());
         loginBtn.setOnClickListener(this);
         seturl.setOnClickListener(this);
+        forgotpassword.setOnClickListener(this);
         int year = Calendar.getInstance().get(Calendar.YEAR);
 
         txt.setText(year + " " + getResources().getString(R.string.realappraiser_brand));
@@ -355,6 +366,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.seturl:
                 Serverurldialog();
                 break;
+            case R.id.forgotpassword :
+                //forgetPasswordDialog();
+               // initResetPassword();
+               // validateResetPassword();
+                passwordExpiryDialog();
         }
     }
 
@@ -449,6 +465,257 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
    */
     }
 
+
+    /*******
+     * forget password popup
+     * *******/
+    private void forgetPasswordDialog() {
+        /*dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setContentView(R.layout.loginpopup);
+
+
+        TextView popuptitle = (TextView) dialog.findViewById(R.id.title);
+        addkeys = (EditText) dialog.findViewById(R.id.layout_url);
+        ImageView Cancel = (ImageView) dialog.findViewById(R.id.close);
+        Button submit = (Button) dialog.findViewById(R.id.button);
+        submit.setTypeface(general.mediumtypeface());
+        popuptitle.setTypeface(general.mediumtypeface());*/
+
+        View view = getLayoutInflater().inflate(R.layout.forget_popup, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setView(view);
+        forgetPopup = builder.create();
+        forgetPopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        forgetPopup.show();
+
+        TextView popuptitle = (TextView) view.findViewById(R.id.title);
+
+        popuptitle.setText("Forget Password");
+
+        EditText edResetPwd = (EditText) view.findViewById(R.id.layout_url);
+
+
+
+        ImageView Cancel = (ImageView) view.findViewById(R.id.close);
+        Button submit = (Button) view.findViewById(R.id.button);
+        submit.setTypeface(general.mediumtypeface());
+        popuptitle.setTypeface(general.mediumtypeface());
+
+
+        Cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard(edResetPwd);
+                forgetPopup.dismiss();
+            }
+        });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // hideSoftKeyboard(edResetPwd);
+                String emailText = edResetPwd.getText().toString().trim();
+                String baseurl = general.ApiBaseUrl();
+                if (emailText.isEmpty() || !isValidEmail(emailText)) {
+                    edResetPwd.setError(getString(R.string.err_msg_email));
+                    requestFocus(edResetPwd);
+                }else{
+                    if(Connectivity.isConnected(LoginActivity.this)){
+                        validateForgotEmailWithServer(emailText,forgetPopup);
+                    }
+                    else General.customToast("Please check your Internet Connection!", LoginActivity.this);
+                }
+            }
+        });
+    }
+
+
+    private void initResetPassword() {
+     Dialog initResetPassword = new Dialog(LoginActivity.this, R.style.MyThemeDialog2);
+        initResetPassword.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        initResetPassword.setCancelable(false);
+        initResetPassword.setCanceledOnTouchOutside(false);
+        initResetPassword.setContentView(R.layout.property_exists_popup);
+
+        LinearLayout layout_spinner = (LinearLayout) initResetPassword.findViewById(R.id.layout_spinner);
+        layout_spinner.setVisibility(View.GONE);
+
+        TextView popuptitle = (TextView) initResetPassword.findViewById(R.id.title);
+        Button yesBtn = (Button) initResetPassword.findViewById(R.id.yesBtn);
+        Button noBtn = (Button) initResetPassword.findViewById(R.id.noBtn);
+        yesBtn.setTypeface(general.mediumtypeface());
+        yesBtn.setText("Reset");
+        noBtn.setTypeface(general.mediumtypeface());
+        noBtn.setText("Cancel");
+        popuptitle.setTypeface(general.mediumtypeface());
+
+        String title_is = "Your Password is expired. Please reset.";
+        popuptitle.setText(title_is);
+
+
+        yesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                initResetPassword.dismiss();
+                passwordExpiryDialog();
+            }
+        });
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initResetPassword.dismiss();
+            }
+        });
+        initResetPassword.show();
+    }
+
+
+
+
+    /*******
+     * password expiry popup
+     * *******/
+    private void passwordExpiryDialog() {
+
+        View view = getLayoutInflater().inflate(R.layout.password_expiry_popup, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        AlertDialog passwordExpiryPopup = builder.create();
+        passwordExpiryPopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        passwordExpiryPopup.show();
+
+        TextView popuptitle = (TextView) view.findViewById(R.id.title);
+
+        popuptitle.setText("Reset Password");
+
+        EditText etCurrentPwd = (EditText) view.findViewById(R.id.current_password);
+        EditText etNewPwd = (EditText) view.findViewById(R.id.new_password);
+        EditText etConfirmNewPwd = (EditText) view.findViewById(R.id.retype_new_password);
+
+
+
+        ImageView Cancel = (ImageView) view.findViewById(R.id.close);
+        Button submit = (Button) view.findViewById(R.id.button);
+        submit.setTypeface(general.mediumtypeface());
+        popuptitle.setTypeface(general.mediumtypeface());
+
+        passwordExpiryPopup.setCanceledOnTouchOutside(false);
+
+
+        Cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                passwordExpiryPopup.dismiss();
+            }
+        });
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               if(validateExpiryPassword(etCurrentPwd,etNewPwd,etConfirmNewPwd)){
+                   Log.e("LoginActivity","Valid password");
+                   General.customToast("Valid password",LoginActivity.this);
+               }else{
+                   General.customToast("Not Valid password",LoginActivity.this);
+               }
+            }
+        });
+    }
+
+    private boolean validateExpiryPassword(EditText etCurrentPwd, EditText etNewPwd, EditText etConfirmNewPwd){
+        if(general.isEmpty(etCurrentPwd.getText().toString().trim())){
+            General.customToast("Please enter current password",LoginActivity.this);
+            return false;
+        }
+
+        if(!general.isEmpty(etCurrentPwd.getText().toString().trim()) && etCurrentPwd.getText().toString().trim().length() < 8){
+            General.customToast("Password must be 8 ",LoginActivity.this);
+            return false;
+        }
+
+
+
+        if(general.isEmpty(etNewPwd.getText().toString().trim())){
+            General.customToast("Please enter new password",LoginActivity.this);
+            return false;
+        }
+        if(general.isEmpty(etConfirmNewPwd.getText().toString().trim())){
+            General.customToast("Please enter confirm new password",LoginActivity.this);
+            return false;
+        }
+
+        if(etCurrentPwd.getText().toString().trim().equals(etNewPwd.getText().toString().trim())){
+            General.customToast("Current and new password not same",LoginActivity.this);
+            return false;
+        }
+        if(etNewPwd.getText().toString().trim().equals(etCurrentPwd.getText().toString().trim())){
+            General.customToast("Password not same",LoginActivity.this);
+            return false;
+        }
+
+        validatePassword(etNewPwd.getText().toString().trim());
+        validatePassword(etNewPwd.getText().toString().trim());
+
+        return true;
+    }
+
+    private boolean validatePassword(String password){
+        String passwd = password;
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+        System.out.println(passwd.matches(pattern));
+        if(!passwd.matches(pattern)){
+            return false;
+        }
+        return true;
+    }
+
+
+    private void validateForgotEmailWithServer(String email, AlertDialog forgetPopup){
+
+        General.showloading(LoginActivity.this);
+
+        JsonRequestData requestData = new JsonRequestData();
+        String url = general.ApiBaseUrl() + SettingsUtils.ForgetPassword;
+        requestData.setUrl(url);
+        requestData.setEmail(email);
+        requestData.setInitQueryUrl(url);
+        requestData.setUrl(RequestParam.forgetQuaryURl(requestData));
+        requestData.setRequestBody(RequestParam.forgetPassword(requestData));
+
+        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this, requestData, SettingsUtils.PUT);
+        webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+            @Override
+            public void onTaskComplete(JsonRequestData requestData) {
+                Log.e("forget Password", requestData.getResponse());
+
+                if(requestData.getResponse() != null){
+                    RequestApiStatus requestApiStatus = new Gson().fromJson(requestData.getResponse(), RequestApiStatus.class);
+                    if(requestApiStatus.getStatus() == 1){
+                        General.customToast("Password has been sent to your registered E-mail id.",LoginActivity.this);
+                        if(forgetPopup != null)
+                            forgetPopup.dismiss();
+                    }else{
+                        General.customToast("Please Provide Valid Email ID",LoginActivity.this);
+                    }
+                }
+
+
+                 hideloading();
+            }
+        });
+        webserviceTask.execute();
+
+
+    }
+
     private void hideSoftKeyboard(View addkeys) {
         if (addkeys != null) {
             InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -483,6 +750,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         requestData.setUrl(url);
         requestData.setEmail(lemail);
         requestData.setPwd(encrptPass);
+        SettingsUtils.getInstance().putValue("EncryptPassword",encrptPass);
         requestData.setRequestBody(RequestParam.LoginRequestParams(requestData));
 
         WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this, requestData, SettingsUtils.POST);
@@ -523,6 +791,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String data = storeModel.getData();
 //                    data="o1sSD6lHTpRrI581uB=8yAaWD0E7TvIz";
             String s = data.substring(0, 16);
+            SettingsUtils.getInstance().putValue("data_encryption",data);
             encrptPass = EncryptionKeyGenerator.encrypt(data, s, lpwd);
             Log.e(TAG, "encryptedPassword => " + encrptPass);
             String decryptedPassword = EncryptionKeyGenerator.decrypt(data, s, encrptPass);
@@ -594,6 +863,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             general.CustomToast(getResources().getString(R.string.serverProblem));
         }
     }
+
 
     private void generateToken(Integer branchId, boolean branchChoose, Dialog dialog) {
 
