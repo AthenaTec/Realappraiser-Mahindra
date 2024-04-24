@@ -123,7 +123,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private AlertDialog forgetPopup;
 
 
-
     private String msg = "", info = "";
     private String lemail = "", lpwd = "";
     private ArrayList<DataModel> loginModel;
@@ -366,10 +365,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.seturl:
                 Serverurldialog();
                 break;
-            case R.id.forgotpassword :
-                //forgetPasswordDialog();
-               // initResetPassword();
-               // validateResetPassword();
+            case R.id.forgotpassword:
                 passwordExpiryDialog();
         }
     }
@@ -500,7 +496,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         EditText edResetPwd = (EditText) view.findViewById(R.id.layout_url);
 
 
-
         ImageView Cancel = (ImageView) view.findViewById(R.id.close);
         Button submit = (Button) view.findViewById(R.id.button);
         submit.setTypeface(general.mediumtypeface());
@@ -518,17 +513,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // hideSoftKeyboard(edResetPwd);
+                // hideSoftKeyboard(edResetPwd);
                 String emailText = edResetPwd.getText().toString().trim();
                 String baseurl = general.ApiBaseUrl();
                 if (emailText.isEmpty() || !isValidEmail(emailText)) {
                     edResetPwd.setError(getString(R.string.err_msg_email));
                     requestFocus(edResetPwd);
-                }else{
-                    if(Connectivity.isConnected(LoginActivity.this)){
-                        validateForgotEmailWithServer(emailText,forgetPopup);
-                    }
-                    else General.customToast("Please check your Internet Connection!", LoginActivity.this);
+                } else {
+                    if (Connectivity.isConnected(LoginActivity.this)) {
+                        validateForgotEmailWithServer(emailText, forgetPopup);
+                    } else
+                        General.customToast("Please check your Internet Connection!", LoginActivity.this);
                 }
             }
         });
@@ -536,7 +531,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void initResetPassword() {
-     Dialog initResetPassword = new Dialog(LoginActivity.this, R.style.MyThemeDialog2);
+        Dialog initResetPassword = new Dialog(LoginActivity.this, R.style.MyThemeDialog2);
         initResetPassword.requestWindowFeature(Window.FEATURE_NO_TITLE);
         initResetPassword.setCancelable(false);
         initResetPassword.setCanceledOnTouchOutside(false);
@@ -561,7 +556,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 initResetPassword.dismiss();
                 passwordExpiryDialog();
             }
@@ -574,8 +568,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
         initResetPassword.show();
     }
-
-
 
 
     /*******
@@ -600,7 +592,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         EditText etConfirmNewPwd = (EditText) view.findViewById(R.id.retype_new_password);
 
 
-
         ImageView Cancel = (ImageView) view.findViewById(R.id.close);
         Button submit = (Button) view.findViewById(R.id.button);
         submit.setTypeface(general.mediumtypeface());
@@ -619,66 +610,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Connectivity.isConnected(LoginActivity.this)) {
+                    if (general.validateExpiryPassword(etCurrentPwd, etNewPwd, etConfirmNewPwd, LoginActivity.this)) {
+                        submit.setClickable(false);
+                        general.InitiategetStoreUserLoginTaskGeneral(etCurrentPwd, etNewPwd, etConfirmNewPwd,
+                                LoginActivity.this, passwordExpiryPopup, true, lemail, submit);
+                        pwd_input.getText().clear();
 
-               if(validateExpiryPassword(etCurrentPwd,etNewPwd,etConfirmNewPwd)){
-                   Log.e("LoginActivity","Valid password");
-                   General.customToast("Valid password",LoginActivity.this);
-               }else{
-                   General.customToast("Not Valid password",LoginActivity.this);
-               }
+                    } else {
+                        General.customToast("Not Valid password", LoginActivity.this);
+                    }
+                } else {
+                    General.customToast("Please check your Internet Connection!", LoginActivity.this);
+                }
             }
         });
     }
 
-    private boolean validateExpiryPassword(EditText etCurrentPwd, EditText etNewPwd, EditText etConfirmNewPwd){
-        if(general.isEmpty(etCurrentPwd.getText().toString().trim())){
-            General.customToast("Please enter current password",LoginActivity.this);
-            return false;
-        }
 
-        if(!general.isEmpty(etCurrentPwd.getText().toString().trim()) && etCurrentPwd.getText().toString().trim().length() < 8){
-            General.customToast("Password must be 8 ",LoginActivity.this);
-            return false;
-        }
-
-
-
-        if(general.isEmpty(etNewPwd.getText().toString().trim())){
-            General.customToast("Please enter new password",LoginActivity.this);
-            return false;
-        }
-        if(general.isEmpty(etConfirmNewPwd.getText().toString().trim())){
-            General.customToast("Please enter confirm new password",LoginActivity.this);
-            return false;
-        }
-
-        if(etCurrentPwd.getText().toString().trim().equals(etNewPwd.getText().toString().trim())){
-            General.customToast("Current and new password not same",LoginActivity.this);
-            return false;
-        }
-        if(etNewPwd.getText().toString().trim().equals(etCurrentPwd.getText().toString().trim())){
-            General.customToast("Password not same",LoginActivity.this);
-            return false;
-        }
-
-        validatePassword(etNewPwd.getText().toString().trim());
-        validatePassword(etNewPwd.getText().toString().trim());
-
-        return true;
-    }
-
-    private boolean validatePassword(String password){
-        String passwd = password;
-        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
-        System.out.println(passwd.matches(pattern));
-        if(!passwd.matches(pattern)){
-            return false;
-        }
-        return true;
-    }
-
-
-    private void validateForgotEmailWithServer(String email, AlertDialog forgetPopup){
+    private void validateForgotEmailWithServer(String email, AlertDialog forgetPopup) {
 
         General.showloading(LoginActivity.this);
 
@@ -696,19 +646,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onTaskComplete(JsonRequestData requestData) {
                 Log.e("forget Password", requestData.getResponse());
 
-                if(requestData.getResponse() != null){
+                if (requestData.getResponse() != null) {
                     RequestApiStatus requestApiStatus = new Gson().fromJson(requestData.getResponse(), RequestApiStatus.class);
-                    if(requestApiStatus.getStatus() == 1){
-                        General.customToast("Password has been sent to your registered E-mail id.",LoginActivity.this);
-                        if(forgetPopup != null)
+                    if (requestApiStatus.getStatus() == 1) {
+                        General.customToast("Password has been sent to your registered E-mail id.", LoginActivity.this);
+                        if (forgetPopup != null)
                             forgetPopup.dismiss();
-                    }else{
-                        General.customToast("Please Provide Valid Email ID",LoginActivity.this);
+                    } else {
+                        General.customToast("Please Provide Valid Email ID", LoginActivity.this);
                     }
                 }
 
 
-                 hideloading();
+                hideloading();
             }
         });
         webserviceTask.execute();
@@ -750,7 +700,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         requestData.setUrl(url);
         requestData.setEmail(lemail);
         requestData.setPwd(encrptPass);
-        SettingsUtils.getInstance().putValue("EncryptPassword",encrptPass);
+        SettingsUtils.getInstance().putValue("EncryptPassword", encrptPass);
         requestData.setRequestBody(RequestParam.LoginRequestParams(requestData));
 
         WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this, requestData, SettingsUtils.POST);
@@ -791,7 +741,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String data = storeModel.getData();
 //                    data="o1sSD6lHTpRrI581uB=8yAaWD0E7TvIz";
             String s = data.substring(0, 16);
-            SettingsUtils.getInstance().putValue("data_encryption",data);
+            SettingsUtils.getInstance().putValue("data_encryption", data);
             encrptPass = EncryptionKeyGenerator.encrypt(data, s, lpwd);
             Log.e(TAG, "encryptedPassword => " + encrptPass);
             String decryptedPassword = EncryptionKeyGenerator.decrypt(data, s, encrptPass);
@@ -854,6 +804,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } else if (result.equals("2")) {
                 general.hideloading();
                 general.CustomToast(getResources().getString(R.string.not_validuser));
+            } else if (result.equals("3")) {
+                general.hideloading();
+                initResetPassword();
             } else if (result.equals("0")) {
                 general.hideloading();
                 general.CustomToast(getResources().getString(R.string.wrong_password));
@@ -1440,7 +1393,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             general.CustomToast("Login Successful");
                             general.hideloading();
                             general.isLogoutClicked = false;
-                            if(checkSessionLogut()){
+                            if (checkSessionLogut()) {
                                 LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
                                 logOutScheduler.cancelAlarm();
                                 logOutScheduler.schedule();
@@ -1547,7 +1500,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
 //                    LogoutWorkManager logoutWorkManager = new LogoutWorkManager(getApplicationContext());
 
-                    if(checkSessionLogut()){
+                    if (checkSessionLogut()) {
                         LogOutScheduler logOutScheduler = new LogOutScheduler(LoginActivity.this);
                         logOutScheduler.cancelAlarm();
                         logOutScheduler.schedule();
@@ -1580,20 +1533,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private boolean checkSessionLogut(){
+    private boolean checkSessionLogut() {
         SimpleDateFormat formatMinutes = new SimpleDateFormat("mm");
         String getMinutes = formatMinutes.format(new Date());
         SimpleDateFormat formatSeconds = new SimpleDateFormat("ss");
         String getSeconds = formatSeconds.format(new Date());
         SimpleDateFormat formatHours = new SimpleDateFormat("HH");
         String getHours = formatHours.format(new Date());
-        int hours  = Integer.parseInt(getHours);
+        int hours = Integer.parseInt(getHours);
         int minutes = Integer.parseInt(getMinutes);
         int seconds = Integer.parseInt(getSeconds);
 
-         if(hours <= 20 && hours >= 6){
-           return true;
-        }else{
+        if (hours <= 20 && hours >= 6) {
+            return true;
+        } else {
             return false;
         }
     }

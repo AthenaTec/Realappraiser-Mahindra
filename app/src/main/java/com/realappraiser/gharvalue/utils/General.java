@@ -801,32 +801,30 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-    public void LogoutDialog(Activity activity, double longitudes, double latitudes)
-    {
+    public void LogoutDialog(Activity activity, double longitudes, double latitudes) {
         isLogoutClicked = true;
-         View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
-         AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.CustomDialog);
-         builder.setView(view);
+        View view = activity.getLayoutInflater().inflate(R.layout.save_pop_up, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.CustomDialog);
+        builder.setView(view);
 
-         savePopup = builder.create();
-         savePopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        savePopup = builder.create();
+        savePopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-         TextView title = view.findViewById(R.id.title);
-         title.setText("Are you sure you want to Logout?");
-         Button btnSubmit = view.findViewById(R.id.btn_save);
-         btnSubmit.setText("YES");
-         Button btnCancel = view.findViewById(R.id.btn_no);
-         btnCancel.setText("NO");
-         savePopup.setCancelable(false);
-         savePopup.setCanceledOnTouchOutside(false);
-         if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
-             savePopup.show();
-         }
-         btnSubmit.setOnClickListener(
-                 new View.OnClickListener() {
-                     @Override
-                     public void onClick(View view)
-                     {
+        TextView title = view.findViewById(R.id.title);
+        title.setText("Are you sure you want to Logout?");
+        Button btnSubmit = view.findViewById(R.id.btn_save);
+        btnSubmit.setText("YES");
+        Button btnCancel = view.findViewById(R.id.btn_no);
+        btnCancel.setText("NO");
+        savePopup.setCancelable(false);
+        savePopup.setCanceledOnTouchOutside(false);
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
+            savePopup.show();
+        }
+        btnSubmit.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                          /*Singleton.getInstance().longitude = 0.0;
                          Singleton.getInstance().latitude = 0.0;
                          Singleton.getInstance().aCase = new Case();
@@ -920,20 +918,20 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                          activity.startActivity(intent);*/
-                         showloading(activity);
-                         getCurrentLocationOfUser(activity);
-                     }
-                 });
+                        showloading(activity);
+                        getCurrentLocationOfUser(activity);
+                    }
+                });
 
-         btnCancel.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 isLogoutClicked = false;
-                 savePopup.cancel();
-             }
-         });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isLogoutClicked = false;
+                savePopup.cancel();
+            }
+        });
 
-     }
+    }
 
     public static void logoutUser(Activity activity) {
         Singleton.getInstance().longitude = 0.0;
@@ -1836,7 +1834,6 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-
     public static String siteVisitDateToConversion(String date) {
         String ActualDate = "";
         if (!date.isEmpty())
@@ -1919,7 +1916,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         // Delete - GetPhotoMeasurmentQuery
         appDatabase.interfaceGetPhotoMeasurmentQuery().deleteRow();
 
-      //  activity.finishAffinity();
+        //  activity.finishAffinity();
 
 
         boolean isSuccess = new LocationTrackerApi(activity).shareLocation("",
@@ -1941,7 +1938,6 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-
     private void getCurrentLocation(Activity activity, General general) {
 
         if (general.GPS_status()) {
@@ -1957,7 +1953,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                             SettingsUtils.Longitudes = general.getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = general.getcurrent_latitude(activity);
                             SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
-                            SettingsUtils.getInstance().putValue("long",String.valueOf(general.getcurrent_longitude(activity)));
+                            SettingsUtils.getInstance().putValue("long", String.valueOf(general.getcurrent_longitude(activity)));
                             General.sessionLogout(activity, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
                         }
                     }
@@ -1985,25 +1981,25 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-    public boolean getOfflineCase(){
-        try{
+    public boolean getOfflineCase() {
+        try {
             AppDatabase appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
             ArrayList<OfflineDataModel> oflineData = (ArrayList) appDatabase.interfaceOfflineDataModelQuery().getDataModal_offlinecase(true);
             if (oflineData.size() > 0) {
                 return true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getMessage();
             return false;
         }
 
 
-      return false;
+        return false;
 
     }
 
 
-    private void Logout(Activity activity, double latitudes, double longitudes){
+    private void Logout(Activity activity, double latitudes, double longitudes) {
         Singleton.getInstance().longitude = 0.0;
         Singleton.getInstance().latitude = 0.0;
         Singleton.getInstance().aCase = new Case();
@@ -2080,7 +2076,6 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
             new WorkerManager(activity).stopWorker();
 
 
-
             General.hideloading();
 
             Intent intent = new Intent(mContext, LoginActivity.class);
@@ -2121,9 +2116,9 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                             SettingsUtils.Longitudes = getcurrent_longitude(activity);
                             SettingsUtils.Latitudes = getcurrent_latitude(activity);
                             SettingsUtils.getInstance().putValue("lat", String.valueOf(getcurrent_latitude(activity)));
-                            SettingsUtils.getInstance().putValue("long",String.valueOf(getcurrent_longitude(activity)));
-                            Logout(activity,SettingsUtils.Latitudes, SettingsUtils.Longitudes);
-                           // general.LogoutDialog(HomeActivity.this, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
+                            SettingsUtils.getInstance().putValue("long", String.valueOf(getcurrent_longitude(activity)));
+                            Logout(activity, SettingsUtils.Latitudes, SettingsUtils.Longitudes);
+                            // general.LogoutDialog(HomeActivity.this, SettingsUtils.Longitudes, SettingsUtils.Latitudes);
                         }
                     }
                 }, 1500);
@@ -2132,17 +2127,16 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
                 General.hideloading();
                 e.printStackTrace();
             }
-        }else{
+        } else {
             isLogoutClicked = false;
             General.hideloading();
-            General.customToast("Please turn on your Location",mContext);
+            General.customToast("Please turn on your Location", mContext);
 
         }
     }
 
 
-    public void getChangePassword(Activity activity)
-    {
+    public void getChangePassword(Activity activity) {
         View view = activity.getLayoutInflater().inflate(R.layout.password_expiry_popup, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setView(view);
@@ -2156,7 +2150,6 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         EditText etCurrentPwd = (EditText) view.findViewById(R.id.current_password);
         EditText etNewPwd = (EditText) view.findViewById(R.id.new_password);
         EditText etConfirmNewPwd = (EditText) view.findViewById(R.id.retype_new_password);
-
 
 
         ImageView Cancel = (ImageView) view.findViewById(R.id.close);
@@ -2176,13 +2169,14 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateExpiryPassword(etCurrentPwd,etNewPwd,etConfirmNewPwd,activity)){
-                    Log.e("LoginActivity","Valid password");
-                    General.customToast("Valid password",activity);
-                    InitiategetStoreUserLoginTask(etCurrentPwd,etNewPwd,etConfirmNewPwd,activity);
-                    //toUpdatePassword(etCurrentPwd,etNewPwd,etConfirmNewPwd);
-                }else{
-                    General.customToast("Not Valid password",activity);
+                if (validateExpiryPassword(etCurrentPwd, etNewPwd, etConfirmNewPwd, activity)) {
+                    if (Connectivity.isConnected(activity)) {
+                        InitiategetStoreUserLoginTaskGeneral(etCurrentPwd, etNewPwd, etConfirmNewPwd, activity, passwordExpiryPopup, false, "", submit);
+                    } else {
+                        General.customToast("Please check your Internet Connection!", activity);
+                    }
+                } else {
+                    Log.e("LoginActivity", "not valid password");
                 }
             }
         });
@@ -2190,60 +2184,58 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-    private boolean validateExpiryPassword(EditText etCurrentPwd, EditText etNewPwd, EditText etConfirmNewPwd, Activity activity){
-        if(isEmpty(etCurrentPwd.getText().toString().trim())){
-            General.customToast("Please enter current password",activity);
+    public boolean validateExpiryPassword(EditText etCurrentPwd, EditText etNewPwd, EditText etConfirmNewPwd, Activity activity) {
+        if (isEmpty(etCurrentPwd.getText().toString().trim())) {
+            General.customToast("Please enter current password", activity);
             return false;
         }
 
-        if(!isEmpty(etCurrentPwd.getText().toString().trim()) && etCurrentPwd.getText().toString().trim().length() < 8){
-            General.customToast("Password must be at least 8 characters",activity);
+        if (!isEmpty(etCurrentPwd.getText().toString().trim()) && etCurrentPwd.getText().toString().trim().length() < 8) {
+            General.customToast("Password must be at least 8 characters", activity);
             return false;
         }
 
-        if(!validatePassword(etCurrentPwd.getText().toString().trim())){
-            General.customToast("Ensure that password contain both upper, lower and include symbol like @#$%^&+=",activity);
+        if (!validatePassword(etCurrentPwd.getText().toString().trim())) {
+            General.customToast("Ensure that password contain both upper, lower and include symbol like @#$%^&+=", activity);
             return false;
         }
 
-        if(isEmpty(etNewPwd.getText().toString().trim())){
-            General.customToast("Please enter new password",activity);
+        if (isEmpty(etNewPwd.getText().toString().trim())) {
+            General.customToast("Please enter new password", activity);
             return false;
         }
 
-        if(etNewPwd.getText().toString().trim().length() < 8){
-            General.customToast("New password must be at least 8 characters",activity);
+        if (etNewPwd.getText().toString().trim().length() < 8) {
+            General.customToast("New password must be at least 8 characters", activity);
             return false;
         }
 
-        if(!validatePassword(etNewPwd.getText().toString().trim())){
-            General.customToast("Ensure that password contain both upper, lower and include symbol like @#$%^&+=",activity);
+        if (!validatePassword(etNewPwd.getText().toString().trim())) {
+            General.customToast("Ensure that password contain both upper, lower and include symbol like @#$%^&+=", activity);
             return false;
         }
-
-        if(etCurrentPwd.getText().toString().trim().equals(etNewPwd.getText().toString().trim())){
-            General.customToast("Current and new password not same",activity);
-            return false;
-        }
-
         //Confirm Password
-        if(isEmpty(etConfirmNewPwd.getText().toString().trim())){
-            General.customToast("Please enter confirm password",activity);
+        if (isEmpty(etConfirmNewPwd.getText().toString().trim())) {
+            General.customToast("Please enter confirm password", activity);
             return false;
         }
 
-        if(etConfirmNewPwd.getText().toString().trim().length() < 8){
-            General.customToast("Confirm password must be at least 8 characters",activity);
+        if (etConfirmNewPwd.getText().toString().trim().length() < 8) {
+            General.customToast("Confirm password must be at least 8 characters", activity);
             return false;
         }
 
-        if(!validatePassword(etConfirmNewPwd.getText().toString().trim())){
-            General.customToast("Ensure that password contain both upper, lower and include symbol like @#$%^&+=",activity);
+        if (!validatePassword(etConfirmNewPwd.getText().toString().trim())) {
+            General.customToast("Ensure that password contain both upper, lower and include symbol like @#$%^&+=", activity);
+            return false;
+        }
+        if (!etConfirmNewPwd.getText().toString().trim().equals(etNewPwd.getText().toString().trim())) {
+            General.customToast("New password not same", activity);
             return false;
         }
 
-        if(etCurrentPwd.getText().toString().trim().equals(etNewPwd.getText().toString().trim())){
-            General.customToast("Current and New password not same",activity);
+        if (etCurrentPwd.getText().toString().trim().equals(etNewPwd.getText().toString().trim())) {
+            General.customToast("Current and New password not same", activity);
             return false;
         }
 
@@ -2251,99 +2243,117 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         return true;
     }
 
-    private boolean validatePassword(String password){
+    private boolean validatePassword(String password) {
         String passwd = password;
         String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
-        System.out.println("Validation for   "+passwd.matches(pattern));
-        if(!passwd.matches(pattern)){
+        System.out.println("Validation for   " + passwd.matches(pattern));
+        if (!passwd.matches(pattern)) {
             return false;
         }
         return true;
     }
 
+    private void validateResetPassword(String newPwdEncryption, String encryptionOldPwd, Activity activity, AlertDialog passwordExpiryPopup, boolean isFromLogin, String fsEmail, Button submit) {
 
-    private void toUpdatePassword(EditText etCurrentPwd, EditText etNewPwd, EditText etConfirmNewPwd){
-
-
-       /*String encryCurrentPwd =  SettingsUtils.getInstance().getValue("EncryptPassword",null);
-
-        String dataKeyFromServer = SettingsUtils.getInstance().getValue("data_encryption",null);
-
-        String trimmedKeyFromServer = dataKeyFromServer.substring(0, 16);
-
-        String newPwdEncryption = EncryptionKeyGenerator.encrypt(dataKeyFromServer, trimmedKeyFromServer, etCurrentPwd.getText().toString());
-        Log.e(TAG, "ResetPwd encrypted => " + newPwdEncryption);
-        String decryptedPassword = EncryptionKeyGenerator.decrypt(dataKeyFromServer, trimmedKeyFromServer, newPwdEncryption);
-        Log.e(TAG, "ResetPwd decrypted => " + decryptedPassword);*/
-
-        //validateResetPassword(newPwdEncryption);
-    }
-
-    private void validateResetPassword(String newPwdEncryption, String encryptionOldPwd, Activity activity)  {
-
-        try{
+        try {
             JSONObject json = new JSONObject();
-            json.put("Email", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_EMAIL,""));
-            json.put("Password",newPwdEncryption);
+            json.put("Password", newPwdEncryption);
             JsonRequestData requestData = new JsonRequestData();
-            String url = ApiBaseUrl() + SettingsUtils.ResetPassword;
-            requestData.setUrl(url);
-            requestData.setPwd("password");
+            String url = "";
+            int methodType;
+            if (!isFromLogin) {
+                json.put("Email", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_EMAIL, ""));
+                methodType = SettingsUtils.PUT_TOKEN;
+                url = ApiBaseUrl() + SettingsUtils.ResetPassword;
+            } else {
+                json.put("Email", fsEmail);
+                methodType = SettingsUtils.PUT;
+                url = ApiBaseUrl() + SettingsUtils.ResetPasswordLogin;
+            }
             requestData.setInitQueryUrl(url);
-            requestData.setUrl(RequestParam.resetPasswordUrl(requestData,encryptionOldPwd));
-            requestData.setRequestBody(RequestParam.resetPassword(requestData,json));
-            //requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN,""));
-            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(activity, requestData, SettingsUtils.PUT);
-            Log.e("Change Password ....",new Gson().toJson(requestData));
+            requestData.setUrl(RequestParam.resetPasswordUrl(requestData, encryptionOldPwd));
+            requestData.setRequestBody(RequestParam.resetPassword(requestData, json, newPwdEncryption, isFromLogin, fsEmail));
+
+            if (!isFromLogin)
+                requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
+
+
+            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(activity, requestData, methodType);
+            Log.e("Change Password ....", new Gson().toJson(requestData));
             webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
                 @Override
                 public void onTaskComplete(JsonRequestData requestData) {
-                    RequestApiStatus requestApiStatus = new Gson().fromJson(requestData.getResponse(), RequestApiStatus.class);
-                    if (requestApiStatus !=null && requestApiStatus.getStatus() == 1) {
-                        Log.e("Reset Password", requestData.getResponse());
+                    try {
+                        RequestApiStatus requestApiStatus = new Gson().fromJson(requestData.getResponse(), RequestApiStatus.class);
+                        General.hideloading();
+                        if (requestApiStatus != null && requestApiStatus.getStatus() == 1) {
+                            if (passwordExpiryPopup != null)
+                                passwordExpiryPopup.dismiss();
+                            General.customToastLong("Password was changed successfully", activity);
+                        } else if (requestApiStatus != null && requestApiStatus.getStatus() == 2) {
+                            if (submit != null) submit.setClickable(true);
+                            General.customToastLong("Unable to Change password", activity);
+                        }
+                    } catch (Exception e) {
+                        if (submit != null) submit.setClickable(true);
+                        e.printStackTrace();
                     }
+
                 }
             });
             webserviceTask.execute();
-        }catch (Exception exception){
+        } catch (Exception exception) {
+            General.hideloading();
             exception.getMessage();
         }
     }
 
 
+    public void InitiategetStoreUserLoginTaskGeneral(EditText etCurrentPwd, EditText etNewPwd, EditText etConfirmNewPwd, Activity activity, AlertDialog passwordExpiryPopup, boolean isFromLogin, String fsEmail, Button submit) {
 
-    private void InitiategetStoreUserLoginTask(EditText etCurrentPwd, EditText etNewPwd, EditText etConfirmNewPwd, Activity activity) {
+        General.showloading(activity);
+
         String url = ApiBaseUrl() + SettingsUtils.GETSTORE_PASSWORD_KEY;
         JsonRequestData requestData = new JsonRequestData();
         requestData.setUrl(url);
-        requestData.setEmail(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_EMAIL,""));
+        if (!isFromLogin)
+            requestData.setEmail(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_EMAIL, ""));
+        else
+            requestData.setEmail(fsEmail);
         requestData.setRequestBody(RequestParam.StoreLoginRequestParams(requestData));
         WebserviceCommunicator webserviceTask = new WebserviceCommunicator(activity, requestData, SettingsUtils.POST);
+        Log.e("ChangePwdReq", new Gson().toJson(requestData));
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
-                if (requestData.getResponse() != null) {
-                    GetStoreModel storeModel = new Gson().fromJson(requestData.getResponse(), GetStoreModel.class);
-                    String data = storeModel.getData();
-//                    data="o1sSD6lHTpRrI581uB=8yAaWD0E7TvIz";
-                    String s = data.substring(0, 16);
 
-                    Log.e("Encrypted Data...",data + "  substring of Data :  "+s);
+                try {
+                    if (requestData.getResponse() != null) {
+                        GetStoreModel storeModel = new Gson().fromJson(requestData.getResponse(), GetStoreModel.class);
+                        String data = storeModel.getData();
+                        String s = data.substring(0, 16);
+                        Log.e("Encrypted Data...", data + "  substring of Data :  " + s);
+                        /* fetch new encryption */
+                        String encryption = EncryptionKeyGenerator.encrypt(data, s, etCurrentPwd.getText().toString().trim()); //for testing we are using static value
+                        Log.e(TAG, "encryptedPassword Current => " + encryption);
+                        String decryptedPassword = EncryptionKeyGenerator.decrypt(data, s, encryption);
+                        Log.e(TAG, "decryptedPassword current => " + decryptedPassword);
 
-                    /* fetch new encryption */
-                    String encryption = EncryptionKeyGenerator.encrypt(data, s, "Welcome@123"); //for testing we are using static value
-                    Log.e(TAG, "encryptedPassword Current => " + encryption);
-                    String decryptedPassword = EncryptionKeyGenerator.decrypt(data, s, encryption);
-                    Log.e(TAG, "decryptedPassword current => " + decryptedPassword);
+                        /*Create new password encryption*/
+                        String confirmPasswordEncryption = EncryptionKeyGenerator.encrypt(data, s, etConfirmNewPwd.getText().toString().trim()); //for testing we are using static value
+                        Log.e(TAG, "encryptedPassword New => " + confirmPasswordEncryption);
+                        String confirmDecryptedPassword = EncryptionKeyGenerator.decrypt(data, s, confirmPasswordEncryption);
+                        Log.e(TAG, "decryptedPassword New=> " + confirmDecryptedPassword);
 
-                    /*Create new password encryption*/
-                    String confirmPasswordEncryption = EncryptionKeyGenerator.encrypt(data, s,etConfirmNewPwd.getText().toString() ); //for testing we are using static value
-                    Log.e(TAG, "encryptedPassword New => " + confirmPasswordEncryption);
-                    String confirmDecryptedPassword = EncryptionKeyGenerator.decrypt(data, s, confirmPasswordEncryption);
-                    Log.e(TAG, "decryptedPassword New=> " + confirmDecryptedPassword);
+                        validateResetPassword(confirmPasswordEncryption, encryption, activity, passwordExpiryPopup,
+                                isFromLogin, fsEmail, submit);
 
 
-                    validateResetPassword(confirmPasswordEncryption,encryption,activity);
+                    }
+                } catch (Exception e) {
+                    if (submit != null) submit.setClickable(true);
+                    General.hideloading();
+                    e.getMessage();
                 }
             }
         });

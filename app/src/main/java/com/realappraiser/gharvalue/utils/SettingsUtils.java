@@ -50,6 +50,7 @@ public class SettingsUtils {
     public static final String ForgetPassword = "/api/Login/ForgetPassword";
 
     public static final String ResetPassword = "/api/Login/ResetPassword";
+    public static final String ResetPasswordLogin = "/api/Login/ResetPasswordLoginPage";
 
     public static final String CurrentServer = "/api/Utililty/app_AuthenticateAPI";
     public static final String Login = "/api/Login/app_AuthenticateUser"; // for kakode
@@ -350,8 +351,8 @@ public class SettingsUtils {
 
 
     public static String convertLatLngToAddress(Context context) {
-      double latt = Double.parseDouble(SettingsUtils.getInstance().getValue("lat",""));
-      double longi = Double.parseDouble(SettingsUtils.getInstance().getValue("long",""));
+        double latt = Double.parseDouble(SettingsUtils.getInstance().getValue("lat", ""));
+        double longi = Double.parseDouble(SettingsUtils.getInstance().getValue("long", ""));
 
         String address = "Address not found";
         Context context2 = context;

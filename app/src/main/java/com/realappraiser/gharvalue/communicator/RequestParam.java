@@ -20,9 +20,9 @@ public class RequestParam {
     private static final String TAG = "RequestParam";
 
 
-    public static RequestBody safetNetResultParams(JsonRequestData jsonRequestData){
+    public static RequestBody safetNetResultParams(JsonRequestData jsonRequestData) {
         RequestBody newRequest = RequestBody.create(
-                MediaType.parse("application/json"),jsonRequestData.getSafetyNet());
+                MediaType.parse("application/json"), jsonRequestData.getSafetyNet());
         return newRequest;
     }
 
@@ -33,21 +33,22 @@ public class RequestParam {
                 .build();
         return requestBody;
     }
- public static RequestBody StoreLoginRequestParams(JsonRequestData jsonRequestData) {
+
+    public static RequestBody StoreLoginRequestParams(JsonRequestData jsonRequestData) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("email", jsonRequestData.getEmail())
                 .build();
         return requestBody;
     }
 
-    public static RequestBody TokenRequestParams(JsonRequestData jsonRequestData){
+    public static RequestBody TokenRequestParams(JsonRequestData jsonRequestData) {
 
         RequestBody requestBody = new FormBody.Builder()
-                .add("UserName",jsonRequestData.getEmail())
-                .add("Password",jsonRequestData.getPwd())
-                .add("grant_type",jsonRequestData.getGrantType())
+                .add("UserName", jsonRequestData.getEmail())
+                .add("Password", jsonRequestData.getPwd())
+                .add("grant_type", jsonRequestData.getGrantType())
                 .build();
-       return requestBody;
+        return requestBody;
     }
 
     public static RequestBody UploadPropertyDocumentsRequestParams(JsonRequestData jsonRequestData) {
@@ -57,18 +58,19 @@ public class RequestParam {
         return requestBody;
     }
 
-    public static String GetEmployeeBranchs(JsonRequestData jsonRequestData){
+    public static String GetEmployeeBranchs(JsonRequestData jsonRequestData) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("LoginId", jsonRequestData.getEmpId());
         return urlBuilder.build().toString();
     }
+
     public static String OpenCloseCaseListRequestParams(JsonRequestData jsonRequestData) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("empId", jsonRequestData.getEmpId());
         urlBuilder.addQueryParameter("startDate", jsonRequestData.getStartDate());
         // urlBuilder.addQueryParameter("endDate", "09/Jan/2018");
         urlBuilder.addQueryParameter("endDate", jsonRequestData.getEndDate());
-        urlBuilder.addQueryParameter("agencyBranchId",jsonRequestData.getAgencyBranchId());
+        urlBuilder.addQueryParameter("agencyBranchId", jsonRequestData.getAgencyBranchId());
         String geturl = urlBuilder.build().toString();
 
         return geturl;
@@ -92,19 +94,28 @@ public class RequestParam {
         return requestBody;
     }
 
-    public static RequestBody forgetPassword(JsonRequestData jsonRequestData){
+    public static RequestBody forgetPassword(JsonRequestData jsonRequestData) {
 
         RequestBody requestBody = new FormBody.Builder()
-                .add("Email",jsonRequestData.getEmail()).build();
+                .add("Email", jsonRequestData.getEmail()).build();
         return requestBody;
     }
 
-    public static RequestBody resetPassword(JsonRequestData jsonRequestData,JSONObject jsonObject){
+    public static RequestBody resetPassword(JsonRequestData jsonRequestData, JSONObject jsonObject, String PasswordKey, boolean isFromLogin, String fsEmail) {
+        RequestBody requestBody = null;
+        if (!isFromLogin) {
+            requestBody = new FormBody.Builder().
+                    add("Email", SettingsUtils.getInstance().getValue(SettingsUtils.KEY_EMAIL, "")).
+                    add("Password", PasswordKey).
+                    build();
+        } else {
+            requestBody = new FormBody.Builder().
+                    add("Email", fsEmail).
+                    add("Password", PasswordKey).
+                    build();
+        }
 
-       RequestBody requestBody = new FormBody.Builder().
-               add("loginDetails", String.valueOf(jsonObject)).
-               build();
-       return requestBody;
+        return requestBody;
     }
 
     public static String PropertyTypeListRequestParams(JsonRequestData jsonRequestData) {
@@ -125,7 +136,7 @@ public class RequestParam {
         return geturl;
     }
 
-    public static String getPropertyDetails(JsonRequestData jsonRequestData){
+    public static String getPropertyDetails(JsonRequestData jsonRequestData) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("CaseId", jsonRequestData.getCaseId());
         String geturl = urlBuilder.build().toString();
@@ -142,7 +153,7 @@ public class RequestParam {
         return geturl;
     }
 
-    public static String GetSubBranches(JsonRequestData jsonRequestData){
+    public static String GetSubBranches(JsonRequestData jsonRequestData) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("agencyBranchId", jsonRequestData.getAgencyId());
         return urlBuilder.build().toString();
@@ -184,10 +195,10 @@ public class RequestParam {
         return geturl;
     }
 
-    public static String resetPasswordUrl(JsonRequestData jsonRequestData, String encryptionOldPwd){
+    public static String resetPasswordUrl(JsonRequestData jsonRequestData, String encryptionOldPwd) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
-        urlBuilder.addQueryParameter("active","1");
-        urlBuilder.addQueryParameter("password",encryptionOldPwd);
+        urlBuilder.addQueryParameter("active", "1");
+        urlBuilder.addQueryParameter("password", encryptionOldPwd);
         String getUrl = urlBuilder.build().toString();
         return getUrl;
     }
@@ -197,8 +208,8 @@ public class RequestParam {
                 .add("CaseId", jsonRequestData.getCaseId())
                 .add("AssignedTo", jsonRequestData.getAssignedTo())
                 .add("ModifiedBy", jsonRequestData.getModifiedBy())
-                .add("FSAgencyBranchId",jsonRequestData.getAgencyBranchId())
-                .add("AssignedBranchId",jsonRequestData.getAgencyBranchId())
+                .add("FSAgencyBranchId", jsonRequestData.getAgencyBranchId())
+                .add("AssignedBranchId", jsonRequestData.getAgencyBranchId())
                 .build();
     }
 
@@ -211,9 +222,9 @@ public class RequestParam {
                 .add("Longitude", jsonRequestData.getLongitude())
                 .add("TrackerTime", jsonRequestData.getTrackerTime())
                 .add("Address", jsonRequestData.getAddress())
-                .add("ActivityType",jsonRequestData.getActivityType())
-                .add("Comments",jsonRequestData.getComments())
-                .add("AgencyBranchId",jsonRequestData.getAgencyBId())
+                .add("ActivityType", jsonRequestData.getActivityType())
+                .add("Comments", jsonRequestData.getComments())
+                .add("AgencyBranchId", jsonRequestData.getAgencyBId())
                 .build();
     }
 
@@ -247,13 +258,13 @@ public class RequestParam {
                 .add("CreatedBy", jsonRequestData.getModifiedBy())
                 .add("CaseAdminId", jsonRequestData.getCaseAdminId())
                 .add("ReportMakerId", jsonRequestData.getReportMakerId())
-                .add("SubBranch",jsonRequestData.getSubBranchId())
-                .add("AgencyBranchId",jsonRequestData.getAgencyBranchId())
-                .add("FSAgencyBranchId",jsonRequestData.getAgencyBranchId())
-                .add("AssignedBranchId",jsonRequestData.getAgencyBranchId())
-                .add("BankReferenceNO",jsonRequestData.getBankRefNo())
-                .add("CAAgencyBranchId",jsonRequestData.getCaBranchId())
-                .add("RMAgencyBranchId",jsonRequestData.getRmBranchId())
+                .add("SubBranch", jsonRequestData.getSubBranchId())
+                .add("AgencyBranchId", jsonRequestData.getAgencyBranchId())
+                .add("FSAgencyBranchId", jsonRequestData.getAgencyBranchId())
+                .add("AssignedBranchId", jsonRequestData.getAgencyBranchId())
+                .add("BankReferenceNO", jsonRequestData.getBankRefNo())
+                .add("CAAgencyBranchId", jsonRequestData.getCaBranchId())
+                .add("RMAgencyBranchId", jsonRequestData.getRmBranchId())
                 .build();
 
         return requestBody;
@@ -328,9 +339,6 @@ public class RequestParam {
     }
 
 
-
-
-
     public static String EditInspectionRequestParams(JsonRequestData jsonRequestData) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("id", jsonRequestData.getId());
@@ -365,7 +373,6 @@ public class RequestParam {
     }
 
 
-
     public static RequestBody uploadimageRequestParams(JsonRequestData jsonRequestData) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("img", jsonRequestData.getCompanyName())
@@ -376,7 +383,7 @@ public class RequestParam {
     }
 
     public static RequestBody uploadimageRequestParams_measurment_offline(JsonRequestData jsonRequestData) {
-        Log.e(TAG, "uploadimageRequestParams_measurment_offline: " );
+        Log.e(TAG, "uploadimageRequestParams_measurment_offline: ");
 
         RequestBody requestBody = new FormBody.Builder()
                 .add("img", jsonRequestData.getCompanyName())
@@ -388,10 +395,8 @@ public class RequestParam {
     }
 
 
-
-
     public static RequestBody uploadimageRequestParams_oneImage(JsonRequestData jsonRequestData) {
-        Log.e(TAG, "uploadimageRequestParams_oneImage: " );
+        Log.e(TAG, "uploadimageRequestParams_oneImage: ");
         RequestBody requestBody = new FormBody.Builder()
                 .add("measurementimg", jsonRequestData.getCompanyName())
                 .add("edit_synk", jsonRequestData.getApplicantName())
