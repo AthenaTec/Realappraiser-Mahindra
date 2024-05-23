@@ -23,6 +23,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.realappraiser.gharvalue.Interface.AverageComPerInterface;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.fragments.FragmentValuationBuilding;
 import com.realappraiser.gharvalue.model.IndPropertyFloor;
@@ -41,6 +42,9 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
 
     public FragmentActivity mContext;
     public ArrayList<IndPropertyFloor> steps;
+
+    AverageComPerInterface averageComPerInterface;
+
     public ArrayList<IndPropertyFloorsValuation> stepsValuation;
     @SuppressLint("StaticFieldLeak")
     public static General general;
@@ -145,11 +149,14 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
         }
     }
 
-    public ValuationPermissibleAreaAdapter(ArrayList<IndPropertyFloorsValuation> stepsValuation, ArrayList<IndPropertyFloor> steps, FragmentActivity context) {
+    public ValuationPermissibleAreaAdapter(ArrayList<IndPropertyFloorsValuation> stepsValuation, ArrayList<IndPropertyFloor> steps, FragmentActivity context
+            , AverageComPerInterface averageComPerInterface
+    ) {
         this.steps = steps;
         this.stepsValuation = stepsValuation;
         this.mContext = context;
         general = new General(mContext);
+        this.averageComPerInterface = averageComPerInterface;
         // propertyFloorInternalAdapter = new PropertyFloorInternalAdapter((Activity)context);
     }
 
@@ -210,12 +217,16 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
             holder.textview_permissiblearea_value.setText("");
         }
 
+
+
         String percentageDepreciation = steps.get(position).getPercentageDepreciation();
         if (!general.isEmpty(percentageDepreciation)) {
             holder.edittext_permissiblearea_dep_per.setText("" + percentageDepreciation);
         } else {
             holder.edittext_permissiblearea_dep_per.setText("");
         }
+
+
 
         String formattedCommaString1 = general.DecimalFormattedCommaString(stepsValuation.get(position).getFloorDepreciationValue());
         if (!general.isEmpty(formattedCommaString1)) {
@@ -360,6 +371,7 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
                 stepsModel.setMeasuredConstrValue("" + act_total);
                 stepsValuation.set(adapterPosition, stepsModel);
                 Singleton.getInstance().indPropertyFloorsValuations.set(adapterPosition, stepsModel);
+                averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,false);
 
                 /*****total construction*****/
                 int total_construction = general.getTotalConstructionValue(stepsValuation);
@@ -435,7 +447,8 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
             }
 
 
-        } else {
+        }
+        else {
             String initval = "0";
             textview_permissiblearea_value.setText("");
             if (textview_totalconstructionvalue_result != null)
@@ -444,6 +457,21 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
                 textview_insurancevaluepe_result.setText("");
             if (textview_totalpropertyvalue_result != null)
                 textview_totalpropertyvalue_result.setText("");
+
+            final IndPropertyFloorsValuation stepsModel = stepsValuation.get(adapterPosition);
+            stepsModel.setDocumentConstrValue("");
+            stepsModel.setMeasuredConstrValue("");
+            stepsValuation.set(adapterPosition, stepsModel);
+            Singleton.getInstance().indPropertyFloorsValuations.set(adapterPosition, stepsModel);
+            averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,false);
+
+
+            if (FragmentValuationBuilding.textview_totalconstructionvalue_result != null)
+                FragmentValuationBuilding.textview_totalconstructionvalue_result.setText("");
+            if (FragmentValuationBuilding.textview_insurancevaluepe_result != null)
+                FragmentValuationBuilding.textview_insurancevaluepe_result.setText("");
+            if (FragmentValuationBuilding.textview_totalpropertyvalue_result != null)
+                FragmentValuationBuilding.textview_totalpropertyvalue_result.setText("");
 
 
         }

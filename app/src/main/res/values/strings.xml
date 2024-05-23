@@ -286,6 +286,10 @@
         <u>Compare Property Rates</u>.
     </string>
 
+    <string name="forget_password">
+        <u>Forgot Password?</u>
+    </string>
+
 
     <string name="guideline_value">Guideline DLC Value:</string>
     <string name="unit">Unit</string>

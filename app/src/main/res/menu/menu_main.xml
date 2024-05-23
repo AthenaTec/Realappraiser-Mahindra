@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/ic_home"
         android:icon="@drawable/home"
@@ -72,6 +71,12 @@
                 android:icon="@drawable/view_tickets"
                 android:theme="@style/OverflowMenu"
                 android:title="@string/viewticket"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/changepassword"
+                android:icon="@drawable/lock"
+                android:theme="@style/OverflowMenu"
+                android:title="CHANGE PASSWORD"
                 app:showAsAction="ifRoom" />
         </menu>
     </item>

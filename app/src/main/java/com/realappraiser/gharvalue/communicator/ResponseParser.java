@@ -201,6 +201,9 @@ public class ResponseParser {
                     } else if (status.equals("2")) {
                         status = "2";
                         msg = jObj.getString(TAG_MSG);
+                    } else if(status.equals("3")){
+                        status = "3";
+                        msg = jObj.getString(TAG_MSG);
                     } else {
                         status = "0";
                         msg = jObj.getString(TAG_MSG);

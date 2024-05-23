@@ -754,12 +754,14 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
         requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
         requestData.setRequestBody(RequestParam.UpdateCaseStatusRequestParams(requestData));
 
+        Log.e("Accept Request form",new Gson().toJson(requestData));
+
         WebserviceCommunicator webserviceTask = new WebserviceCommunicator(mContext, requestData,
                 SettingsUtils.PUT_TOKEN);
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
-
+                Log.e(TAG, "AccStatusCidRes: " + new Gson().toJson(requestData.getResponse()));
                 if (requestData.isSuccessful()) {
                     parseUpdateStatusCaseidResponse(requestData.getResponse());
                 } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
@@ -1013,6 +1015,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
         final Spinner spinner_reject = (Spinner) dialog.findViewById(R.id.spinner_reject);
 
 
+
         ArrayAdapter<RejectionComment> adapterReject = new ArrayAdapter<RejectionComment>(mContext,
                 R.layout.row_spinner_item, Singleton.getInstance().rejectionComments_list);
         adapterReject.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -1088,6 +1091,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
                 if (requestData.isSuccessful()) {
+                    Log.e(TAG, "RejStatusCidRes: " + new Gson().toJson(requestData.getResponse()));
                     parseRejectStatusCaseidResponse(requestData.getResponse());
                 } else if (!requestData.isSuccessful() &&
                         (requestData.getResponseCode() == 400

@@ -1698,12 +1698,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         MenuItem item6 = menu.findItem(R.id.raiseticketsystem);
         MenuItem item7 = menu.findItem(R.id.viewticket);
         MenuItem item8 = menu.findItem(R.id.filter);
+       // MenuItem item6 = menu.findItem(R.id.changepassword);
 
         item.setVisible(true);
         item1.setVisible(true);
         item3.setVisible(true);
         item4.setVisible(true);
         item5.setVisible(true);
+        //item6.setVisible(true);
         item2.setVisible(false);
         item8.setVisible(false);
         return true;
@@ -1752,6 +1754,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.convyencereport:
                 getConvyenceReport();
                 break;
+            case R.id.changepassword:
+                 general.getChangePassword(this);
+                 break;
 
             case R.id.raiseticketsystem:
                 raiseTickerPopup();
@@ -3391,6 +3396,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         Intent intent = new Intent(HomeActivity.this, ViewRaisedTicketsActivity.class);
         startActivity(intent);
     }
+
+
+
 
 
     @Override

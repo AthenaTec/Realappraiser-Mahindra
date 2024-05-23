@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,7 +30,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.realappraiser.gharvalue.Interface.AverageComPerInterface;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.adapter.ComparePropertyRateAdapter;
 import com.realappraiser.gharvalue.adapter.ValuationActualAreaAdapter;
@@ -54,6 +53,7 @@ import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.model.GetPropertyCompareDetailsModel;
 import com.realappraiser.gharvalue.model.GetPropertyDetailsModel;
+import com.realappraiser.gharvalue.model.IndPropertyFloor;
 import com.realappraiser.gharvalue.model.IndPropertyFloorsValuation;
 import com.realappraiser.gharvalue.model.Measurements;
 import com.realappraiser.gharvalue.model.RatePopup;
@@ -66,6 +66,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -73,11 +74,14 @@ import butterknife.ButterKnife;
 
 
 @SuppressWarnings("ALL")
-public class FragmentValuationBuilding extends Fragment implements RatePopupupInterface {
+public class FragmentValuationBuilding extends Fragment implements RatePopupupInterface,AverageComPerInterface {
 
     // TODO General class to call typeface and all...
     @SuppressLint("StaticFieldLeak")
     static private General general;
+
+    static private ArrayList<IndPropertyFloor> buidlingValuation;
+
 
 
     // TODO RatioGroup ini
@@ -1427,7 +1431,8 @@ public class FragmentValuationBuilding extends Fragment implements RatePopupupIn
         }
 
         if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage())) {
-            etAverageConstruction.setText(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage());
+            etAverageConstruction.setText( ""+Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage());
+            FragmentBuilding.textview_comp_total.setText(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage());
         }
 
         if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getRecommendationPercentage())) {
@@ -1681,10 +1686,10 @@ public class FragmentValuationBuilding extends Fragment implements RatePopupupIn
 
 
         if (FragmentBuilding.listAdapter != null) {
-            listAdapter = new ValuationPermissibleAreaAdapter(list, FragmentBuilding.listAdapter.getStepList(), fragmentActivity);
+            listAdapter = new ValuationPermissibleAreaAdapter(list, FragmentBuilding.listAdapter.getStepList(), fragmentActivity,this);
             recyclerview_permissiblearea.setAdapter(listAdapter);
 
-            listActualAdapter = new ValuationActualAreaAdapter(list, FragmentBuilding.listAdapter.getStepList(), fragmentActivity);
+            listActualAdapter = new ValuationActualAreaAdapter(list, FragmentBuilding.listAdapter.getStepList(), fragmentActivity,this);
             recyclerview_actualarea.setAdapter(listActualAdapter);
         }
     }
@@ -2134,12 +2139,12 @@ public class FragmentValuationBuilding extends Fragment implements RatePopupupIn
             String asperComPercentage = Singleton.getInstance().indPropertyValuation.getCompletionPercentage();
             String asperCompValue = Singleton.getInstance().indPropertyValuation.getTotalValueAtCompletion();
 
-            if (!general.isEmpty(asperComPercentage)) {
+           /* if (!general.isEmpty(asperComPercentage)) {
                 if (asperComPercentage.contains(","))
                     editText_aspercompletion.setText(general.ReplaceCommaSaveToString(asperComPercentage));
                 else
                     editText_aspercompletion.setText(asperComPercentage);
-            }
+            }*/
 
             if (!general.isEmpty(asperCompValue)) {
                 if (asperCompValue.contains(","))
@@ -3825,4 +3830,67 @@ public class FragmentValuationBuilding extends Fragment implements RatePopupupIn
     public void onRatePopupFailed(String msg) {
         Toast.makeText(getActivity(), "Unable to fetch market rate value!", Toast.LENGTH_SHORT).show();
     }
+
+    public static void calulateAveragePercentageWeight(ArrayList<IndPropertyFloor> steps, int adapterposition, String s){
+        buidlingValuation = steps;
+    }
+
+    @Override
+    public void rateValueUpdate(ArrayList<IndPropertyFloorsValuation> stepsValuation, int adapterPosition,boolean isActual) {
+           if(Singleton.getInstance().indPropertyFloors.size() > 1){
+               float totalValuePer = 0;
+               float totalValue = 0;
+               for(int i = 0;i < Singleton.getInstance().indPropertyFloors.size();i++){
+                   if(!stepsValuation.get(i).getMeasuredConstrValue().isEmpty() &&
+                           Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion() != null &&
+                           Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion() != 0
+                   && Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion() != -1
+
+                   ){
+                       float c =  Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion();
+                       float a  = c / 100;
+                       if(isActual){
+                           totalValuePer = totalValuePer + (Integer.parseInt(stepsValuation.get(i).getMeasuredConstrValue()) * a);
+                           Log.e("totalValuePer", String.valueOf(totalValuePer));
+                           totalValue = totalValue + Integer.parseInt(stepsValuation.get(i).getMeasuredConstrValue());
+                           Log.e("totalValue", String.valueOf(totalValue));
+                       }else{
+                           totalValuePer = totalValuePer + (Integer.parseInt(stepsValuation.get(i).getDocumentConstrValue()) * a);
+                           Log.e("totalValuePer", String.valueOf(totalValuePer));
+                           totalValue = totalValue + Integer.parseInt(stepsValuation.get(i).getDocumentConstrValue());
+                           Log.e("totalValue", String.valueOf(totalValue));
+                       }
+                   }
+               }
+               float finalValue = totalValuePer / totalValue;
+               Log.e("totalValueFraction", String.valueOf(finalValue));
+               float totalInPer = finalValue * 100;
+               if(totalValue > 0.0)
+               {
+                  /* etAverageConstruction.setText(String.valueOf(totalInPer));
+                   FragmentBuilding.textview_comp_total.setText(String.valueOf(totalInPer));*/
+
+                   String totalAvg = ""+ new DecimalFormat(".##").format(totalInPer);
+
+                   etAverageConstruction.setText(totalAvg);
+                   FragmentBuilding.textview_comp_total.setText(totalAvg);
+                   //Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage(totalAvg);
+
+               }else{
+                   etAverageConstruction.setText("");
+                   FragmentBuilding.textview_comp_total.setText("");
+                   //Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage("");
+               }
+           }else{
+               Integer integer = Singleton.getInstance().indPropertyFloors.get(0).getPercentageCompletion();
+               if(integer !=null ){
+                   String totalAvg = ""+ new DecimalFormat(".##").format(integer);
+                   etAverageConstruction.setText(totalAvg);
+                   //etAverageConstruction.setText(String.valueOf(integer));
+                   //FragmentBuilding.textview_comp_total.setText(String.valueOf(integer));
+                   FragmentBuilding.textview_comp_total.setText(totalAvg);
+                  // Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage(totalAvg);
+               }
+           }
+       }
 }

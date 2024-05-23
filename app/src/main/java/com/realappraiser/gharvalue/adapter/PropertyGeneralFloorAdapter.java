@@ -223,6 +223,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             // set Average
                             if (textview_comp_total != null) {
                                 textview_comp_total.setText("" + average_total);
+                            if (textview_comp_total != null) {
+                                /*FragmentBuilding.textview_comp_total.setText("" + average_total);*/
+                                textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
                             }
 
                             aspercompletion_val("" + average_total);
@@ -407,7 +410,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                         if (Integer.valueOf(toString) < 46) {
                                             stepsModel.setPropertyAge(Integer.valueOf(toString));
                                             // Added in n ew feature
-                                            if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null&&Singleton.getInstance().caseOtherDetailsModel.getData().get(0)!=null) {
+                                            /*if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null&&Singleton.getInstance().caseOtherDetailsModel.getData().get(0)!=null) {
                                                 if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox() != null) {
                                                     if (Integer.parseInt(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox()) == 1) {
                                                         if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getPercentageDepreciation() != null)
@@ -418,13 +421,15 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                                         stepsModel.setPercentageDepreciation("0");
 
                                                     }
-                                                } else {
+                                                }
+
+                                                else {
                                                     stepsModel.setPercentageDepreciation(toString);
                                                 }
                                             } else {
                                                 stepsModel.setPercentageDepreciation(toString);
 
-                                            }
+                                            }*/
                                             //if (general.isEmpty(String.valueOf(stepsModel.getResidualLife()))) {
                                             // If ResidualLife is empty it will affect
                                             int life = general.getAgeLifeValue(Integer.valueOf(toString));
@@ -437,6 +442,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                         } else {
                                             stepsModel.setPropertyAge(Integer.valueOf(toString));
                                             // Added in new feature
+                                            /*
                                             if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox() != null) {
                                                 if (Integer.parseInt(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox()) == 1) {
                                                     if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getPercentageDepreciation() != null)
@@ -449,7 +455,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                                 }
                                             } else {
                                                 stepsModel.setPercentageDepreciation(toString);
-                                            }
+                                            }*/
                                             //if (general.isEmpty(String.valueOf(stepsModel.getResidualLife()))) {
                                             // If ResidualLife is empty it will affect
                                             stepsModel.setResidualLife(null);
@@ -1421,6 +1427,8 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 } else {
                     stepsModel.setPercentageDepreciation(toString);
                 }
+                */
+
                 //if (general.isEmpty(String.valueOf(stepsModel.getResidualLife()))) {
                 // If ResidualLife is empty it will affect
                 stepsModel.setResidualLife(null);
@@ -1553,7 +1561,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     if (is_not_null) {
                         int average_total = 100;
                         if (textview_comp_total != null) {
-                            textview_comp_total.setText("" + average_total);
+                            textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
                         }
                         // Old condtion
                         /*if ((Singleton.getInstance().is_new_floor_created) && (Singleton.getInstance().as_per_com)) {
@@ -1566,7 +1574,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     } else {
                         int average_total = 0;
                         if (textview_comp_total != null) {
-                            textview_comp_total.setText("" + average_total);
+                            textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
                         }
                         // Added in new feature
                         aspercompletion_val("" + average_total);
@@ -1620,7 +1628,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             }
                             int average_total = general.getCompletedSumValue(steps);
                             if (textview_comp_total != null) {
-                                textview_comp_total.setText("" + average_total);
+                                textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
                             }
                             // set Aspercom
                             aspercompletion_val("" + average_total);
@@ -1665,7 +1673,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             }
                             int average_total = general.getCompletedSumValue(steps);
                             if (textview_comp_total != null) {
-                                textview_comp_total.setText("" + average_total);
+                                textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
                             }
                             // set Aspercom
                             aspercompletion_val("" + average_total);
