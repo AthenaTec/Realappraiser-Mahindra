@@ -45,6 +45,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
@@ -257,8 +258,11 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     @BindView(R.id.etName)
     EditText applicantName;
 
-    @BindView(R.id.spSalutionBorrower)
-    Spinner spSalutionBorrower;
+    /*@BindView(R.id.spSalutionBorrower)
+    Spinner spSalutionBorrower;*/
+
+    @BindView(R.id.et_SalutionBorrower)
+    TextInputEditText et_SalutionBorrower;
 
     @BindView(R.id.llNameOfBorrower)
     LinearLayout llNameOfBorrower;
@@ -269,8 +273,11 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     @BindView(R.id.spSalutionSeller)
     Spinner spSalutionSeller;
 
-    @BindView(R.id.spinner_type_of_loan)
-    Spinner spinner_type_of_loan;
+    /*@BindView(R.id.spinner_type_of_loan)
+    Spinner spinner_type_of_loan;*/
+
+    @BindView(R.id.et_type_of_loan)
+    TextInputEditText etTypeOfLoan;
 
     @BindView(R.id.ll_type_of_loan)
     LinearLayout llTypeOfLoan;
@@ -1075,9 +1082,9 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("District")) {
             til_district.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().property.getLandmark() != null)
+            if (Singleton.getInstance().aCase.getDistrict() != null)
             {
-                et_district.setText(Singleton.getInstance().aCase.getDistrict());
+                et_district.setText(""+Singleton.getInstance().aCase.getDistrict());
                 fsProgressCount = fsProgressCount + 1;
             }
         } else til_district.setVisibility(View.GONE);
@@ -1101,10 +1108,6 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         } else tl_pincode.setVisibility(View.GONE);
 
 
-        if(general.getUIVisibility("GPSCo-ordinates")){
-            ll_geo_co_ordinates.setVisibility(View.VISIBLE);
-            geoCorodinate();
-        }else ll_geo_co_ordinates.setVisibility(View.GONE);
 
 
 
@@ -1328,7 +1331,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         if (general.getUIVisibility("Architect / Engineer License No.")) {
             layout_engineer_license.setVisibility(View.VISIBLE);
             if (!general.isEmpty(Singleton.getInstance().indProperty.getArchitectEngineerLicenseNo())) {
-                et_engineer_license.setText(Singleton.getInstance().indProperty.getArchitectEngineerLicenseNo());
+                et_engineer_license.setText(""+Singleton.getInstance().indProperty.getArchitectEngineerLicenseNo());
                 fsProgressCount = fsProgressCount + 1;
             }
         } else layout_engineer_license.setVisibility(View.GONE);
@@ -1450,14 +1453,14 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         } else checkbox_lift_in_building.setVisibility(View.GONE);
 
 
-        if (general.getUIVisibility("Average Construction Percentage")) {
+      /*  if (general.getUIVisibility("Average Construction Percentage")) {
             tl_avg_construction_per.setVisibility(View.VISIBLE);
             if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage())) {
                 fsProgressCount = fsProgressCount + 1;
                 etAverageConstruction.setText(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage());
             }
         } else tl_avg_construction_per.setVisibility(View.GONE);
-
+*/
 
         if (general.getUIVisibility("Recommendation Percentage")) {
             tl_recommendation_per.setVisibility(View.VISIBLE);
@@ -1702,15 +1705,15 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         }
 
 
-        if (general.getUIVisibility("No. of floors above ground")) {
+       /* if (general.getUIVisibility("No. of floors above ground")) {
             tl_no_of_floors_above_ground.setVisibility(View.VISIBLE);
             if (!general.isEmpty(Singleton.getInstance().indProperty.getNoofFloorsAboveGround())) {
                 fsProgressCount = fsProgressCount + 1;
                 et_above_ground.setText(Singleton.getInstance().indProperty.getNoofFloorsAboveGround());
             }
         } else
-            tl_no_of_floors_above_ground.setVisibility(View.GONE);
-
+            tl_no_of_floors_above_ground.setVisibility(View.GONE);*/
+        tl_no_of_floors_above_ground.setVisibility(View.GONE);
 
         if (general.getUIVisibility("Basement")) {
             tl_basement.setVisibility(View.VISIBLE);
@@ -1820,7 +1823,10 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (!general.isEmpty(String.valueOf(Singleton.getInstance().property.getPurpose()))) {
             for (int x = 0; x < Singleton.getInstance().purposeOfList.size(); x++) {
-                if (Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId() != null)
+                if (Singleton.getInstance().property.getPurposeofloanId() != null && Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId() != null
+                        && Singleton.getInstance().purposeOfList.get(x) != null
+                        && Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId() != null
+                        )
                     if (Singleton.getInstance().property.getPurposeofloanId()
                             .equals(Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId())) {
                         spinner_purpose.setSelection(x);
@@ -1835,7 +1841,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         // spinner - nameof seller initials
         initials_typeList = new ArrayList<>();
         initials_typeList = general.NameofSellerInitials_array();
-        ArrayAdapter<String> nameofsellerListAdapter = new ArrayAdapter<String>(getActivity(), R.layout.row_spinner_item, initials_typeList) {
+        /*ArrayAdapter<String> nameofsellerListAdapter = new ArrayAdapter<String>(getActivity(), R.layout.row_spinner_item, initials_typeList) {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTypeface(general.mediumtypeface());
@@ -1852,7 +1858,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         nameofsellerListAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
         spSalutionBorrower.setPrompt(getResources().getString(R.string.nameof_Borrower));
         spSalutionBorrower.setAdapter(nameofsellerListAdapter);
-        spSalutionBorrower.setOnTouchListener(this);
+        spSalutionBorrower.setOnTouchListener(this);*/
 
         if (!general.isEmpty(Singleton.getInstance().aCase.getApplicantName())) {
             String applicant_id = Singleton.getInstance().aCase.getApplicantName();
@@ -1866,7 +1872,8 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 String initials = initials_typeList.get(i);
 
                 if (applicant_id.trim().equalsIgnoreCase(initials.trim())) {
-                    spSalutionBorrower.setSelection(i, false);
+                    //spSalutionBorrower.setSelection(i, false);
+                    et_SalutionBorrower.setText(""+initials.trim());
                     nameofApplicant = "";
                     splitInitial = null;
                     break;
@@ -1884,17 +1891,20 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
                     if (itemCount > 2) {
                         if (initials.trim().equalsIgnoreCase(initialconcat.trim())) {
-                            spSalutionBorrower.setSelection(i, false);
+                            et_SalutionBorrower.setText(""+initialconcat.trim());
+                            //spSalutionBorrower.setSelection(i, false);
                             break;
                         }
                     } else {
 
                         if (applicant_id.trim().equalsIgnoreCase(initials.trim())) {
-                            spSalutionBorrower.setSelection(i, false);
+                            //spSalutionBorrower.setSelection(i, false);
+                            et_SalutionBorrower.setText(""+initials.trim());
                             break;
                         } else if (splitInitial.length > 0) {
                             if (splitInitial[0].equalsIgnoreCase(initials.trim())) {
-                                spSalutionBorrower.setSelection(i, false);
+                                et_SalutionBorrower.setText(""+initials.trim());
+                               // spSalutionBorrower.setSelection(i, false);
                                 break;
                             }
                         }
@@ -1922,7 +1932,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 for (int i = 0; i < initials_typeList.size(); i++) {
                     String initials = initials_typeList.get(i);
                     if (initials.trim().equalsIgnoreCase(applicant_id.trim())) {
-                        spSalutionBorrower.setSelection(i, false);
+                        //spSalutionBorrower.setSelection(i, false);
                         nameofApplicant = "";
                         break;
 
@@ -4199,11 +4209,11 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             Singleton.getInstance().indProperty.setLiftInBuilding(checkbox_lift_in_building.isChecked());
 
 
-        if (tl_avg_construction_per.getVisibility() == View.VISIBLE) {
+       /* if (tl_avg_construction_per.getVisibility() == View.VISIBLE) {
             if (!general.isEmpty(etAverageConstruction.getText().toString()))
                 Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage(etAverageConstruction.getText().toString());
             else Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage("");
-        }
+        }*/
 
 
         if (tl_recommendation_per.getVisibility() == View.VISIBLE) {
@@ -4728,7 +4738,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
     private void getNameOfBorrower() {
         String nameofseller = applicantName.getText().toString();
-        if (!general.isEmpty(nameofseller)) {
+       /* if (!general.isEmpty(nameofseller)) {
             String spinnerinitial = spSalutionBorrower.getSelectedItem().toString();
             if (spinnerinitial.contains(".")) {
                 spinnerinitial = spinnerinitial.replace(".", ". ");
@@ -4748,7 +4758,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 Singleton.getInstance().aCase.setApplicantName("");
             else
                 Singleton.getInstance().aCase.setApplicantName(spinnerinitial);
-        }
+        }*/
     }
 
     private void getNameOfSeller() {
@@ -4853,15 +4863,16 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             }
         };
         localityArrayAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
-        spinner_type_of_loan.setAdapter(localityArrayAdapter);
-        spinner_type_of_loan.setOnTouchListener(this);
+       /* spinner_type_of_loan.setAdapter(localityArrayAdapter);
+        spinner_type_of_loan.setOnTouchListener(this);*/
 
         if (!general.isEmpty(String.valueOf(Singleton.getInstance().aCase.getLoanType()))) {
             for (int x = 0; x < Singleton.getInstance().loanType.size(); x++) {
-                if (Singleton.getInstance().loanType.get(x).getTypeOfPropertyId() != null)
+
                     if (Singleton.getInstance().aCase.getLoanType().equals(
-                            Singleton.getInstance().loanType.get(x).getTypeOfPropertyId())) {
-                        spinner_type_of_loan.setSelection(x);
+                            Singleton.getInstance().loanType.get(x).getName())) {
+                       // spinner_type_of_loan.setSelection(x);
+                        etTypeOfLoan.setText(""+Singleton.getInstance().loanType.get(x).getName());
                         fsProgressCount = fsProgressCount + 1;
                         break;
                     }
@@ -4940,6 +4951,16 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             editText_surveyno.setError("Please enter survey");
             isLocalityMandatory = true;
         }
+        /*if (general.isEmpty(editText_landmark.getText().toString())) {
+            editText_landmark.setError("Please enter landmark");
+            isLocalityMandatory = true;
+        }
+        if (general.isEmpty(etPinCode.getText().toString())) {
+            etPinCode.setError("Please enter pincode");
+            isLocalityMandatory = true;
+        }*/
+
+
         if (isLocalityMandatory) {
             cardViewLocality.callOnClick();
         }
@@ -4967,6 +4988,12 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             txtProgressBar.setText(""+"0%");
         }
 
+
+        if(general.getUIVisibility("LAT/LONG DETAILS")){
+            ll_geo_co_ordinates.setVisibility(View.VISIBLE);
+            geoCorodinate();
+        }
+        else ll_geo_co_ordinates.setVisibility(View.GONE);
 
     }
 }

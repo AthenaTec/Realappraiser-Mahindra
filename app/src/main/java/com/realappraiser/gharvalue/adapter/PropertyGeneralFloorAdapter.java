@@ -237,6 +237,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                         }
                     }
                 }
+            }
             });
 
             edittext_general_progress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -1427,7 +1428,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 } else {
                     stepsModel.setPercentageDepreciation(toString);
                 }
-                */
+
 
                 //if (general.isEmpty(String.valueOf(stepsModel.getResidualLife()))) {
                 // If ResidualLife is empty it will affect

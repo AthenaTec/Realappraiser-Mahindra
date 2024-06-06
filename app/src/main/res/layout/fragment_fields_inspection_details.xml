@@ -299,7 +299,7 @@
                         android:id="@+id/ll_type_of_loan"
                         android:orientation="vertical"
                         >
-                    <TextView
+                    <!--<TextView
                         android:id="@+id/txt_type_of_loan"
                         style="@style/general_sub_section_txt_header"
                         android:layout_width="match_parent"
@@ -308,14 +308,43 @@
                         android:text="Type of Loan*"
                         tools:ignore="RtlHardcoded"
                         android:layout_marginTop="@dimen/_5sdp"
-                        />
-                    <Spinner
+                        />-->
+                   <!-- <Spinner
                         android:id="@+id/spinner_type_of_loan"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/spinner_status"
                         android:minHeight="@dimen/_30sdp"
-                        android:popupBackground="@drawable/spinner_pop_up_dialog_bg" />
+                        android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+                        android:clickable="false"
+                        android:focusableInTouchMode="false"
+                        android:focusable="false"
+                        />-->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layout_type_of_loan"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            app:hintTextAppearance="@style/TextInputLayout_hint"
+                            app:hintTextColor="@color/font_texthint"
+                            tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_type_of_loan"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/regular"
+                                android:hint="Type of Loan*"
+                                android:inputType="textCapSentences"
+                                android:maxLength="100"
+                                android:textSize="@dimen/_13sdp"
+                                android:clickable="false"
+                                android:longClickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                />
+                        </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
                     <!--name of borrower-->
@@ -327,8 +356,35 @@
                         android:weightSum="2"
                         android:id="@+id/llNameOfBorrower"
                         >
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tt_SalutionBorrower"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            app:hintTextAppearance="@style/TextInputLayout_hint"
+                            app:hintTextColor="@color/font_texthint"
+                            tools:ignore="RtlHardcoded,RtlSymmetry"
+                            android:layout_marginEnd="@dimen/_2sdp"
+                            >
 
-                        <Spinner
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_SalutionBorrower"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/regular"
+                                android:hint="Salution"
+                                android:inputType="textCapSentences"
+                                android:maxLength="100"
+                                android:textSize="@dimen/_13sdp"
+                                android:clickable="false"
+                                android:longClickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!--<Spinner
                             android:id="@+id/spSalutionBorrower"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -338,7 +394,7 @@
                             android:minHeight="@dimen/_30sdp"
                             android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
                             android:layout_gravity="center"
-                            />
+                            />-->
 
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -359,7 +415,12 @@
                                 android:imeOptions="actionDone"
                                 android:inputType="textCapWords"
                                 android:textSize="@dimen/_13sdp"
-                                tools:ignore="LabelFor,SpUsage" />
+                                tools:ignore="LabelFor,SpUsage"
+                                android:clickable="false"
+                                android:longClickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                />
                         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -585,6 +646,10 @@
                             android:inputType="textCapSentences"
                             android:maxLength="100"
                             android:textSize="@dimen/_13sdp"
+                            android:clickable="false"
+                            android:longClickable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -734,6 +799,10 @@
                         android:textSize="@dimen/_13sdp"
                         android:imeOptions="actionNext"
                         android:nextFocusForward="@+id/editText_plotno"
+                        android:clickable="false"
+                        android:longClickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -870,7 +939,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/regular"
-                        android:hint="Landmark*"
+                        android:hint="Landmark"
                         android:inputType="textCapSentences"
                         android:maxLength="100"
                         android:textSize="@dimen/_13sdp"
@@ -894,7 +963,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/regular"
-                        android:hint="Pin Code*"
+                        android:hint="Pin Code"
                         android:inputType="number"
                         android:maxLength="10"
                         android:textSize="@dimen/_13sdp" />
@@ -1611,7 +1680,7 @@
                 </LinearLayout>
 
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/txt_type_of_property"
                     style="@style/general_sub_section_txt_header"
                     android:layout_width="match_parent"
@@ -1619,9 +1688,9 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:gravity="left"
                     android:text="Type of Property"
-                    tools:ignore="RtlHardcoded" />
+                    tools:ignore="RtlHardcoded" />-->
 
-                <EditText
+                <!--<EditText
                     android:id="@+id/etpropertyTypeProperty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1635,7 +1704,34 @@
                     android:fontFamily="@font/regular"
                     android:gravity="left|center"
                     android:textSize="@dimen/_13sdp"
-                    tools:ignore="LabelFor,SpUsage" />
+                    tools:ignore="LabelFor,SpUsage" />-->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_etpropertyTypeProperty"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    app:hintTextAppearance="@style/TextInputLayout_hint"
+                    app:hintTextColor="@color/font_texthint"
+                    tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etpropertyTypeProperty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:hint="Type of Property"
+                        android:inputType="text"
+                        android:maxLength="100"
+                        android:textSize="@dimen/_13sdp"
+                        android:editable="false"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                <!-- <Spinner
                     android:id="@+id/spinner_property"
@@ -1955,7 +2051,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/txt_type_of_property_details"
                     style="@style/general_sub_section_txt_header"
                     android:layout_width="match_parent"
@@ -1963,9 +2059,9 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:gravity="left"
                     android:text="Description of the property"
-                    tools:ignore="RtlHardcoded" />
+                    tools:ignore="RtlHardcoded" />-->
 
-                <EditText
+                <!--<EditText
                     android:id="@+id/etpropertyTypePropertyDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1979,7 +2075,33 @@
                     android:fontFamily="@font/regular"
                     android:gravity="left|center"
                     android:textSize="@dimen/_13sdp"
-                    tools:ignore="LabelFor,SpUsage" />
+                    tools:ignore="LabelFor,SpUsage" />-->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_etpropertyTypePropertyDetails"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    app:hintTextAppearance="@style/TextInputLayout_hint"
+                    app:hintTextColor="@color/font_texthint"
+                    tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etpropertyTypePropertyDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:hint="Description of the property"
+                        android:inputType="text"
+                        android:maxLength="100"
+                        android:textSize="@dimen/_13sdp"
+                        android:editable="false"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <CheckBox
                     android:id="@+id/checkbox_lift_in_building"
@@ -2005,6 +2127,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginTop="@dimen/_5sdp"
                     app:hintTextAppearance="@style/TextInputLayout_hint"
                     app:hintTextColor="@color/font_texthint"
@@ -2232,7 +2355,7 @@
 
 
                 <!--ndma property-->
-                <TextView
+                <!--<TextView
                     android:id="@+id/txt_type_of_property_ndma"
                     style="@style/general_sub_section_txt_header"
                     android:layout_width="match_parent"
@@ -2240,9 +2363,9 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:gravity="left"
                     android:text="Type of Property"
-                    tools:ignore="RtlHardcoded" />
+                    tools:ignore="RtlHardcoded" />-->
 
-                <EditText
+                <!--<EditText
                     android:id="@+id/etpropertyTypeNdma"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2256,7 +2379,37 @@
                     android:fontFamily="@font/regular"
                     android:gravity="left|center"
                     android:textSize="@dimen/_13sdp"
-                    tools:ignore="LabelFor,SpUsage" />
+                    tools:ignore="LabelFor,SpUsage" />-->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_etpropertyTypeNdma"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    app:hintTextAppearance="@style/TextInputLayout_hint"
+                    app:hintTextColor="@color/font_texthint"
+                    tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etpropertyTypeNdma"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:hint="Type of Property"
+                        android:inputType="text"
+                        android:maxLength="100"
+                        android:textSize="@dimen/_13sdp"
+                        android:editable="false"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
 
                 <!--Type of Masonry-->
                 <LinearLayout
@@ -2286,6 +2439,7 @@
 
                 <!--Floor Details-->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:visibility="gone"
                     android:id="@+id/tl_total_no_floor_in_building"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
@@ -2994,9 +3148,15 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/additional_remarks"
                             android:inputType="textCapWords"
-                            android:maxLength="100"
+                            android:maxLength="4000"
                             android:textSize="@dimen/_13sdp" />
                     </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_8sdp"
+                        android:text="(Upto 4000characters)"
+                        />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_special_remarks"

@@ -974,6 +974,8 @@ public class FragmentValuationLand extends Fragment implements RatePopupupInterf
         if (!general.isEmpty(caseid))
             Singleton.getInstance().indPropertyValuation.setCaseId(Integer.valueOf(caseid));
        // Singleton.getInstance().indPropertyValuation.setGuidelineRate(editText_guideline_rate.getText().toString().trim());
+
+        if(editText_guideline_value != null && !general.isEmpty(editText_guideline_value.getText().toString().trim()))
         Singleton.getInstance().indPropertyValuation.setGuidelineValue(general.ReplaceCommaSaveToString(editText_guideline_value.getText().toString().trim()));
         Singleton.getInstance().indPropertyValuation.setDocumentLandRate(editText_rate_permissiblearea.getText().toString().trim());
         Singleton.getInstance().indPropertyValuation.setDocumentLandValue(general.ReplaceCommaSaveToString(editText_total_permissiblearea.getText().toString().trim()));

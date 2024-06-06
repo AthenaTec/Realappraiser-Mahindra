@@ -1685,13 +1685,13 @@ public class FragmentValuationBuilding extends Fragment implements RatePopupupIn
         }
 
 
-        if (FragmentBuilding.listAdapter != null) {
+        /*if (FragmentBuilding.listAdapter != null) {
             listAdapter = new ValuationPermissibleAreaAdapter(list, FragmentBuilding.listAdapter.getStepList(), fragmentActivity,this);
             recyclerview_permissiblearea.setAdapter(listAdapter);
 
             listActualAdapter = new ValuationActualAreaAdapter(list, FragmentBuilding.listAdapter.getStepList(), fragmentActivity,this);
             recyclerview_actualarea.setAdapter(listActualAdapter);
-        }
+        }*/
     }
 
     private void DisplayValuesLandBuilding() {

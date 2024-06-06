@@ -61,7 +61,7 @@
                             android:layout_height="wrap_content"
                             android:letterSpacing="0.1"
                             android:text="@string/latlng"
-                            android:textAllCaps="true"
+                            android:textAllCaps="false"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font_very_medium"
                             tools:ignore="UnusedAttribute" />
@@ -213,7 +213,7 @@
                             android:layout_height="wrap_content"
                             android:letterSpacing="0.1"
                             android:text="@string/addimage"
-                            android:textAllCaps="true"
+                            android:textAllCaps="false"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font_very_medium"
                             tools:ignore="SpUsage,UnusedAttribute" />

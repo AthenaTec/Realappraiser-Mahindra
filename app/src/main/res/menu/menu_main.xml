@@ -64,14 +64,17 @@
                 android:icon="@drawable/recreate_ticket"
                 android:theme="@style/OverflowMenu"
                 android:title="@string/raiseticketsystem"
-                app:showAsAction="ifRoom" />
+                app:showAsAction="ifRoom"
+                android:visible="false"/>
 
             <item
                 android:id="@+id/viewticket"
                 android:icon="@drawable/view_tickets"
                 android:theme="@style/OverflowMenu"
                 android:title="@string/viewticket"
-                app:showAsAction="ifRoom" />
+                app:showAsAction="ifRoom"
+                android:visible="false"
+                />
             <item
                 android:id="@+id/changepassword"
                 android:icon="@drawable/lock"

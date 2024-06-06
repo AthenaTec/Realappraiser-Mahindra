@@ -150,7 +150,7 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
     }
 
     public ValuationPermissibleAreaAdapter(ArrayList<IndPropertyFloorsValuation> stepsValuation, ArrayList<IndPropertyFloor> steps, FragmentActivity context
-            , AverageComPerInterface averageComPerInterface
+           /* , AverageComPerInterface averageComPerInterface*/
     ) {
         this.steps = steps;
         this.stepsValuation = stepsValuation;

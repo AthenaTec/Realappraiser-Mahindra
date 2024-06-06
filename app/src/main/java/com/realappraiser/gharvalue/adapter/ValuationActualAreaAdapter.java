@@ -139,7 +139,7 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
 
 
     public ValuationActualAreaAdapter(ArrayList<IndPropertyFloorsValuation> stepsValuation, ArrayList<IndPropertyFloor> steps,
-                                      FragmentActivity context,AverageComPerInterface averageComPerInterface) {
+                                      FragmentActivity context/*,AverageComPerInterface averageComPerInterface*/) {
         this.steps = steps;
         this.stepsValuation = stepsValuation;
         this.mContext = context;
