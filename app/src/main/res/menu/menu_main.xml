@@ -21,7 +21,9 @@
         android:id="@+id/filter"
         android:icon="@drawable/filter_icon"
         app:showAsAction="always"
-        tools:ignore="MenuTitle"/>
+        tools:ignore="MenuTitle"
+        android:visible="false"
+        />
     <item
         android:id="@+id/dropdown_menu"
         android:icon="@drawable/menu_version"
@@ -60,26 +62,23 @@
                 android:title="@string/convenyance_report"
                 app:showAsAction="ifRoom" />
             <item
+                android:id="@+id/changepassword"
+                android:icon="@drawable/lock"
+                android:theme="@style/OverflowMenu"
+                android:title="CHANGE PASSWORD"
+                app:showAsAction="ifRoom" />
+            <item
                 android:id="@+id/raiseticketsystem"
                 android:icon="@drawable/recreate_ticket"
                 android:theme="@style/OverflowMenu"
                 android:title="@string/raiseticketsystem"
-                app:showAsAction="ifRoom"
-                android:visible="false"/>
+                app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/viewticket"
                 android:icon="@drawable/view_tickets"
                 android:theme="@style/OverflowMenu"
                 android:title="@string/viewticket"
-                app:showAsAction="ifRoom"
-                android:visible="false"
-                />
-            <item
-                android:id="@+id/changepassword"
-                android:icon="@drawable/lock"
-                android:theme="@style/OverflowMenu"
-                android:title="CHANGE PASSWORD"
                 app:showAsAction="ifRoom" />
         </menu>
     </item>

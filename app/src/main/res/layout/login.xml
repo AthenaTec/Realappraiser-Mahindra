@@ -157,7 +157,7 @@
         android:textSize="15sp"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_gravity="center"
-        android:visibility="gone"
+        android:visibility="visible"
         />
 
     <TextView

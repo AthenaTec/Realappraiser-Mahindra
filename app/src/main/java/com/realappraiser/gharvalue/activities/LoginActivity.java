@@ -12,20 +12,30 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Base64;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,7 +48,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -51,6 +65,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.R;
+import com.realappraiser.gharvalue.adapter.ImageAdapter;
 import com.realappraiser.gharvalue.alarm.LogOutScheduler;
 import com.realappraiser.gharvalue.communicator.DataModel;
 import com.realappraiser.gharvalue.communicator.DataResponse;
@@ -60,12 +75,18 @@ import com.realappraiser.gharvalue.communicator.ResponseParser;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.model.ConfigData;
+import com.realappraiser.gharvalue.model.GetPhoto;
 import com.realappraiser.gharvalue.model.GetStoreModel;
 import com.realappraiser.gharvalue.model.MultiBranchModel;
 import com.realappraiser.gharvalue.model.RequestApiStatus;
 import com.realappraiser.gharvalue.model.SafeNetModel;
 import com.realappraiser.gharvalue.model.SecurityToken;
 import com.realappraiser.gharvalue.sessiontimeout.LocationService;
+import com.realappraiser.gharvalue.ticketRaiseSystem.adapter.TicketRaiseImageAdapter;
+import com.realappraiser.gharvalue.ticketRaiseSystem.model.TicketCreationResponse;
+import com.realappraiser.gharvalue.ticketRaiseSystem.model.TicketQueryDataModel;
+import com.realappraiser.gharvalue.ticketRaiseSystem.model.TicketRaisePhoto;
+import com.realappraiser.gharvalue.ticketRaiseSystem.view.TicketRaisePhotoPickerActivity;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
@@ -82,16 +103,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import id.zelory.compressor.Compressor;
 
 /**
  * Created by kaptas on 15/12/17.
@@ -130,9 +158,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     // Analytics
     private FirebaseAnalytics mFirebaseAnalytics;
-
+    private int PLACE_PICKER_REQUEST = 1;
+    private int querySpinnerPosition = -1;
     private boolean isGPS = false;
-
     private double latt = 0.0, longi = 0.0;
 
 
@@ -148,6 +176,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Manifest.permission.CAMERA,
     };
 
+    private String[] androidHigherVersionPermission = new String[]{
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.CAMERA};
+
+    TicketRaiseImageAdapter ticketRaiseImageAdapter;
+
+    public static ArrayList<GetPhoto> GetPhoto_list_response = new ArrayList<>();
+
     /**
      * Password hide Imageview instance
      */
@@ -162,6 +198,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String address = "";
 
     AlertDialog branchPopup;
+
+    private static final int GALLERY_REQUEST = 2;
+
+    private static final int CAMERA_REQUEST = 123;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -192,7 +232,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             initValues();
         }*/
 
-        initValues();
+        if (General.rootAndEmulatorChecker(LoginActivity.this) == false) {
+            initValues();
+        }
 
 
         passwordHide.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +244,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+    }
+
+
+    @OnClick(R.id.txt_raiseTicket)
+    void raiseTicket() {
+        if (Connectivity.isConnected(LoginActivity.this)) {
+            String ticketQueryResponse = SettingsUtils.getInstance().getValue(SettingsUtils.TicketQuery, "");
+            if (ticketQueryResponse == null || ticketQueryResponse.isEmpty()) {
+                InitiateGetTicketQueryDropDownTask();
+            } else {
+                initiateTicketQueryPopup();
+            }
+        } else {
+            General.customToast("Internet Connection Is Required", LoginActivity.this);
+        }
     }
 
     private void onShowPassword() {
@@ -1280,11 +1337,94 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
             }, 1000);
-        } else if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SettingsUtils.GPS_REQUEST) {
-                isGPS = true;
-                makeLocationUpadte();
+        } else if (resultCode == Activity.RESULT_OK && requestCode == SettingsUtils.GPS_REQUEST) {
+            isGPS = true;
+            makeLocationUpadte();
+        } else if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                //noinspection deprecation
+                // @SuppressWarnings("deprecation")
+               /* Place place = PlacePicker.getPlace(data, this);
+                StringBuilder stBuilder = new StringBuilder();
+                String placename = String.format("%s", place.getName());
+                double LAT = place.getLatLng().latitude;
+                double LNG = place.getLatLng().longitude;
+                Singleton.getInstance().latitude = LAT;
+                Singleton.getInstance().longitude = LNG;
+                Singleton.getInstance().latlng_details = LAT + ":" + LNG;
+                String address = String.format("%s", place.getAddress());
+                stBuilder.append(address);
+                latvalue.setText(String.valueOf(LAT));
+                longvalue.setText(String.valueOf(LNG));*/
+
+                /* set Marker */
+               /* if ((!general.isEmpty(String.valueOf(LAT))) && (!general.isEmpty(String.valueOf(LNG)))) {
+                    LatLng latLng = new LatLng(LAT, LNG);
+                    mMap.clear();
+                    mMap.addMarker(new MarkerOptions().position(latLng));
+                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+                }*/
+
             }
+        } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+
+            try {
+
+
+                File imgFile = new File(SettingsUtils.mPhotoPath);
+
+                Uri.fromFile(imgFile);
+                //Singleton.getInstance().hit_photo_api = true;
+                //textview_error_photo.setVisibility(View.GONE);
+                Log.e("PathNew :", SettingsUtils.mPhotoPath);
+
+
+                try {
+                    File compressedImageFile = new Compressor(this).compressToFile(imgFile);
+                    if (!general.isEmpty(SettingsUtils.mPhotoPath)) {
+                        Log.e(TAG, "onActivityResult: " + compressedImageFile.getAbsolutePath());
+                        convertToBase64(compressedImageFile.getAbsolutePath());
+                    }
+
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
+
+
+            /***** From Image Adapter *****/
+            ImageAdapter imageAdapter = TicketRaisePhotoPickerActivity.imageAdapter;
+            Log.e(TAG, "show 1538");
+            for (int i = 0; i < imageAdapter.getCheckedItems().size(); i++) {
+                Log.e(TAG, "onActivityResult: " + imageAdapter.getCheckedItems().get(i));
+                try {
+
+                    File imgFile = new File(imageAdapter.getCheckedItems().get(i));
+
+                    Log.d(TAG, "onActivityResult: " + imgFile.getAbsolutePath());
+
+                    File compressedImageFile = new Compressor(this).compressToFile(imgFile);
+                    convertToBase64(compressedImageFile.getAbsolutePath());
+
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                if (i == imageAdapter.getCheckedItems().size() - 1) {
+                    Log.e(TAG, "Hide 1564");
+                }
+            }
+            //noinspection StatementWithEmptyBody
+            if (Build.VERSION.SDK_INT >= 23 &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            }
+
         }
 
     }
@@ -1479,7 +1619,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
             requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
-//            requestData.setAuthToken("Bearer FFcxMfxHjm79qtRcMFNbp4Ydf7l_3jGiLSeSuY2tC3QJmiurkOSfEQGtbN-M6S3kF13VMSM5CALbIJNnT37zMi81gCRCz6YWZD7Usqs9i73kIgJGoHdDsPJdHkWyzD52JuORASt5p-jEB5jN2abX2HXdcIDrZD_YxVHWlFVn4uITc1SA8nk5OPCy5-xmpSq4VrHoUPsRrRMPx411C8gfcJvdaOCTodGRKFVwzVffHRC2cTRi-");
             requestData.setRequestBody(RequestParam.LocationTracker(requestData));
 
             Log.e("Location Params", new Gson().toJson(requestData));
@@ -1511,7 +1650,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SettingsUtils.getInstance().putValue("sessionCountDown", "");
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     SettingsUtils.getInstance().putValue("fromLogin", true);
-                    SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, true);
                     startActivity(intent);
                 }
             });
@@ -1550,7 +1688,428 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return false;
         }
     }
+
+    private void InitiateGetTicketQueryDropDownTask() {
+        String url = general.ApiBaseUrl() + SettingsUtils.getTicketQuery;
+        JsonRequestData requestData = new JsonRequestData();
+        requestData.setUrl(url);
+        // requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
+        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this,
+                requestData, SettingsUtils.GET);
+        webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+            @Override
+            public void onTaskComplete(JsonRequestData requestData) {
+
+                if (requestData.isSuccessful()) {
+                    TicketQueryDataModel ticketQueryDataModel = new Gson().fromJson(requestData.getResponse(), TicketQueryDataModel.class);
+                    String result = "";
+                    if (ticketQueryDataModel != null) {
+                        SettingsUtils.getInstance().putValue(SettingsUtils.TicketQuery, requestData.getResponse());
+                        initiateTicketQueryPopup();
+                    }
+                } else {
+
+                }
+            }
+        });
+        webserviceTask.execute();
+    }
+
+    private void initiateTicketQueryPopup() {
+
+
+        final Dialog dialog = new Dialog(LoginActivity.this, R.style.raiseTicket);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        //dialog.setContentView(R.layout.ticket_raise_system_without_login);
+        dialog.setContentView(R.layout.activity_ticket_raise_system);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+
+        Button btn = dialog.findViewById(R.id.btnSubmit);
+
+        final EditText etOther = dialog.findViewById(R.id.et_other);
+        final Spinner spTicketQuery = dialog.findViewById(R.id.spinnerTicketQuery);
+        final EditText etDescritpion = dialog.findViewById(R.id.etDescritpion);
+        final EditText etEmail = dialog.findViewById(R.id.et_email);
+        final EditText etSapID = dialog.findViewById(R.id.et_sapID);
+        final EditText etContact = dialog.findViewById(R.id.et_contactNumber);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isValidate = general.createTicketValidation(querySpinnerPosition, etOther, etDescritpion, etEmail, etSapID, etContact
+                        , GetPhoto_list_response, LoginActivity.this
+                );
+                if (isValidate) {
+
+                    General.showloading(LoginActivity.this);
+                    TicketRaisePhoto ticketRaisePhoto = new TicketRaisePhoto();
+                    ticketRaisePhoto.setQueryType(querySpinnerPosition);
+                    ticketRaisePhoto.setTicketStatus("1");
+                    if (etOther.getVisibility() == View.VISIBLE) {
+                        ticketRaisePhoto.setOtherQueries(etOther.getText().toString().trim());
+                    }
+                    ticketRaisePhoto.setDescription(etDescritpion.getText().toString().trim());
+                    ticketRaisePhoto.setEmailId(etEmail.getText().toString().trim());
+                    ticketRaisePhoto.setSAPID(etSapID.getText().toString().trim());
+                    ticketRaisePhoto.setContactNumber(etContact.getText().toString().trim());
+                    ArrayList<TicketRaisePhoto.Datum> data = new ArrayList<>();
+                    ArrayList<GetPhoto> photoResposne = new ArrayList<>();
+
+                    photoResposne = GetPhoto_list_response;
+
+                    if (photoResposne.size() > 2) {
+                        for (int i = 2; i < photoResposne.size(); i++) {
+                            TicketRaisePhoto.Datum datum = new TicketRaisePhoto.Datum();
+                            datum.setFileName(photoResposne.get(i).getFileName());
+                            datum.setId(photoResposne.get(i).getId());
+                            datum.setImage(photoResposne.get(i).getLogo());
+                            datum.setTitle(photoResposne.get(i).getTitle());
+                            data.add(datum);
+
+                        }
+                        ticketRaisePhoto.setTicketImages(data);
+                        createTicketApi(ticketRaisePhoto, dialog);
+                    }
+
+
+                }
+
+            }
+        });
+
+
+        GetPhoto_list_response = general.createStaticImage();
+
+        ticketRaiseImageAdapter = new TicketRaiseImageAdapter(general, this, GetPhoto_list_response);
+
+        final RecyclerView recyclerView = dialog.findViewById(R.id.rv_image);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+        recyclerView.setAdapter(ticketRaiseImageAdapter);
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, recyclerView, new ClickListener() {
+
+            @Override
+            public void onClick(View view, int position) {
+                if (getAvailableMemory()) {
+                    Log.e("can pick image :", getAvailableMemory() + "");
+                    if (position == 0) {
+                        if (checkPermissions())
+                            if (GetPhoto_list_response.size() <= 3) {
+                                TakePicture();
+                            } else {
+                                general.CustomToast(getResources().getString(R.string.tiket_raise_image_size_limit));
+                            }
+                    } else if (position == 1) {
+                        if (checkPermissions()) {
+                                /*if (GetPhoto_list_response.size() <= 7) {
+                                            Intent gallery_select = new Intent(LoginActivity.this, MultiPhotoSelectActivity.class);
+                                   // gallery_select.putExtra("available_photo_size",GetPhoto_list_response.size()-2);
+                                    gallery_select.putExtra("TicketRaiseImage",true);
+                                    startActivityForResult(gallery_select, GALLERY_REQUEST);
+                                } else {
+                                    general.CustomToast(getResources().getString(R.string.tiket_raise_image_size_limit));
+                                }*/
+                            if (GetPhoto_list_response.size() <= 3) {
+                                Intent gallery_select = new Intent(LoginActivity.this, TicketRaisePhotoPickerActivity.class);
+                                gallery_select.putExtra("available_photo_size", GetPhoto_list_response.size() - 2);
+                                startActivityForResult(gallery_select, GALLERY_REQUEST);
+                            } else {
+                                general.CustomToast(getResources().getString(R.string.tiket_raise_image_size_limit));
+                            }
+
+
+                        }
+                    }
+                } else {
+                    general.customToast("Please delete some images in your device, to add new image", LoginActivity.this);
+                    Log.e("cannot pick image:", getAvailableMemory() + "");
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
+
+        String ticketQueryDropDown = SettingsUtils.getInstance().getValue(SettingsUtils.TicketQuery, "");
+        TicketQueryDataModel ticketQueryDataModel = new Gson().fromJson(ticketQueryDropDown, TicketQueryDataModel.class);
+
+        ArrayList<TicketQueryDataModel.Data> ticketData = new ArrayList();
+        ticketData.add(new TicketQueryDataModel.Data("Select TicketQuery"));
+        ticketData.addAll(ticketQueryDataModel.getData());
+
+        ArrayAdapter<TicketQueryDataModel.Data> arrayAdapter3 = new ArrayAdapter<>(this, R.layout.row_spinner_item_, ticketData);
+        arrayAdapter3.setDropDownViewResource(R.layout.row_spinner_item_popup);
+        spTicketQuery.setAdapter(arrayAdapter3);
+
+        spTicketQuery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                querySpinnerPosition = ticketData.get(i).getID();
+
+
+                String other = ticketData.get(i).getName();
+
+                if (other != null && !other.isEmpty() && other.equalsIgnoreCase("Others")) {
+                    etOther.setVisibility(View.VISIBLE);
+                } else {
+                    etOther.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+
+    /******
+     * Check Available Memory for the photo
+     * ********/
+    private boolean getAvailableMemory() {
+        boolean available = false;
+        final Runtime runtime = Runtime.getRuntime();
+        final long usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / 1048576L;
+        final long maxHeapSizeInMB = runtime.maxMemory() / 1048576L;
+        final long availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB;
+        final long limitHeapSizeInMB = maxHeapSizeInMB - 8;
+
+        if (usedMemInMB <= limitHeapSizeInMB) {
+            available = true;
+        } else {
+            available = false;
+        }
+        return available;
+    }
+
+    private boolean checkPermissions() {
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        if (Build.VERSION.SDK_INT < 33) {
+            for (String p : permissions) {
+                result = ContextCompat.checkSelfPermission(this, p);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(p);
+                }
+            }
+        } else {
+            for (String p : androidHigherVersionPermission) {
+                result = ContextCompat.checkSelfPermission(this, p);
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(p);
+                }
+            }
+        }
+
+
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
+                    REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
+
+    private void TakePicture() {
+        Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        File photoFile = null;
+        try {
+            photoFile = SettingsUtils.createImageFile(this);
+        } catch (IOException ex) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("takeCameraPicture:");
+            sb.append(ex);
+            Log.e(TAG, sb.toString());
+        }
+        if (photoFile != null) {
+            takePictureIntent.putExtra("output", FileProvider.getUriForFile(this,
+                    SettingsUtils.FILE_PROVIDER, photoFile));
+            startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+        }
+//        }
+    }
+    class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+
+        private ClickListener clicklistener;
+        private GestureDetector gestureDetector;
+
+        public RecyclerTouchListener(Context context, final RecyclerView recycleView, final ClickListener clicklistener) {
+
+            this.clicklistener = clicklistener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recycleView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && clicklistener != null) {
+                        clicklistener.onLongClick(child, recycleView.getChildAdapterPosition(child));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clicklistener != null && gestureDetector.onTouchEvent(e)) {
+                clicklistener.onClick(child, rv.getChildAdapterPosition(child));
+            }
+
+        return false;
+        }
+
+        @Override
+        public void onTouchEvent (RecyclerView rv, MotionEvent e){
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent ( boolean disallowIntercept){
+
+        }
+
+
+    }
+        public static interface ClickListener {
+            public void onClick(View view, int position);
+
+            public void onLongClick(View view, int position);
+        }
+
+
+        private String convertToBase64(String imagePath) {
+            Bitmap bmp = null;
+            ByteArrayOutputStream bos = null;
+            byte[] bt = null;
+            String encodedImage = null;
+            try {
+                bmp = BitmapFactory.decodeFile(imagePath);
+                bos = new ByteArrayOutputStream();
+
+                long current_time_cam_image = Calendar.getInstance().getTimeInMillis();
+                String fileName = "RA_" + current_time_cam_image + ".jpg";
+
+                if (bmp != null) {
+                    bmp = printLatLong(fileName, bmp);
+                }
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+
+
+                bt = bos.toByteArray();
+                encodedImage = Base64.encodeToString(bt, Base64.DEFAULT);
+                String mBase64 = "";
+                mBase64 = encodedImage;
+
+
+                if (mBase64 != null) {
+                    //Log.e("encode_is", "encode_is: " + mBase64);
+                    GetPhoto getPhoto_new_image = new GetPhoto();
+                    getPhoto_new_image.setNewimage(true);
+                    getPhoto_new_image.setLogo(mBase64);
+                    getPhoto_new_image.setId(0);
+                    getPhoto_new_image.setFileName(fileName);
+
+                    getPhoto_new_image.setPropertyId(0);
+
+                    GetPhoto_list_response.add(getPhoto_new_image);
+                    ticketRaiseImageAdapter.setphoto_adapter(GetPhoto_list_response);
+                }
+
+
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            return encodedImage;
+        }
+
+
+        private Bitmap printLatLong(String fileName, Bitmap toEdit) {
+            try {
+                //  Log.e(TAG, "printLatLong: " + latValue + "\n" + longvalue);
+
+//        Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), Bitmap.Config.ARGB_8888);
+                Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), toEdit.getConfig());
+                Canvas cs = new Canvas(dest);
+                cs.drawBitmap(toEdit, 0, 0, null);
+                Paint tPaint = new Paint();
+                tPaint.setTextSize(20.0f);
+                tPaint.setColor(-16776961);
+                tPaint.setTextAlign(Paint.Align.CENTER);
+                tPaint.setStyle(Paint.Style.FILL);
+                float height = tPaint.measureText("yY");
+
+                Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
+                StringBuilder sb2 = new StringBuilder();
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+
+                    sb2.append(Environment.getExternalStorageDirectory());
+
+                } else {
+                    sb2.append(this.getExternalFilesDir(""));
+                }
+                sb2.append(File.separator);
+
+                sb2.append(fileName);
+                sb2.append(".jpg");
+                dest.compress(compressFormat, 100, new FileOutputStream(new File(sb2.toString())));
+                return dest;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        private void createTicketApi(TicketRaisePhoto ticketRaisePhoto, Dialog dialog) {
+            String url = general.ApiBaseUrl() + SettingsUtils.createQuery;
+            JsonRequestData requestData = new JsonRequestData();
+            requestData.setUrl(url);
+            requestData.setMainJson(new Gson().toJson(ticketRaisePhoto));
+            requestData.setRequestBody(RequestParam.SaveCaseInspectionRequestParams(requestData));
+            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this,
+                    requestData, SettingsUtils.POST);
+
+            Log.e(LoginActivity.class.getName(), new Gson().toJson(requestData));
+            webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+                @Override
+                public void onTaskComplete(JsonRequestData requestData) {
+
+                    try {
+                        TicketCreationResponse ticketCreationResponse = new Gson().fromJson(requestData.getResponse(), TicketCreationResponse.class);
+                        if (ticketCreationResponse.getStatus() == 1) {
+                            if (ticketCreationResponse.getData() != null) {
+                                General.customToast("Ticket ID " + ticketCreationResponse.getData().getTicketIDVal() + " Created!", LoginActivity.this);
+                                if (dialog != null)
+                                    dialog.cancel();
+                            }
+                        }
+                        General.hideloading();
+                    } catch (Exception e) {
+                        e.getMessage();
+                        General.hideloading();
+                    }
+                }
+            });
+            webserviceTask.execute();
+        }
+
+
 }
+
 
 
 
