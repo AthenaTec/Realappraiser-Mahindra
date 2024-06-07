@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/height_10"
+            android:layout_marginBottom="@dimen/height_5"
+            android:fontFamily="@font/medium"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="View Tickets"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/_17sdp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/height_5"
+            android:layout_weight=".65"
+            android:fontFamily="@font/medium"
+            android:text="Filter By"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp" />
+
+        <Spinner
+            android:id="@+id/spinner_filter"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            tools:ignore="InconsistentLayout"
+            android:background="@drawable/spinner_status"
+            android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+            android:spinnerMode="dropdown"
+            android:padding="@dimen/_10sdp"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_status"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            tools:ignore="InconsistentLayout"
+            android:background="@drawable/spinner_status"
+            android:popupBackground="@drawable/spinner_pop_up_dialog_bg"
+            android:spinnerMode="dropdown"
+            android:padding="@dimen/_10sdp"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_8sdp"
+            />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:background="@drawable/et_rec_border_grey"
+            android:clickable="true"
+            android:editable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="Enter Ticket ID"
+            android:lineSpacingExtra="2dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="@dimen/_10sdp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/font_texthint"
+            android:textSize="14sp"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:visibility="gone"
+            android:inputType="number"
+            />
+
+        <EditText
+            android:id="@+id/etFromDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/et_rec_border_grey"
+            android:clickable="false"
+            android:editable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="From Date"
+            android:lineSpacingExtra="2dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="@dimen/_10sdp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/font_texthint"
+            android:textSize="14sp"
+            android:drawableEnd="@drawable/calender_icon"
+            android:layout_marginRight="@dimen/_2sdp"
+            android:layout_marginEnd="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            />
+
+
+        <EditText
+            android:id="@+id/etToDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/et_rec_border_grey"
+            android:clickable="false"
+            android:editable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="To Date"
+            android:lineSpacingExtra="2dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="@dimen/_10sdp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/font_texthint"
+            android:textSize="14sp"
+            android:drawableEnd="@drawable/calender_icon"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            />
+
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
+            <Button
+                android:id="@+id/btnClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/buttonshape"
+                android:fontFamily="@font/medium"
+                android:paddingStart="@dimen/_18sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_18sdp"
+                android:paddingBottom="@dimen/_8sdp"
+                android:text="Cancel"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/strokeshape_bg"
+                android:fontFamily="@font/medium"
+                android:paddingStart="25dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="25dp"
+                android:paddingBottom="10dp"
+                android:text="Search"
+                android:textColor="@color/White"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

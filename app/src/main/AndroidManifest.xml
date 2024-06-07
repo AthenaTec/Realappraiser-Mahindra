@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.realappraiser.gharvalue">
 
-
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -44,19 +43,19 @@
         tools:replace="android:allowBackup"
         tools:targetApi="m">
         <activity
+            android:name=".ticketRaiseSystem.view.TicketRaisePhotoPickerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".viewtickets.view.ViewRaisedTicketsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activities.BaseActivity"
             android:exported="false" />
         <activity
             android:name=".convenyancereport.ConvenyanceReport"
-            android:exported="true">
-
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".noncaseactivity.NonCaseActivity"
             android:exported="false" />
@@ -169,6 +168,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".alarm.LogOutReceiver"/>
+
     </application>
 
 </manifest>

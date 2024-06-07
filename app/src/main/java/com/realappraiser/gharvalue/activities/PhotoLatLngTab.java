@@ -262,6 +262,7 @@ public class PhotoLatLngTab extends BaseActivity implements TabLayout.OnTabSelec
         MenuItem item5 = menu.findItem(R.id.create);
         MenuItem item6 = menu.findItem(R.id.noncaseactivity);
         MenuItem item7 = menu.findItem(R.id.convyencereport);
+        MenuItem item8 = menu.findItem(R.id.filter);
 
 
         item.setVisible(true);
@@ -272,6 +273,7 @@ public class PhotoLatLngTab extends BaseActivity implements TabLayout.OnTabSelec
         item5.setVisible(false);
         item6.setVisible(false);
         item7.setVisible(false);
+        item8.setVisible(false);
         return true;
     }
 

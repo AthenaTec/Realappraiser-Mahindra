@@ -18,8 +18,7 @@ import java.util.ArrayList;
 
 public class DailyReportAdapter extends RecyclerView.Adapter<DailyReportAdapter.DailyReportViewHolder> {
 
-    private ArrayList
-            <DailyActivityData> dataModels;
+    private ArrayList<DailyActivityData> dataModels;
     private final Activity mContext;
 
     private General general;

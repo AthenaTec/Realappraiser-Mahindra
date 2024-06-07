@@ -26,11 +26,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.R;
+import com.realappraiser.gharvalue.communicator.DailyActivityResponse;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
-import com.realappraiser.gharvalue.communicator.DailyActivityResponse;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.SettingsUtils;

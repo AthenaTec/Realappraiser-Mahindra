@@ -110,6 +110,22 @@ public class SettingsUtils {
     public static final String WEEKLY_REPORT = "/api/FsConveyance/app_CustomConveyanceReport";
 
 
+    public static final String getTicketQuery = "/api/Ticket/GetTicketQueries";
+
+    public static final String createQuery = "/api/Ticket/InsertTicketDetails";
+
+    public static final String fetchRaisedTicket = "/api/Ticket/GetTicketDetails";
+
+    public static final String fetchTicketInfo = "/api/Ticket/TicketDetailsbyId";
+
+    public static final String fetchTicketStatus = "/api/Ticket/GetTicketStatus";
+
+    public static final String fetchTicketImage = "/api/Ticket/GetBLOBImageByTicketId";
+
+
+    public static final String UpdateStatusbyId = "/api/Ticket/UpdateStatusbyId";
+
+
     //public static final String Logout = API_BASE_URL + "login/logout";
 
     public static final String KEY_LOGIN_ID = "KEY_LOGIN_ID";
@@ -117,6 +133,8 @@ public class SettingsUtils {
     public static final String KEY_LASTNAME = "KEY_LASTNAME";
     public static final String KEY_EMAIL = "KEY_EMAIL";
     public static final String DropDownSave = "DropDownSave";
+    public static final String TicketQuery = "TicketQuery";
+    public static final String FilterStatusQuery = "FilterStatusQuery";
     public static final String KEY_DOCUMENT = "KEY_DOCUMENT";
     public static final String KEY_OFFLINECASE_COUNT = "KEY_OFFLINECASE_COUNT";
     public static final String KEY_ENABLE_OFFLINE = "KEY_ENABLE_OFFLINE";

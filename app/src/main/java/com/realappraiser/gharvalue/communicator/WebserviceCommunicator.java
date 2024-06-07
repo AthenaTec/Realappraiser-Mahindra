@@ -294,6 +294,7 @@ public class WebserviceCommunicator extends AsyncTask<String, Void, JsonRequestD
                     .readTimeout(30, TimeUnit.SECONDS).build();
 
             /*if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
+           /* if (BuildConfig.BUILD_TYPE == "debug" || BuildConfig.DEBUG == true) {
                 client = new OkHttpClient.Builder()
                         .addInterceptor(interceptor)
                         .addInterceptor(provideCacheInterceptor())

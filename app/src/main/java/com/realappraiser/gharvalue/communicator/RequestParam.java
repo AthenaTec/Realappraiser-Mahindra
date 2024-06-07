@@ -6,6 +6,9 @@ import com.realappraiser.gharvalue.utils.SettingsUtils;
 
 import org.json.JSONObject;
 
+import com.realappraiser.gharvalue.ticketRaiseSystem.model.GetRaisedTickets;
+import com.realappraiser.gharvalue.ticketRaiseSystem.service.TicketJsonRequestData;
+
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -154,6 +157,31 @@ public class RequestParam {
     }
 
     public static String GetSubBranches(JsonRequestData jsonRequestData) {
+    public static String getTicketInfo(JsonRequestData jsonRequestData){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
+        urlBuilder.addQueryParameter("TicketId",String.valueOf(jsonRequestData.getTicketId()));
+        String getUrl = urlBuilder.build().toString();
+        return getUrl;
+    }
+
+    public static String getUpdateTicketInfo(TicketJsonRequestData jsonRequestData){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
+        urlBuilder.addQueryParameter("TicketId",String.valueOf(jsonRequestData.getTicketId()));
+        urlBuilder.addQueryParameter("StatusId",String.valueOf(jsonRequestData.getStatusId()));
+        urlBuilder.addQueryParameter("comments",jsonRequestData.getComments());
+        String getUrl = urlBuilder.build().toString();
+        return getUrl;
+    }
+
+    public static String getTicketImage(JsonRequestData jsonRequestData){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
+        urlBuilder.addQueryParameter("TicketId",String.valueOf(jsonRequestData.getTicketId()));
+        String getUrl = urlBuilder.build().toString();
+        return getUrl;
+    }
+
+
+    public static String GetSubBranches(JsonRequestData jsonRequestData){
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("agencyBranchId", jsonRequestData.getAgencyId());
         return urlBuilder.build().toString();
@@ -339,6 +367,22 @@ public class RequestParam {
     }
 
 
+    public static RequestBody getRaisedticket(GetRaisedTickets raisedTickets) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("fromdate", raisedTickets.getFromdate())
+                .add("todate", raisedTickets.getTodate())
+                .add("fillterby", raisedTickets.getFillterby())
+                .add("ticketId", raisedTickets.getTicketId())
+                .add("status", raisedTickets.getStatus())
+                .add("roleId", String.valueOf(raisedTickets.getRoleId()))
+                .add("EmpId", String.valueOf(raisedTickets.getEmpId()))
+                .build();
+        return requestBody;
+
+    }
+
+
+
     public static String EditInspectionRequestParams(JsonRequestData jsonRequestData) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("id", jsonRequestData.getId());
@@ -490,6 +534,15 @@ public class RequestParam {
         urlBuilder.addQueryParameter("ToDate", jsonRequestData.getToDate());
         String geturl = urlBuilder.build().toString();
         return geturl;
+    }
+
+
+    public static RequestBody getUpdateTicketResponse(TicketJsonRequestData ticketJsonRequestData) {
+        return new FormBody.Builder()
+                .add("TicketId", String.valueOf(ticketJsonRequestData.getTicketId()))
+                .add("StatusId", String.valueOf(ticketJsonRequestData.getStatusId()))
+                .add("comments", ticketJsonRequestData.getComments())
+                .build();
     }
 
 }

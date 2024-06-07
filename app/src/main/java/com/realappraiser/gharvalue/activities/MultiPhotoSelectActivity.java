@@ -384,7 +384,7 @@ public class MultiPhotoSelectActivity extends BaseActivity {
     }
 
     private void initializeRecyclerView(ArrayList<String> imageUrls) {
-        imageAdapter = new ImageAdapter(this, imageUrls,selectedPhotoSize,photolanlat);
+        imageAdapter = new ImageAdapter(this, imageUrls,selectedPhotoSize,photolanlat, false);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);

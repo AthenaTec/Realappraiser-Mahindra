@@ -4,8 +4,6 @@ package com.realappraiser.gharvalue.communicator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
-
 import okhttp3.RequestBody;
 
 /**
@@ -119,6 +117,9 @@ public class JsonRequestData {
     private String FromDate;
 
     private String ToDate;
+
+    private int TicketId;
+
 
     public String getNotes() {
         return Notes;
@@ -829,6 +830,14 @@ public class JsonRequestData {
 
     public void setFromDate(String fromDate) {
         FromDate = fromDate;
+    }
+
+    public int getTicketId() {
+        return TicketId;
+    }
+
+    public void setTicketId(int ticketId) {
+        TicketId = ticketId;
     }
 
     /*public DailyActivityDataResponse getData() {
