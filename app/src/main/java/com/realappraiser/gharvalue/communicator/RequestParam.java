@@ -156,7 +156,6 @@ public class RequestParam {
         return geturl;
     }
 
-    public static String GetSubBranches(JsonRequestData jsonRequestData) {
     public static String getTicketInfo(JsonRequestData jsonRequestData){
         HttpUrl.Builder urlBuilder = HttpUrl.parse(jsonRequestData.getInitQueryUrl()).newBuilder();
         urlBuilder.addQueryParameter("TicketId",String.valueOf(jsonRequestData.getTicketId()));

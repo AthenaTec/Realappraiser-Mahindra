@@ -2364,56 +2364,7 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
     }
 
 
-    public boolean createTicketValidation(int querySpinnerPosition, EditText etOther, EditText etDescritpion, EditText etEmail, EditText etSapID, EditText etContact, ArrayList<GetPhoto> getPhoto_list_response, Context context) {
 
-        if (querySpinnerPosition == -1 || querySpinnerPosition == 0) {
-            General.customToast("Please Select query", context);
-            return false;
-        } else if (etOther.getVisibility() == (View.VISIBLE) && etOther != null && etOther.getText().toString().trim().isEmpty()) {
-            General.customToast("Please enter other query", context);
-            return false;
-        } else if (etDescritpion != null && etDescritpion.getText().toString().trim().isEmpty()) {
-            General.customToast("Please enter description", context);
-            return false;
-        } else if (etEmail != null && etEmail.getText().toString().trim().isEmpty()) {
-            General.customToast("Please enter Email ID", context);
-            return false;
-        } else if (etSapID != null && etSapID.getText().toString().trim().isEmpty()) {
-            General.customToast("Please enter SAP ID", context);
-            return false;
-        } else if (etContact != null && etContact.getText().toString().trim().isEmpty() ) {
-            General.customToast("Please enter Contact Number", context);
-            return false;
-        }else if(etContact.getText().toString().trim().length() < 10){
-            General.customToast("Mobile Number must be 10 digits", context);
-            return false;
-        } else if (getPhoto_list_response == null || getPhoto_list_response.size() < 3 ) {
-            General.customToast("Please upload image", context);
-            return false;
-        }
-        return true;
-    }
-
-
-    public ArrayList<GetPhoto> createStaticImage(){
-
-        ArrayList<GetPhoto> createPhotoList = new ArrayList<GetPhoto>();
-
-        GetPhoto dummy_cameraImage = new GetPhoto();
-        dummy_cameraImage.setDefaultimage(true);
-        dummy_cameraImage.setPropertyId(0);
-        Gson gson_dummy_camera = new Gson();
-        gson_dummy_camera.toJson(dummy_cameraImage);
-        createPhotoList.add(dummy_cameraImage);
-
-        GetPhoto dummy_galleryImage = new GetPhoto();
-        dummy_galleryImage.setDefaultimage(true);
-        dummy_galleryImage.setPropertyId(0);
-        Gson gson_dummy_gallery = new Gson();
-        gson_dummy_gallery.toJson(dummy_galleryImage);
-        createPhotoList.add(dummy_galleryImage);
-        return createPhotoList;
-    }
     public boolean createTicketValidation(int querySpinnerPosition, EditText etOther, EditText etDescritpion, EditText etEmail, EditText etSapID, EditText etContact, ArrayList<GetPhoto> getPhoto_list_response, Context context) {
 
         if (querySpinnerPosition == -1 || querySpinnerPosition == 0) {

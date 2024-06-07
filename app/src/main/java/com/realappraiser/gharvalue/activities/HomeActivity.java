@@ -1661,9 +1661,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         MenuItem item4 = menu.findItem(R.id.noncaseactivity);
         MenuItem item5 = menu.findItem(R.id.convyencereport);
         MenuItem item6 = menu.findItem(R.id.changepassword);
-        MenuItem item6 = menu.findItem(R.id.raiseticketsystem);
-        MenuItem item7 = menu.findItem(R.id.viewticket);
-        MenuItem item8 = menu.findItem(R.id.filter);
+        MenuItem item7 = menu.findItem(R.id.raiseticketsystem);
+        MenuItem item8 = menu.findItem(R.id.viewticket);
+        MenuItem item9 = menu.findItem(R.id.filter);
 
         item.setVisible(true);
         item1.setVisible(true);
@@ -1672,7 +1672,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         item5.setVisible(true);
         item6.setVisible(true);
         item2.setVisible(false);
-        item8.setVisible(false);
+        item8.setVisible(true);
         return true;
     }
 

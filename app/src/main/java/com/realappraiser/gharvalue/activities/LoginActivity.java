@@ -66,6 +66,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.adapter.ImageAdapter;
+import com.realappraiser.gharvalue.alarm.LogOutScheduler;
 import com.realappraiser.gharvalue.communicator.DataModel;
 import com.realappraiser.gharvalue.communicator.DataResponse;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
@@ -80,6 +81,7 @@ import com.realappraiser.gharvalue.model.MultiBranchModel;
 import com.realappraiser.gharvalue.model.RequestApiStatus;
 import com.realappraiser.gharvalue.model.SafeNetModel;
 import com.realappraiser.gharvalue.model.SecurityToken;
+import com.realappraiser.gharvalue.sessiontimeout.LocationService;
 import com.realappraiser.gharvalue.ticketRaiseSystem.adapter.TicketRaiseImageAdapter;
 import com.realappraiser.gharvalue.ticketRaiseSystem.model.TicketCreationResponse;
 import com.realappraiser.gharvalue.ticketRaiseSystem.model.TicketQueryDataModel;
@@ -209,7 +211,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.login);
         ButterKnife.bind(this);
 
-        SettingsUtils.getInstance().putValue("sessionCountDown", "");
+        // SettingsUtils.getInstance().putValue("sessionCountDown", "");
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -1338,8 +1340,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else if (resultCode == Activity.RESULT_OK && requestCode == SettingsUtils.GPS_REQUEST) {
             isGPS = true;
             makeLocationUpadte();
-        }
-        else if (requestCode == PLACE_PICKER_REQUEST) {
+        } else if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 //noinspection deprecation
                 // @SuppressWarnings("deprecation")
@@ -1366,8 +1367,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }*/
 
             }
-        }
-        else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
 
             try {
 
@@ -1747,7 +1747,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     TicketRaisePhoto ticketRaisePhoto = new TicketRaisePhoto();
                     ticketRaisePhoto.setQueryType(querySpinnerPosition);
                     ticketRaisePhoto.setTicketStatus("1");
-                    if(etOther.getVisibility() == View.VISIBLE){
+                    if (etOther.getVisibility() == View.VISIBLE) {
                         ticketRaisePhoto.setOtherQueries(etOther.getText().toString().trim());
                     }
                     ticketRaisePhoto.setDescription(etDescritpion.getText().toString().trim());
@@ -1833,7 +1833,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             }
         }));
-
 
 
         String ticketQueryDropDown = SettingsUtils.getInstance().getValue(SettingsUtils.TicketQuery, "");
@@ -1940,7 +1939,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 //        }
     }
-
     class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         private ClickListener clicklistener;
@@ -1972,139 +1970,146 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 clicklistener.onClick(child, rv.getChildAdapterPosition(child));
             }
 
-        @Override
-        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
+        return false;
         }
 
         @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        public void onTouchEvent (RecyclerView rv, MotionEvent e){
 
         }
-    }
 
-    public static interface ClickListener {
-        public void onClick(View view, int position);
+        @Override
+        public void onRequestDisallowInterceptTouchEvent ( boolean disallowIntercept){
 
-        public void onLongClick(View view, int position);
-    }
-
-
-    private String convertToBase64(String imagePath) {
-        Bitmap bmp = null;
-        ByteArrayOutputStream bos = null;
-        byte[] bt = null;
-        String encodedImage = null;
-        try {
-            bmp = BitmapFactory.decodeFile(imagePath);
-            bos = new ByteArrayOutputStream();
-
-            long current_time_cam_image = Calendar.getInstance().getTimeInMillis();
-            String fileName = "RA_" + current_time_cam_image + ".jpg";
-
-            if (bmp != null) {
-                bmp = printLatLong(fileName, bmp);
-            }
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-
-
-            bt = bos.toByteArray();
-            encodedImage = Base64.encodeToString(bt, Base64.DEFAULT);
-            String mBase64 = "";
-            mBase64 = encodedImage;
-
-
-            if (mBase64 != null) {
-                //Log.e("encode_is", "encode_is: " + mBase64);
-                GetPhoto getPhoto_new_image = new GetPhoto();
-                getPhoto_new_image.setNewimage(true);
-                getPhoto_new_image.setLogo(mBase64);
-                getPhoto_new_image.setId(0);
-                getPhoto_new_image.setFileName(fileName);
-
-                getPhoto_new_image.setPropertyId(0);
-
-                GetPhoto_list_response.add(getPhoto_new_image);
-                ticketRaiseImageAdapter.setphoto_adapter(GetPhoto_list_response);
-            }
-
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
         }
-        return encodedImage;
+
+
     }
+        public static interface ClickListener {
+            public void onClick(View view, int position);
+
+            public void onLongClick(View view, int position);
+        }
 
 
-    private Bitmap printLatLong(String fileName, Bitmap toEdit) {
-        try {
-            //  Log.e(TAG, "printLatLong: " + latValue + "\n" + longvalue);
+        private String convertToBase64(String imagePath) {
+            Bitmap bmp = null;
+            ByteArrayOutputStream bos = null;
+            byte[] bt = null;
+            String encodedImage = null;
+            try {
+                bmp = BitmapFactory.decodeFile(imagePath);
+                bos = new ByteArrayOutputStream();
+
+                long current_time_cam_image = Calendar.getInstance().getTimeInMillis();
+                String fileName = "RA_" + current_time_cam_image + ".jpg";
+
+                if (bmp != null) {
+                    bmp = printLatLong(fileName, bmp);
+                }
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+
+
+                bt = bos.toByteArray();
+                encodedImage = Base64.encodeToString(bt, Base64.DEFAULT);
+                String mBase64 = "";
+                mBase64 = encodedImage;
+
+
+                if (mBase64 != null) {
+                    //Log.e("encode_is", "encode_is: " + mBase64);
+                    GetPhoto getPhoto_new_image = new GetPhoto();
+                    getPhoto_new_image.setNewimage(true);
+                    getPhoto_new_image.setLogo(mBase64);
+                    getPhoto_new_image.setId(0);
+                    getPhoto_new_image.setFileName(fileName);
+
+                    getPhoto_new_image.setPropertyId(0);
+
+                    GetPhoto_list_response.add(getPhoto_new_image);
+                    ticketRaiseImageAdapter.setphoto_adapter(GetPhoto_list_response);
+                }
+
+
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            return encodedImage;
+        }
+
+
+        private Bitmap printLatLong(String fileName, Bitmap toEdit) {
+            try {
+                //  Log.e(TAG, "printLatLong: " + latValue + "\n" + longvalue);
 
 //        Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), Bitmap.Config.ARGB_8888);
-            Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), toEdit.getConfig());
-            Canvas cs = new Canvas(dest);
-            cs.drawBitmap(toEdit, 0, 0, null);
-            Paint tPaint = new Paint();
-            tPaint.setTextSize(20.0f);
-            tPaint.setColor(-16776961);
-            tPaint.setTextAlign(Paint.Align.CENTER);
-            tPaint.setStyle(Paint.Style.FILL);
-            float height = tPaint.measureText("yY");
+                Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), toEdit.getConfig());
+                Canvas cs = new Canvas(dest);
+                cs.drawBitmap(toEdit, 0, 0, null);
+                Paint tPaint = new Paint();
+                tPaint.setTextSize(20.0f);
+                tPaint.setColor(-16776961);
+                tPaint.setTextAlign(Paint.Align.CENTER);
+                tPaint.setStyle(Paint.Style.FILL);
+                float height = tPaint.measureText("yY");
 
-            Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
-            StringBuilder sb2 = new StringBuilder();
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
+                StringBuilder sb2 = new StringBuilder();
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 
-                sb2.append(Environment.getExternalStorageDirectory());
+                    sb2.append(Environment.getExternalStorageDirectory());
 
-            } else {
-                sb2.append(this.getExternalFilesDir(""));
-            }
-            sb2.append(File.separator);
-
-            sb2.append(fileName);
-            sb2.append(".jpg");
-            dest.compress(compressFormat, 100, new FileOutputStream(new File(sb2.toString())));
-            return dest;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void createTicketApi(TicketRaisePhoto ticketRaisePhoto, Dialog dialog) {
-        String url = general.ApiBaseUrl() + SettingsUtils.createQuery;
-        JsonRequestData requestData = new JsonRequestData();
-        requestData.setUrl(url);
-        requestData.setMainJson(new Gson().toJson(ticketRaisePhoto));
-        requestData.setRequestBody(RequestParam.SaveCaseInspectionRequestParams(requestData));
-        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this,
-                requestData, SettingsUtils.POST);
-
-        Log.e(LoginActivity.class.getName(), new Gson().toJson(requestData));
-        webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
-            @Override
-            public void onTaskComplete(JsonRequestData requestData) {
-
-                try {
-                    TicketCreationResponse ticketCreationResponse = new Gson().fromJson(requestData.getResponse(), TicketCreationResponse.class);
-                    if (ticketCreationResponse.getStatus() == 1) {
-                        if (ticketCreationResponse.getData() != null) {
-                            General.customToast("Ticket ID " + ticketCreationResponse.getData().getTicketIDVal() + " Created!", LoginActivity.this);
-                            if (dialog != null)
-                                dialog.cancel();
-                        }
-                    }
-                    General.hideloading();
-                } catch (Exception e) {
-                    e.getMessage();
-                    General.hideloading();
+                } else {
+                    sb2.append(this.getExternalFilesDir(""));
                 }
+                sb2.append(File.separator);
+
+                sb2.append(fileName);
+                sb2.append(".jpg");
+                dest.compress(compressFormat, 100, new FileOutputStream(new File(sb2.toString())));
+                return dest;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
             }
-        });
-        webserviceTask.execute();
-    }
+        }
+
+        private void createTicketApi(TicketRaisePhoto ticketRaisePhoto, Dialog dialog) {
+            String url = general.ApiBaseUrl() + SettingsUtils.createQuery;
+            JsonRequestData requestData = new JsonRequestData();
+            requestData.setUrl(url);
+            requestData.setMainJson(new Gson().toJson(ticketRaisePhoto));
+            requestData.setRequestBody(RequestParam.SaveCaseInspectionRequestParams(requestData));
+            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this,
+                    requestData, SettingsUtils.POST);
+
+            Log.e(LoginActivity.class.getName(), new Gson().toJson(requestData));
+            webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+                @Override
+                public void onTaskComplete(JsonRequestData requestData) {
+
+                    try {
+                        TicketCreationResponse ticketCreationResponse = new Gson().fromJson(requestData.getResponse(), TicketCreationResponse.class);
+                        if (ticketCreationResponse.getStatus() == 1) {
+                            if (ticketCreationResponse.getData() != null) {
+                                General.customToast("Ticket ID " + ticketCreationResponse.getData().getTicketIDVal() + " Created!", LoginActivity.this);
+                                if (dialog != null)
+                                    dialog.cancel();
+                            }
+                        }
+                        General.hideloading();
+                    } catch (Exception e) {
+                        e.getMessage();
+                        General.hideloading();
+                    }
+                }
+            });
+            webserviceTask.execute();
+        }
+
+
 }
+
 
 
 

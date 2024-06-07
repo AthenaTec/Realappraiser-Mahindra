@@ -21,7 +21,9 @@
         android:id="@+id/filter"
         android:icon="@drawable/filter_icon"
         app:showAsAction="always"
-        tools:ignore="MenuTitle"/>
+        tools:ignore="MenuTitle"
+        android:visible="false"
+        />
     <item
         android:id="@+id/dropdown_menu"
         android:icon="@drawable/menu_version"
