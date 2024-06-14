@@ -1175,17 +1175,43 @@
                     android:id="@+id/ll_as_per_site"
                     android:orientation="vertical"
                     >
-                <TextView
-                    android:id="@+id/text_as_per_site_building"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"
-                    android:fontFamily="@font/regular"
-                    android:text="As per Site – Building / House"
-                    android:textColor="@color/font_heading"
-                    android:textSize="@dimen/_13sdp"
-                    tools:ignore="RtlHardcoded" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/height_3"
+                        tools:ignore="RtlHardcoded">
+
+                        <TextView
+                            android:id="@+id/text_as_per_site_building"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_4sdp"
+                            android:fontFamily="@font/regular"
+                            android:text="As per Site – Building / House"
+                            android:textColor="@color/font_heading"
+                            android:textSize="@dimen/_13sdp"
+                            tools:ignore="RtlHardcoded" />
+
+                        <CheckBox
+                            android:id="@+id/same_as_doc_boundary_checkbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_marginRight="@dimen/height_6"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginLeft="@dimen/height_8"
+                            android:layout_weight="1"
+                            android:button="@drawable/check_box_selector"
+                            android:checked="false"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/height_8"
+                            android:text="@string/same_as_docs"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/_13sdp"
+                            tools:ignore="RtlHardcoded,RtlSymmetry" />
+                    </LinearLayout>
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
