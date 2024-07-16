@@ -39,6 +39,7 @@ import com.realappraiser.gharvalue.model.Marketablity;
 import com.realappraiser.gharvalue.model.Measurements;
 import com.realappraiser.gharvalue.model.Nameofpersons;
 import com.realappraiser.gharvalue.model.OfflineDataModel;
+import com.realappraiser.gharvalue.model.OwnershipType;
 import com.realappraiser.gharvalue.model.Paint;
 import com.realappraiser.gharvalue.model.PassageType;
 import com.realappraiser.gharvalue.model.Paving;
@@ -1367,7 +1368,27 @@ public class ResponseParser {
                         }
                         Singleton.getInstance().localities_list = localities_list;
 
+//Added by Hari
+                        /* ******Set OwnershipTpye Dummy Data*******/
+                        ArrayList<OwnershipType> ownershipType_list = new ArrayList<>();
+                        OwnershipType dummy_owner = new OwnershipType();
+                        dummy_owner.setId(0);
+                        dummy_owner.setName("Select");
+                        Gson gson_dummy_ownerType = new Gson();
+                        gson_dummy_ownerType.toJson(dummy_owner);
+                        ownershipType_list.add(dummy_owner);
 
+                        /* Json array for OwnershipType*/
+                        JSONArray ownerType_array = jsonObject.getJSONArray("OwnershipType");
+                        for (int p = 0; p < ownerType_array.length(); p++) {
+                            JSONObject interviewobj = ownerType_array.getJSONObject(p);
+                            Gson gson = new Gson();
+                            OwnershipType obj = null;
+                            obj = new OwnershipType();
+                            obj = gson.fromJson(interviewobj.toString(), OwnershipType.class);
+                            ownershipType_list.add(obj);
+                        }
+                        Singleton.getInstance().ownershipTypes_list = ownershipType_list;
 
                         /* ******Set Tenure Dummy Data*******/
                         ArrayList<Tenure> tenures_list = new ArrayList<>();

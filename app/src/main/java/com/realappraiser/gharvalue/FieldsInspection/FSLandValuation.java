@@ -1260,8 +1260,8 @@ public class FSLandValuation extends Fragment implements RatePopupupInterface {
         Singleton.getInstance().indPropertyValuation.setIsEstimateJustified(false);
 
 
-        getSubSequentRevaluation();
-        storeProposedRenovateValues();
+       // getSubSequentRevaluation();
+     //   storeProposedRenovateValues();
     }
 
     private static void storeProposedRenovateValues() {

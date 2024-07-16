@@ -35,19 +35,17 @@
                 android:layout_marginTop="@dimen/height_30"
                 android:layout_marginBottom="@dimen/height_10"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginLeft="@dimen/_10sdp"
+                android:gravity="end"
                 android:visibility="visible"
                 >
                 <!-- Save button -->
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/textview_save_top_dashboard"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/height_12"
                     android:layout_toLeftOf="@+id/textview_save_top"
                     android:background="@drawable/buttonshape"
                     android:backgroundTint="@color/green"
@@ -72,7 +70,8 @@
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_medium"
-                    tools:ignore="RtlHardcoded,UnusedAttribute" />
+                    tools:ignore="RtlHardcoded,UnusedAttribute"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
             <TextView
@@ -830,6 +829,31 @@
                         android:nextFocusForward="@+id/editText_surveyno"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_unit_no"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    app:hintTextAppearance="@style/TextInputLayout_hint"
+                    app:hintTextColor="@color/font_texthint"
+                    tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_unit_no"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/regular"
+                        android:hint="@string/unitno"
+                        android:inputType="textCapSentences"
+                        android:maxLength="100"
+                        android:textSize="@dimen/_13sdp"
+                        android:imeOptions="actionNext"
+                        android:nextFocusForward="@+id/editText_surveyno"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tl_survey_no"
@@ -1758,6 +1782,63 @@
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/ll_contact_info_property"
+                    >
+
+                    <!--Property Contact Person Name-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_person_name_property"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        app:hintTextAppearance="@style/TextInputLayout_hint"
+                        app:hintTextColor="@color/font_texthint"
+                        tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPersonName_property"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/regular"
+                            android:hint="Property Contact Person Name*"
+                            android:inputType="textCapSentences"
+                            android:maxLength="100"
+                            android:textSize="@dimen/_13sdp"
+                            android:imeOptions="actionNext"
+                            android:nextFocusForward="@+id/etPersonNo"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!--Property Contact Person Number-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_person_number_property"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        app:hintTextAppearance="@style/TextInputLayout_hint"
+                        app:hintTextColor="@color/font_texthint"
+                        tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPersonNo_property"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/regular"
+                            android:hint="Property Contact Person Mobile Number*"
+                            android:inputType="number"
+                            android:maxLength="14"
+                            android:textSize="@dimen/_13sdp"
+                            android:imeOptions="actionNext"
+                            android:nextFocusForward="@+id/et_finnonId"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
                <!-- <Spinner
                     android:id="@+id/spinner_property"
@@ -1931,6 +2012,7 @@
 
                 <!--Type of Locality-->
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/txt_type_of_locality_property"
                     style="@style/general_sub_section_txt_header"
                     android:layout_width="match_parent"
@@ -1941,6 +2023,7 @@
                     tools:ignore="RtlHardcoded" />
 
                 <Spinner
+                    android:visibility="gone"
                     android:id="@+id/spinner_typeoflocality_property"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -2103,48 +2186,31 @@
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="LabelFor,SpUsage" />-->
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tl_etpropertyTypePropertyDetails"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    app:hintTextAppearance="@style/TextInputLayout_hint"
-                    app:hintTextColor="@color/font_texthint"
-                    tools:ignore="RtlHardcoded,RtlSymmetry">
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/tl_etpropertyTypePropertyDetails"-->
+<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="@dimen/_5sdp"-->
+<!--                    app:hintTextAppearance="@style/TextInputLayout_hint"-->
+<!--                    app:hintTextColor="@color/font_texthint"-->
+<!--                    tools:ignore="RtlHardcoded,RtlSymmetry">-->
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etpropertyTypePropertyDetails"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/regular"
-                        android:hint="Description of the property"
-                        android:inputType="text"
-                        android:maxLength="100"
-                        android:textSize="@dimen/_13sdp"
-                        android:editable="false"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <CheckBox
-                    android:id="@+id/checkbox_lift_in_building"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_28sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:button="@drawable/check_box_selector"
-                    android:checked="false"
-                    android:fontFamily="@font/regular"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/height_4"
-                    android:paddingRight="@dimen/height_2"
-                    android:singleLine="true"
-                    android:text="Lift In Building"
-                    android:textColor="@color/font_text"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="RtlHardcoded" />
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/etpropertyTypePropertyDetails"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/regular"-->
+<!--                        android:hint="Description of the property"-->
+<!--                        android:inputType="text"-->
+<!--                        android:maxLength="100"-->
+<!--                        android:textSize="@dimen/_13sdp"-->
+<!--                        android:editable="false"-->
+<!--                        android:clickable="false"-->
+<!--                        android:focusable="false"-->
+<!--                        android:focusableInTouchMode="false"-->
+<!--                        />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
 
 
                 <!--Average Construction percentage-->
@@ -2164,12 +2230,30 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/regular"
-                        android:hint="Stage of Completion (in percentage)"
+                        android:hint="Average Construction Percentage"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="100"
                         android:textSize="@dimen/_13sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
+                <CheckBox
+                    android:id="@+id/checkbox_lift_in_building"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_28sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:button="@drawable/check_box_selector"
+                    android:checked="false"
+                    android:fontFamily="@font/regular"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/height_4"
+                    android:paddingRight="@dimen/height_2"
+                    android:singleLine="true"
+                    android:text="Lift In Building"
+                    android:textColor="@color/font_text"
+                    android:textSize="@dimen/_12sdp"
+                    tools:ignore="RtlHardcoded" />
+
+
 
                 <!--Recommendation Percentage-->
                 <com.google.android.material.textfield.TextInputLayout
@@ -2215,6 +2299,68 @@
                         android:textSize="@dimen/_13sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!--Type Of Structure-->
+                <TextView
+                    android:id="@+id/txt_type_of_structure_property_dtls"
+                    style="@style/general_sub_section_txt_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:gravity="left"
+                    android:text="Describe the Type of Construction"
+                    tools:ignore="RtlHardcoded" />
+
+                <!--<Spinner
+                    android:id="@+id/spinner_type_of_structure"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/spinner_status"
+                    android:minHeight="@dimen/_30sdp"
+                    android:popupBackground="@drawable/spinner_pop_up_dialog_bg" />-->
+
+                <TextView
+                    android:id="@+id/textview_exter_struc_text_property_dtls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_11sdp"
+                    android:background="@drawable/spinner_status"
+                    android:singleLine="true"
+                    tools:ignore="InconsistentLayout,RtlHardcoded"
+                    android:minHeight="@dimen/_30sdp"
+                    android:paddingLeft="@dimen/_3sdp"
+                    />
+
+                <!--flooring-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/llFlooring_property_dtls"
+                    >
+
+                    <TextView
+                        android:id="@+id/txt_flooring_property_dtls"
+                        style="@style/general_sub_section_txt_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:gravity="left"
+                        android:text="What is the type of flooring used?"
+                        tools:ignore="RtlHardcoded" />
+                    <TextView
+                        android:id="@+id/textview_flooring_text_property_dtls"
+                        tools:ignore="InconsistentLayout,RtlHardcoded"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_status"
+                        android:minHeight="@dimen/_30sdp"
+                        android:textSize="@dimen/_11sdp"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:paddingEnd="@dimen/_12sdp"
+                        />
+                </LinearLayout>
 
                 <!--Maintenance Of Building-->
 
@@ -3156,6 +3302,50 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <!--Recommendation Percentage-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl_recommendation_per_remark"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        app:hintTextAppearance="@style/TextInputLayout_hint"
+                        app:hintTextColor="@color/font_texthint"
+                        tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etRecommendationPercentage_remark"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/regular"
+                            android:hint="Recommendation Percentage"
+                            android:inputType="number"
+                            android:maxLength="100"
+                            android:textSize="@dimen/_13sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!--Description of construction stage-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl_construction_stage_remark"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        app:hintTextAppearance="@style/TextInputLayout_hint"
+                        app:hintTextColor="@color/font_texthint"
+                        tools:ignore="RtlHardcoded,RtlSymmetry">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_construction_stage_remark"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/regular"
+                            android:hint="Stage of Construction with description of work completed for proposed structure"
+                            android:inputType="textEmailAddress"
+                            android:maxLength="100"
+                            android:textSize="@dimen/_13sdp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_additional_remarks"
@@ -3183,6 +3373,7 @@
                         android:textSize="@dimen/_8sdp"
                         android:text="(Upto 4000characters)"
                         />
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layout_special_remarks"
@@ -3270,6 +3461,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_medium"
+                    android:visibility="gone"
                     tools:ignore="RtlHardcoded,UnusedAttribute" />
             </RelativeLayout>
 

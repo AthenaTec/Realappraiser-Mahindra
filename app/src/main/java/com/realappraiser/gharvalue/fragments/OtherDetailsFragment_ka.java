@@ -22,8 +22,8 @@ public class OtherDetailsFragment_ka extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                OtherDetails_ka fragment_design = new OtherDetails_ka();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.tabcontent, fragment_design).commitAllowingStateLoss();
+//                OtherDetails_ka fragment_design = new OtherDetails_ka();
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.tabcontent, fragment_design).commitAllowingStateLoss();
             }
         }, 50);
 

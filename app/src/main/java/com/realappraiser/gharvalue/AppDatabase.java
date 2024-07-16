@@ -51,11 +51,7 @@ import org.jetbrains.annotations.NotNull;
  * Created by user on 15-02-2018.
  */
 
-@Database(entities = {DataModel.class, OfflineDataModel.class, TypeOfProperty.class, PropertyUpdateRoomDB.class,
-        Case.class, Property.class, IndProperty.class, IndPropertyValuation.class,
-        IndPropertyFloor.class, IndPropertyFloorsValuation.class, Proximity.class,
-        GetPhoto.class, CaseDetail.class, OflineCase.class, Document_list.class,
-        LatLongDetails.class, GetPhoto_measurment.class}, version = 7, exportSchema = false)
+@Database(entities = {DataModel.class, OfflineDataModel.class, TypeOfProperty.class, PropertyUpdateRoomDB.class, Case.class, Property.class, IndProperty.class, IndPropertyValuation.class, IndPropertyFloor.class, IndPropertyFloorsValuation.class, Proximity.class, GetPhoto.class, CaseDetail.class, OflineCase.class, Document_list.class, LatLongDetails.class, GetPhoto_measurment.class}, version = 7, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
@@ -123,11 +119,8 @@ public abstract class AppDatabase extends RoomDatabase {
                             database.execSQL("ALTER TABLE GetPhotoModel "
                                     +"ADD COLUMN Filename TEXT");
                         }
-                    })*/
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4,MIGRATION_5_6,MIGRATION_6_7)
-                    /* call fallbackToDestructiveMigration in the builder in which case Room will re-create all of the tables */
-                    .fallbackToDestructiveMigration()
-                    .build();
+                    })*/.addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_5_6, MIGRATION_6_7,MIGRATION_7_8)
+                    /* call fallbackToDestructiveMigration in the builder in which case Room will re-create all of the tables */.fallbackToDestructiveMigration().build();
         }
         return INSTANCE;
     }
@@ -140,8 +133,7 @@ public abstract class AppDatabase extends RoomDatabase {
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull @NotNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE GetPhotoModel "
-                    + "ADD COLUMN Filename TEXT");
+            database.execSQL("ALTER TABLE GetPhotoModel " + "ADD COLUMN Filename TEXT");
         }
     };
 
@@ -269,7 +261,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    static final Migration MIGRATION_6_7 = new Migration(6,7) {
+    static final Migration MIGRATION_6_7 = new Migration(6, 7) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE CaseModal ADD COLUMN SiteVisitDate TEXT;");
@@ -279,6 +271,15 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE IndProperty ADD COLUMN SoilTypeDd INTEGER;");
             database.execSQL("ALTER TABLE IndProperty ADD COLUMN IsFireExit INTEGER;");
             database.execSQL("ALTER TABLE IndProperty ADD COLUMN IsGroundSlope INTEGER;");
+        }
+    };
+
+    static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE CaseModal ADD COLUMN ArchitectEngineerLicenseNo TEXT;");
+            database.execSQL("ALTER TABLE CaseModal ADD COLUMN TypeofOwnershipDd INTEGER;");
+            database.execSQL("ALTER TABLE PropertyModal ADD COLUMN IsConstructionDoneasPerSanctionedPlan INTEGER;");
         }
     };
 

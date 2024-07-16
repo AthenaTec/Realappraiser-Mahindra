@@ -43,6 +43,7 @@ import com.realappraiser.gharvalue.model.Measurements;
 import com.realappraiser.gharvalue.model.Nameofpersons;
 import com.realappraiser.gharvalue.model.NewImage;
 import com.realappraiser.gharvalue.model.OfflineDataModel;
+import com.realappraiser.gharvalue.model.OwnershipType;
 import com.realappraiser.gharvalue.model.Paint;
 import com.realappraiser.gharvalue.model.PassageType;
 import com.realappraiser.gharvalue.model.Paving;
@@ -179,6 +180,8 @@ public class Singleton {
     public ArrayList<Tenure> tenures_list = new ArrayList<>();
     public ArrayList<LocalityCategory> localityCategories_list = new ArrayList<>();
     public ArrayList<ClassModel> classes_list = new ArrayList<>();
+    //added by Hari
+    public ArrayList<OwnershipType>ownershipTypes_list=new ArrayList<>();
     public ArrayList<TypeOfProperty> typeOfProperties_list = new ArrayList<>();
     public ArrayList<Floor> floors_list = new ArrayList<>();
     public ArrayList<Kitchentype> kitchens_list = new ArrayList<>();

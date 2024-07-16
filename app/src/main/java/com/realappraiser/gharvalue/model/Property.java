@@ -207,7 +207,6 @@ public class Property {
     private String boundaryMeasureUnit;
 
 
-
     @SerializedName("DocSetBackLeft")
     @Expose
     @ColumnInfo(name = "docSetBackLeft")
@@ -800,7 +799,16 @@ public class Property {
     private Integer purposeofloanId;
 
 
+    @ColumnInfo(name = "IsConstructionDoneAsPerSanctionedPlan")
+    private Boolean IsConstructionDoneAsPerSanctionedPlan;
 
+    public Boolean getIsConstructionDoneAsPerSanctionedPlan() {
+        return IsConstructionDoneAsPerSanctionedPlan;
+    }
+
+    public void setIsConstructionDoneAsPerSanctionedPlan(Boolean isConstructionDoneAsPerSanctionedPlan) {
+        IsConstructionDoneAsPerSanctionedPlan = isConstructionDoneAsPerSanctionedPlan;
+    }
 
     public String getCoastalRegulatoryZone() {
         return coastalRegulatoryZone;
@@ -865,7 +873,6 @@ public class Property {
     public void setIsInHillSlope(Boolean isInHillSlope) {
         this.isInHillSlope = isInHillSlope;
     }
-
 
 
     public String getNameofVendor() {

@@ -2445,9 +2445,9 @@ public class PhotoLatLong_ka extends Fragment implements View.OnClickListener, O
 
     public void show_emptyFocus() {
         // Show focus
-        if (OtherDetails_ka.my_focuslayout != null) {
-            OtherDetails_ka.my_focuslayout.requestFocus();
-        }
+//        if (OtherDetails_ka.my_focuslayout != null) {
+//            OtherDetails_ka.my_focuslayout.requestFocus();
+//        }
     }
 
 

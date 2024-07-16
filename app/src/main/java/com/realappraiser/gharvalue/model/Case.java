@@ -158,6 +158,28 @@ public class Case {
     @ColumnInfo(name ="ApprovedPlanDate")
     private String ApprovedPlanDate;
 
+    @ColumnInfo(name = "ArchitectEngineerLicenseNo")
+    private String ArchitectEngineerLicenseNo;
+
+    @ColumnInfo(name = "TypeofOwnershipDd")
+    private  int TypeofOwnershipDd;
+
+    public int getTypeofOwnershipDd() {
+        return TypeofOwnershipDd;
+    }
+
+    public void setTypeofOwnershipDd(int typeofOwnershipDd) {
+        TypeofOwnershipDd = typeofOwnershipDd;
+    }
+
+    public void setArchitectEngineerLicenseNo(String architectEngineerLicenseNo) {
+        ArchitectEngineerLicenseNo = architectEngineerLicenseNo;
+    }
+
+    public String getArchitectEngineerLicenseNo() {
+        return ArchitectEngineerLicenseNo;
+    }
+
     public String getApprovedPlanNumber() {
         return ApprovedPlanNumber;
     }

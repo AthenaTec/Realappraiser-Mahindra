@@ -97,7 +97,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/forgotpassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -157,7 +157,7 @@
         android:textSize="15sp"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         />
 
     <TextView
@@ -169,5 +169,6 @@
         android:textSize="15sp"
         android:layout_marginTop="@dimen/_90sdp"
         android:layout_gravity="center"
+        android:gravity="bottom"
         />
 </LinearLayout>

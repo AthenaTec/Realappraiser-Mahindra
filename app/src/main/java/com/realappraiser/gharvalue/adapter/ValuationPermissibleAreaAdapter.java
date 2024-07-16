@@ -371,7 +371,9 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
                 stepsModel.setMeasuredConstrValue("" + act_total);
                 stepsValuation.set(adapterPosition, stepsModel);
                 Singleton.getInstance().indPropertyFloorsValuations.set(adapterPosition, stepsModel);
-                averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,false);
+                if(averageComPerInterface!=null){
+                    averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,false);
+                }
 
                 /*****total construction*****/
                 int total_construction = general.getTotalConstructionValue(stepsValuation);
@@ -463,7 +465,9 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
             stepsModel.setMeasuredConstrValue("");
             stepsValuation.set(adapterPosition, stepsModel);
             Singleton.getInstance().indPropertyFloorsValuations.set(adapterPosition, stepsModel);
-            averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,false);
+            if(averageComPerInterface !=null){
+                averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,false);
+            }
 
 
             if (FragmentValuationBuilding.textview_totalconstructionvalue_result != null)

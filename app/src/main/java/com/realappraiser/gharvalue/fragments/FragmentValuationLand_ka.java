@@ -904,9 +904,9 @@ public class FragmentValuationLand_ka extends Fragment {
 
     public void show_emptyFocus() {
         // Show focus
-        if (OtherDetails_ka.my_focuslayout != null) {
-            OtherDetails_ka.my_focuslayout.requestFocus();
-        }
+//        if (OtherDetails_ka.my_focuslayout != null) {
+//            OtherDetails_ka.my_focuslayout.requestFocus();
+//        }
     }
 
 

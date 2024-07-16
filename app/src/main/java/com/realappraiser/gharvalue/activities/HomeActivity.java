@@ -1754,17 +1754,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.convyencereport:
                 getConvyenceReport();
                 break;
-            case R.id.changepassword:
-                 general.getChangePassword(this);
-                 break;
-
-            case R.id.raiseticketsystem:
-                raiseTickerPopup();
-                break;
-
-            case R.id.viewticket:
-                getViewTicketSystem();
-                break;
+//            case R.id.changepassword:
+//                 general.getChangePassword(this);
+//                 break;
+//
+//            case R.id.raiseticketsystem:
+//                raiseTickerPopup();
+//                break;
+//
+//            case R.id.viewticket:
+//                getViewTicketSystem();
+//                break;
         }
 
         return super.onOptionsItemSelected(item);

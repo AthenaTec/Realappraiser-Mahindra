@@ -43,7 +43,6 @@ import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.ResponseParser;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
-import com.realappraiser.gharvalue.fragments.OtherDetails_ka;
 import com.realappraiser.gharvalue.fragments.PhotoLatLong_ka;
 import com.realappraiser.gharvalue.model.GetPhoto;
 import com.realappraiser.gharvalue.model.GetPhoto_measurment;
@@ -785,10 +784,10 @@ public class PhotoLatLngTab extends BaseActivity implements TabLayout.OnTabSelec
     }
 
     public void show_emptyFocus() {
-        // Show focus
-        if (OtherDetails_ka.my_focuslayout != null) {
-            OtherDetails_ka.my_focuslayout.requestFocus();
-        }
+//        // Show focus
+//        if (OtherDetails_ka.my_focuslayout != null) {
+//            OtherDetails_ka.my_focuslayout.requestFocus();
+//        }
     }
 
     private void save_image_offline(final String btn_is) {

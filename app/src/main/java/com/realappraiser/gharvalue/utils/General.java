@@ -2206,6 +2206,15 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
         return false;
     }
 
+    public int getSectionID(String fieldUI) {
+        for (ShowFSUIResponse.Datum datum : Singleton.getInstance().uiData) {
+            if (datum.getFieldinUI().equals(fieldUI)) {
+                return datum.getSectionID();
+            }
+        }
+        return 0;
+    }
+
 
     public void getChangePassword(Activity activity) {
         View view = activity.getLayoutInflater().inflate(R.layout.password_expiry_popup, null);

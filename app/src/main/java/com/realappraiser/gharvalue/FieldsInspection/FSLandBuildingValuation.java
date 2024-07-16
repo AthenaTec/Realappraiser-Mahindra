@@ -933,6 +933,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                             stepsModel.setCaseId(Singleton.getInstance().aCase.getCaseId());
                             stepsModel.setFloorName(getResources().getString(R.string.floorname) + finalI);
                             stepsModel.setFloorUsage(floorusage);
+                            stepsModel.setFloorNo(finalI);
                             list.add(stepsModel);
 
 
@@ -969,6 +970,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         stepsModel.setFloorName(getResources().getString(R.string.floorname) + floorname_dynamic);
                         stepsModel.setConstructionStageId(0);
                         stepsModel.setFloorUsage(floorusage);
+                        stepsModel.setFloorNo(floorname_dynamic);
                         list.add(stepsModel);
 
                         Singleton.getInstance().indPropertyFloors.add(stepsModel);
@@ -1024,6 +1026,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         steps2Model.setOfficeNo(Singleton.getInstance().indPropertyFloors.get(i).getOfficeNo());
                         steps2Model.setFlatPoojaNo(Singleton.getInstance().indPropertyFloors.get(i).getFlatPoojaNo());
                         steps2Model.setFlatDinningNo(Singleton.getInstance().indPropertyFloors.get(i).getFlatDinningNo());
+                        steps2Model.setFloorNo(Singleton.getInstance().indPropertyFloors.get(i).getFloorNo());
 
                         floornolist.add(steps2Model);
 
@@ -1041,6 +1044,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                             IndPropertyFloor steps2Model = new IndPropertyFloor();
                             steps2Model.setCaseId(Singleton.getInstance().aCase.getCaseId());
                             steps2Model.setFloorName(getResources().getString(R.string.floorname) + i + 1);
+                            steps2Model.setFloorNo(i+1);
                             floornolist.add(steps2Model);
                         }
                     } else {
@@ -1073,6 +1077,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         int floorname_dynamic = i + 1;
                         steps2Model.setCaseId(caseid_int);
                         steps2Model.setFloorName(getResources().getString(R.string.floorname) + floorname_dynamic);
+                        steps2Model.setFloorNo(floorname_dynamic);
                         floornolist.add(steps2Model);
                         Singleton.getInstance().floorFromBackend = false;
                     }
@@ -1163,6 +1168,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                     for (int i = previousfloors; i < floors; i++) {
                         IndPropertyFloorsValuation stepsModel = new IndPropertyFloorsValuation();
                         stepsModel.setCaseId(caseid_int);
+                        stepsModel.setFloorNo(i+1);
                         stepsModel.setDocumentConstrValue("");
                         stepsModel.setDocumentConstrRate("");
                         stepsModel.setMeasuredConstrValue("");
@@ -1200,6 +1206,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                     for (int i = 0; i < floors_valsize; i++) {
                         IndPropertyFloorsValuation stepsModel = new IndPropertyFloorsValuation();
                         stepsModel.setCaseId(caseid_int);
+                        stepsModel.setFloorNo(i+1);
                         stepsModel.setDocumentConstrValue("");
                         stepsModel.setDocumentConstrRate("");
                         stepsModel.setMeasuredConstrValue("");
@@ -3692,17 +3699,20 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                     linear_actualarea.setVisibility(View.GONE);
                     Singleton.getInstance().indPropertyValuation.setDocumentedLandValueSel(true);
                     Singleton.getInstance().indPropertyValuation.setMeasuredLandValueSel(false);
-                   /* permission_check = 1;
+                    permission_check = 1;
                     permissionarea_dlc();
-                    Total_Property_Value();*/
+                    Total_Property_Value();
                 } else {
                     linear_permissiblearea.setVisibility(View.GONE);
                     linear_actualarea.setVisibility(View.VISIBLE);
                     Singleton.getInstance().indPropertyValuation.setDocumentedLandValueSel(false);
                     Singleton.getInstance().indPropertyValuation.setMeasuredLandValueSel(true);
-                   /* permission_check = 2;
+                    permission_check = 2;
                     permissionarea_dlc();
-                    Total_Property_Value();*/
+                    Total_Property_Value();
+                    String toString = editText_rate_actualarea.getText().toString();
+                    CommonRate_actualarea_method(toString);
+
                 }
             }
         });
@@ -4080,12 +4090,14 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                             if (general.isEmpty(editText_as_per_measurement.getText().toString())) {
                                 // If its empty
                                 editText_as_per_measurement.setText(charSequence);
+                                actual_measurment(charSequence);
                                 //TODO Interface
                                /* FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
                                 fragmentValuationBuilding.actual_measurment(charSequence);*/
                             }
                             editText_compound_permissiblearea.setError(null);
                             editText_as_per_measurement.setError(null);
+                            permission_measurment(charSequence);
                             //TODO Interface
                             /*FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
                             fragmentValuationBuilding.permission_measurment(charSequence);*/
@@ -4093,6 +4105,8 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
                         } else {
                             editText_as_per_measurement.setText(my_val_str);
+                            actual_measurment(my_val_str);
+
                             //TODO Interface
                           /*  FragmentValuationBuilding fragmentValuationBuilding = new FragmentValuationBuilding();
                             fragmentValuationBuilding.actual_measurment(my_val_str);*/
@@ -4207,7 +4221,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
 
     public void CommonRate_actualarea_method(String str) {
-
+Log.d("Hari","HAri");
         String rate_str = str;
         editText_rate_permissiblearea.setText(rate_str);
         String permissiblearea_str = editText_actualarea.getText().toString();

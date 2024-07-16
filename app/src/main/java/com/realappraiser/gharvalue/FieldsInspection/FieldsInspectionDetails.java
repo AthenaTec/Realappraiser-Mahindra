@@ -1,8 +1,9 @@
 package com.realappraiser.gharvalue.FieldsInspection;
 
+import static com.realappraiser.gharvalue.fragments.PhotoLatLong.latsValue;
 import static com.realappraiser.gharvalue.fragments.PhotoLatLong.latvalue;
+import static com.realappraiser.gharvalue.fragments.PhotoLatLong.longsValue;
 import static com.realappraiser.gharvalue.fragments.PhotoLatLong.longvalue;
-import static com.realappraiser.gharvalue.utils.General.checkInternetConnection;
 import static com.realappraiser.gharvalue.utils.General.siteVisitDateToConversion;
 import static com.realappraiser.gharvalue.utils.General.uiVisiblityCount;
 
@@ -84,6 +85,7 @@ import com.realappraiser.gharvalue.model.Maintenance;
 import com.realappraiser.gharvalue.model.Marketablity;
 import com.realappraiser.gharvalue.model.OfflineDataModel;
 import com.realappraiser.gharvalue.model.OflineCase;
+import com.realappraiser.gharvalue.model.OwnershipType;
 import com.realappraiser.gharvalue.model.PresentlyOccupied;
 import com.realappraiser.gharvalue.model.Proximity;
 import com.realappraiser.gharvalue.model.Remarks;
@@ -135,6 +137,8 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Boolean isNPA = false;
     String property_type = "building";
 
     String editText_db_east_str, editText_db_west_str, editText_db_north_str, editText_db_south_str;
@@ -301,13 +305,42 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
     @BindView(R.id.ll_contact_info)
     LinearLayout ll_contact_info;
-
     @BindView(R.id.etPersonName)
     EditText etPersonName;
 
     @BindView(R.id.etPersonNo)
     EditText etPersonNo;
 
+    @BindView(R.id.ll_contact_info_property)
+    LinearLayout ll_contact_info_property;
+
+    @BindView(R.id.etPersonName_property)
+    EditText etPersonName_property;
+
+    @BindView(R.id.etPersonNo_property)
+    EditText etPersonNo_property;
+
+    @BindView(R.id.tl_etpropertyTypeProperty)
+    TextInputLayout tl_etpropertyTypeProperty;
+
+    @BindView(R.id.tl_etpropertyTypeNdma)
+    TextInputLayout tl_etpropertyTypeNdma;
+
+    @BindView(R.id.txt_type_of_structure_property_dtls)
+    TextView type_of_construction_property_dtls;
+
+
+    @BindView(R.id.textview_exter_struc_text_property_dtls)
+    TextView textview_exter_struc_text_property_dtls;
+
+    @BindView(R.id.llFlooring_property_dtls)
+    LinearLayout llFlooring_property_dtls;
+
+    @BindView(R.id.txt_flooring_property_dtls)
+    TextView txt_flooring_property_dtls;
+
+    @BindView(R.id.textview_flooring_text_property_dtls)
+    TextView textview_flooring_text_property_dtls;
     @BindView(R.id.iv_calender)
     ImageView iv_calender;
 
@@ -357,6 +390,12 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
     @BindView(R.id.editText_plotno)
     EditText editText_plotno;
+
+    @BindView(R.id.tl_unit_no)
+    TextInputLayout tl_unit_no;
+
+    @BindView(R.id.editText_unit_no)
+    EditText editText_unit_no;
 
     @BindView(R.id.tl_taluka)
     TextInputLayout tl_taluka;
@@ -491,8 +530,8 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     EditText etpropertyTypeProperty;
 
 
-    @BindView(R.id.etpropertyTypePropertyDetails)
-    EditText etpropertyTypePropertyDetails;
+//    @BindView(R.id.etpropertyTypePropertyDetails)
+//    EditText etpropertyTypePropertyDetails;
 
     @BindView(R.id.etpropertyTypeNdma)
     EditText etpropertyTypeNdma;
@@ -579,6 +618,20 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     @BindView(R.id.tl_construction_stage)
     TextInputLayout tl_construction_stage;
 
+    //remark section
+    @BindView(R.id.etRecommendationPercentage_remark)
+    EditText etRecommendationPercentage_remark;
+
+    @BindView(R.id.tl_recommendation_per_remark)
+    TextInputLayout tl_recommendation_per_remark;
+
+    @BindView(R.id.et_construction_stage_remark)
+    EditText et_construction_stage_remark;
+
+    @BindView(R.id.tl_construction_stage_remark)
+    TextInputLayout tl_construction_stage_remark;
+
+
     @BindView(R.id.spinner_maintenanceofbuilding)
     Spinner spinner_maintenanceofbuilding;
 
@@ -604,7 +657,11 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     /* NDMA Parameter */
 
     // Exterior - Type Of Structure
+
+    @BindView(R.id.txt_type_of_structure)
+    TextView type_of_construction;
     ArrayList<Structure> Exter_struc_list = new ArrayList<>();
+    ArrayList<Structure> Exter_struc_list_property_dtls = new ArrayList<>();
     @BindView(R.id.textview_exter_struc_text)
     TextView textview_exter_struc_text;
 
@@ -644,6 +701,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
     // Floor
     ArrayList<Floor> Inter_floors_list = new ArrayList<>();
+    ArrayList<Floor> Inter_floors_list_property_dtls = new ArrayList<>();
     @BindView(R.id.textview_flooring_text)
     TextView textview_flooring_text;
 
@@ -1008,9 +1066,14 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
          * Set the property category type
          * ******/
         String property_cate_id = SettingsUtils.getInstance().getValue(SettingsUtils.PropertyCategoryId, "");
+        String property_bank = SettingsUtils.getInstance().getValue(SettingsUtils.Case_Bank, "");
 
         Log.e(TAG, "initValues: " + SettingsUtils.getInstance().getValue(SettingsUtils.PropertyCategoryId, ""));
+        Log.e(TAG, "case_bank: " + SettingsUtils.getInstance().getValue(SettingsUtils.Case_Bank, ""));
+        Log.e(TAG, "case_bank_branch: " + SettingsUtils.getInstance().getValue(SettingsUtils.Case_BankBranch, ""));
+
         setPropertyType(property_cate_id);
+        setPropertyBank(property_bank);
 
 
         textview_save_top.setOnClickListener(this);
@@ -1026,6 +1089,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     }
 
     private void initGeneral() {
+        Log.d("Bank_template", isNPA.toString());
 
         if (general.getUIVisibility("Purpose")) {
             llPurpose.setVisibility(View.VISIBLE);
@@ -1063,14 +1127,13 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("Type Of Seller")) {
             til_seller_type.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().indProperty.getTypeofSeller() != null &&
-                    !general.isEmpty(Singleton.getInstance().indProperty.getTypeofSeller())) {
+            if (Singleton.getInstance().indProperty.getTypeofSeller() != null && !general.isEmpty(Singleton.getInstance().indProperty.getTypeofSeller())) {
                 fsProgressCount = fsProgressCount + 1;
                 et_seller_type.setText(Singleton.getInstance().indProperty.getTypeofSeller());
             } else et_seller_type.setText("");
         } else til_seller_type.setVisibility(View.GONE);
 
-        if (general.getUIVisibility("Property Contact Person Name, Property Contact Person Mobile Number")) {
+        if (general.getUIVisibility("Property Contact Person Name, Property Contact Person Mobile Number") && general.getSectionID("Property Contact Person Name, Property Contact Person Mobile Number") == 1) {
             ll_contact_info.setVisibility(View.VISIBLE);
 
             if (!general.isEmpty(Singleton.getInstance().aCase.getContactPersonName())) {
@@ -1079,8 +1142,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             if (!general.isEmpty(Singleton.getInstance().aCase.getContactPersonNumber()))
                 etPersonNo.setText(Singleton.getInstance().aCase.getContactPersonNumber());
 
-            if (!general.isEmpty(Singleton.getInstance().aCase.getContactPersonName()) &&
-                    !general.isEmpty(Singleton.getInstance().aCase.getContactPersonNumber())) {
+            if (!general.isEmpty(Singleton.getInstance().aCase.getContactPersonName()) && !general.isEmpty(Singleton.getInstance().aCase.getContactPersonNumber())) {
                 fsProgressCount = fsProgressCount + 1;
             }
 
@@ -1104,7 +1166,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             if (!general.isEmpty(Singleton.getInstance().aCase.getBankReferenceNO())) {
                 et_finnonId.setText(Singleton.getInstance().aCase.getBankReferenceNO());
                 tl_finnonId.setVisibility(View.VISIBLE);
-                fsProgressCount = fsProgressCount + 1;
+                fsProgressCount = fsProgressCount + 4;
             }
 
         } else tl_finnonId.setVisibility(View.GONE);
@@ -1129,20 +1191,31 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             }
         } else tl_complete_address.setVisibility(View.GONE);
 
-
-        if (general.getUIVisibility("Plot No.")) {
-            tl_plot_no.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().property.getPlotNo() != null) {
-                editText_plotno.setText(Singleton.getInstance().property.getPlotNo());
+        if (property_type.equalsIgnoreCase("flat")) {
+            tl_plot_no.setVisibility(View.GONE);
+            tl_unit_no.setVisibility(View.VISIBLE);
+            if (Singleton.getInstance().property.getUnitNo() != null) {
+                editText_unit_no.setText(Singleton.getInstance().property.getUnitNo());
                 fsProgressCount = fsProgressCount + 1;
             }
+        } else {
+            if (general.getUIVisibility("Plot No.")) {
+                tl_unit_no.setVisibility(View.GONE);
+                tl_plot_no.setVisibility(View.VISIBLE);
+                if (Singleton.getInstance().property.getPlotNo() != null) {
+                    editText_plotno.setText(Singleton.getInstance().property.getPlotNo());
+                    fsProgressCount = fsProgressCount + 1;
+                }
 
-        } else tl_plot_no.setVisibility(View.GONE);
+            } else tl_plot_no.setVisibility(View.GONE);
+
+        }
+
 
         if (general.getUIVisibility("Survey No.")) {
             tl_survey_no.setVisibility(View.VISIBLE);
             if (!general.isEmpty(Singleton.getInstance().property.getSurveyNo())) {
-                fsProgressCount = fsProgressCount + 1;
+                fsProgressCount = fsProgressCount + 4;
                 editText_surveyno.setText(Singleton.getInstance().property.getSurveyNo().trim());
             }
         } else tl_survey_no.setVisibility(View.GONE);
@@ -1337,13 +1410,15 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         }
 
 
-        if (general.getUIVisibility("Adverse feature nearby ")) {
+        if (general.getUIVisibility("Adverse feature nearby")) {
             til_adverse_nearby.setVisibility(View.VISIBLE);
             if (!general.isEmpty(Singleton.getInstance().property.getAdverseFeatureNearby())) {
                 fsProgressCount = fsProgressCount + 1;
                 et_adverse_nearby.setText(Singleton.getInstance().property.getAdverseFeatureNearby());
             }
-        } else til_adverse_nearby.setVisibility(View.GONE);
+        } else {
+            til_adverse_nearby.setVisibility(View.GONE);
+        }
     }
 
     private void initProximityRecyclerView() {
@@ -1374,12 +1449,10 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                     Proximity stepsModel = new Proximity();
                     stepsModel.setProximityId(5);
                     list.add(stepsModel);
-                    //Suganya added on jan19
                     Singleton.getInstance().proximities.add(stepsModel);
                     Proximity stepsModel2 = new Proximity();
                     stepsModel2.setProximityId(1);
                     list.add(stepsModel2);
-                    //Suganya added on jan19
                     Singleton.getInstance().proximities.add(stepsModel);
                 }
             }
@@ -1394,7 +1467,14 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
     private void initPropertyValues() {
 
-        typeOfProprty();
+
+        if (general.getUIVisibility("Type of property") && general.getSectionID("Type of property") == 3) {
+            tl_etpropertyTypeProperty.setVisibility(View.VISIBLE);
+            typeOfProperty(3);
+        } else {
+            tl_etpropertyTypeProperty.setVisibility(View.GONE);
+        }
+//        typeOfProprty();
 
         if (general.getUIVisibility("Ownership Type")) {
             ll_ownership.setVisibility(View.VISIBLE);
@@ -1406,9 +1486,9 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("Is construction done as per sanctioned plan")) {
             checkbox_sanctioned_plan.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().indProperty.getIsConstructionDoneasPerSanctionedPlan() != null) {
+            if (Singleton.getInstance().property.getIsConstructionDoneAsPerSanctionedPlan() != null) {
                 fsProgressCount = fsProgressCount + 1;
-                checkbox_sanctioned_plan.setChecked(Singleton.getInstance().indProperty.getIsConstructionDoneasPerSanctionedPlan());
+                checkbox_sanctioned_plan.setChecked(Singleton.getInstance().property.getIsConstructionDoneAsPerSanctionedPlan());
             }
         } else {
             checkbox_sanctioned_plan.setVisibility(View.GONE);
@@ -1426,7 +1506,10 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("Architect / Engineer License No.")) {
             layout_engineer_license.setVisibility(View.VISIBLE);
-            if (!general.isEmpty(Singleton.getInstance().indProperty.getArchitectEngineerLicenseNo())) {
+            if (!General.isEmpty(Singleton.getInstance().aCase.getArchitectEngineerLicenseNo())) {
+                et_engineer_license.setText("" + Singleton.getInstance().aCase.getArchitectEngineerLicenseNo());
+                fsProgressCount = fsProgressCount + 1;
+            } else if (!General.isEmpty(Singleton.getInstance().indProperty.getArchitectEngineerLicenseNo()) && General.isEmpty(Singleton.getInstance().aCase.getArchitectEngineerLicenseNo())) {
                 et_engineer_license.setText("" + Singleton.getInstance().indProperty.getArchitectEngineerLicenseNo());
                 fsProgressCount = fsProgressCount + 1;
             }
@@ -1442,9 +1525,8 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("Authority")) {
             tl_authority.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null
-                    && !general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority())) {
-                fsProgressCount = fsProgressCount + 1;
+            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null && !general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority())) {
+                fsProgressCount = fsProgressCount + 2;
                 et_authority.setText(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority());
             }
         } else {
@@ -1453,8 +1535,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("Prepared By")) {
             tl_plan_prepared_by.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null &&
-                    !general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanPreparedBy())) {
+            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null && !general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanPreparedBy())) {
                 fsProgressCount = fsProgressCount + 1;
                 et_plan_prepared_by.setText(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanPreparedBy());
             }
@@ -1464,8 +1545,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("Plan Number, Date")) {
             ll_planno_date.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null &&
-                    Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null) {
+            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null) {
                 if (!general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanNumber())) {
                     et_approved_plan_no.setText(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanNumber());
                 }
@@ -1474,13 +1554,33 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                     et_approved_plan_date.setText(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanDate());
                 }
             }
-        } else
-            ll_planno_date.setVisibility(View.GONE);
+        } else ll_planno_date.setVisibility(View.GONE);
+
+        if (general.getUIVisibility("Property Contact Person Name, Property Contact Person Mobile Number") && general.getSectionID("Property Contact Person Name, Property Contact Person Mobile Number") == 3) {
+            ll_contact_info_property.setVisibility(View.VISIBLE);
+
+            if (!general.isEmpty(Singleton.getInstance().aCase.getContactPersonName())) {
+                etPersonName_property.setText(Singleton.getInstance().aCase.getContactPersonName());
+            }
+            if (!general.isEmpty(Singleton.getInstance().aCase.getContactPersonNumber()))
+                etPersonNo_property.setText(Singleton.getInstance().aCase.getContactPersonNumber());
+
+            if (!general.isEmpty(Singleton.getInstance().aCase.getContactPersonName()) && !general.isEmpty(Singleton.getInstance().aCase.getContactPersonNumber())) {
+                fsProgressCount = fsProgressCount + 1;
+            }
+
+        } else ll_contact_info_property.setVisibility(View.GONE);
+
+        if (property_type.equalsIgnoreCase("land")) {
+            checkbox_isproperty_demolish.setVisibility(View.GONE);
+        }
+
+
     }
 
     private void initOwnerShipType() {
 
-        ArrayAdapter<Tenure> adapterTenure = new ArrayAdapter<Tenure>(mContext, R.layout.row_spinner_item, Singleton.getInstance().tenures_list) {
+        ArrayAdapter<OwnershipType> adapterTenure = new ArrayAdapter<OwnershipType>(mContext, R.layout.row_spinner_item, Singleton.getInstance().ownershipTypes_list) {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTypeface(general.mediumtypeface());
@@ -1497,10 +1597,10 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         spinner_select_tenure_ownership.setAdapter(adapterTenure);
         spinner_select_tenure_ownership.setOnTouchListener(this);
 
-        Integer tenure = Singleton.getInstance().property.getTenureId();
-        if (!general.isEmpty(String.valueOf(tenure))) {
+        Integer id = Singleton.getInstance().aCase.getTypeofOwnershipDd();
+        if (!general.isEmpty(String.valueOf(id))) {
             fsProgressCount = fsProgressCount + 1;
-            spinner_select_tenure_ownership.setSelection(tenure);
+            spinner_select_tenure_ownership.setSelection(id);
         }
     }
 
@@ -1539,6 +1639,14 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     }
 
     private void initPropertyDetailsValue() {
+        if (general.getUIVisibility("Average Construction Percentage") && general.getSectionID("Average Construction Percentage") == 4) {
+            tl_avg_construction_per.setVisibility(View.VISIBLE);
+            if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage())) {
+                fsProgressCount = fsProgressCount + 1;
+                etAverageConstruction.setText(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage());
+            }
+        } else tl_avg_construction_per.setVisibility(View.GONE);
+
 
         if (general.getUIVisibility("Is Lift Available In Building ")) {
             checkbox_lift_in_building.setVisibility(View.VISIBLE);
@@ -1548,16 +1656,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         } else checkbox_lift_in_building.setVisibility(View.GONE);
 
 
-      /*  if (general.getUIVisibility("Average Construction Percentage")) {
-            tl_avg_construction_per.setVisibility(View.VISIBLE);
-            if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage())) {
-                fsProgressCount = fsProgressCount + 1;
-                etAverageConstruction.setText(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage());
-            }
-        } else tl_avg_construction_per.setVisibility(View.GONE);
-*/
-
-        if (general.getUIVisibility("Recommendation Percentage")) {
+        if (general.getUIVisibility("Recommendation Percentage") && general.getSectionID("Recommendation Percentage") == 4) {
             tl_recommendation_per.setVisibility(View.VISIBLE);
             if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getRecommendationPercentage())) {
                 fsProgressCount = fsProgressCount + 1;
@@ -1574,12 +1673,36 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         }else{
             tl_construction_stage.setVisibility(View.GONE);
         }*/
-
-        if (!general.isEmpty(Singleton.getInstance().indProperty.getDescriptionofConstructionStage())) {
-            fsProgressCount = fsProgressCount + 1;
-            et_construction_stage.setText(Singleton.getInstance().indProperty.getDescriptionofConstructionStage());
+        if (general.getUIVisibility("Average construction percentage,Description of construction stage") && general.getSectionID("Average construction percentage,Description of construction stage") == 4) {
+            if (property_type.equalsIgnoreCase("land")) {
+                tl_construction_stage.setVisibility(View.GONE);
+            } else {
+                if (!general.isEmpty(Singleton.getInstance().indProperty.getDescriptionofConstructionStage())) {
+                    fsProgressCount = fsProgressCount + 1;
+                    et_construction_stage.setText(Singleton.getInstance().indProperty.getDescriptionofConstructionStage());
+                }
+            }
+        } else {
+            tl_construction_stage.setVisibility(View.GONE);
         }
 
+
+        if (general.getUIVisibility("Type Of Structure") && general.getSectionID("Type Of Structure") == 4) {
+            type_of_construction_property_dtls.setVisibility(View.VISIBLE);
+            textview_exter_struc_text_property_dtls.setVisibility(View.VISIBLE);
+            function_exterior_structure_property_dtls();
+        } else {
+            type_of_construction_property_dtls.setVisibility(View.GONE);
+            textview_exter_struc_text_property_dtls.setVisibility(View.GONE);
+        }
+
+
+        if (general.getUIVisibility("Flooring") && general.getSectionID("Flooring") == 4) {
+            llFlooring_property_dtls.setVisibility(View.VISIBLE);
+            function_interior_floor_property_dtls();
+        } else {
+            llFlooring_property_dtls.setVisibility(View.GONE);
+        }
 
         if (general.getUIVisibility("Maintenance Of Building")) {
             ll_maintenace_of_building.setVisibility(View.VISIBLE);
@@ -1663,6 +1786,18 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
     private void initNDMAParameters() {
 
+        if (general.getUIVisibility("Type of property") && general.getSectionID("Type of property") == 5) {
+            tl_etpropertyTypeNdma.setVisibility(View.VISIBLE);
+            typeOfProperty(5);
+        } else if (general.getUIVisibility("Property Type") && general.getSectionID("Property Type") == 5) {
+            tl_etpropertyTypeNdma.setVisibility(View.VISIBLE);
+            typeOfProperty(5);
+
+        } else {
+            tl_etpropertyTypeNdma.setVisibility(View.GONE);
+        }
+
+
         if (general.getUIVisibility("Type of Masonry")) {
             ll_masonry.setVisibility(View.VISIBLE);
             typeOfMasonry();
@@ -1670,8 +1805,18 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             ll_masonry.setVisibility(View.GONE);
         }
 
-
-        function_exterior_structure();
+        if (property_type.equalsIgnoreCase("land")) {
+            type_of_construction.setVisibility(View.GONE);
+            textview_exter_struc_text.setVisibility(View.GONE);
+        }
+        if (general.getUIVisibility("Type Of Structure") && general.getSectionID("Type Of Structure") == 5) {
+            type_of_construction.setVisibility(View.VISIBLE);
+            textview_exter_struc_text.setVisibility(View.VISIBLE);
+            function_exterior_structure();
+        } else {
+            type_of_construction.setVisibility(View.GONE);
+            textview_exter_struc_text.setVisibility(View.GONE);
+        }
 
 
         textview_exter_struc_text.setOnClickListener(new View.OnClickListener() {
@@ -1682,7 +1827,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             }
         });
 
-        if (general.getUIVisibility("Flooring")) {
+        if (general.getUIVisibility("Flooring") && general.getSectionID("Flooring") == 5) {
             llFlooring.setVisibility(View.VISIBLE);
             function_interior_floor();
         } else {
@@ -1798,16 +1943,20 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             ll_footing_foundation.setVisibility(View.GONE);
         }
 
+        if (property_type.equalsIgnoreCase("land")) {
+            tl_no_of_floors_above_ground.setVisibility(View.GONE);
 
-       /* if (general.getUIVisibility("No. of floors above ground")) {
-            tl_no_of_floors_above_ground.setVisibility(View.VISIBLE);
-            if (!general.isEmpty(Singleton.getInstance().indProperty.getNoofFloorsAboveGround())) {
-                fsProgressCount = fsProgressCount + 1;
-                et_above_ground.setText(Singleton.getInstance().indProperty.getNoofFloorsAboveGround());
-            }
-        } else
-            tl_no_of_floors_above_ground.setVisibility(View.GONE);*/
-        tl_no_of_floors_above_ground.setVisibility(View.GONE);
+        } else {
+            if (general.getUIVisibility("No. of floors above ground") && general.getSectionID("No. of floors above ground") == 5) {
+                tl_no_of_floors_above_ground.setVisibility(View.VISIBLE);
+                if (!general.isEmpty(Singleton.getInstance().indProperty.getNoofFloorsAboveGround())) {
+                    fsProgressCount = fsProgressCount + 1;
+                    et_above_ground.setText(Singleton.getInstance().indProperty.getNoofFloorsAboveGround());
+                }
+            } else
+                tl_no_of_floors_above_ground.setVisibility(View.GONE);
+        }
+
 
         if (general.getUIVisibility("Basement")) {
             tl_basement.setVisibility(View.VISIBLE);
@@ -1886,8 +2035,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             Log.e("spinner_qualityofcon", "::: " + Singleton.getInstance().indProperty.getTypeofSteelGradeId());
             for (int x = 0; x < Singleton.getInstance().typeOfSteelList.size(); x++) {
                 if (Singleton.getInstance().typeOfSteelList.get(x).getTypeofsteelgradeId() != null)
-                    if (Singleton.getInstance().indProperty.getTypeofSteelGradeId()
-                            .equals(Singleton.getInstance().typeOfSteelList.get(x).getTypeofsteelgradeId())) {
+                    if (Singleton.getInstance().indProperty.getTypeofSteelGradeId().equals(Singleton.getInstance().typeOfSteelList.get(x).getTypeofsteelgradeId())) {
                         fsProgressCount = fsProgressCount + 1;
                         spinner_steel.setSelection(x);
                         break;
@@ -1917,12 +2065,8 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (!general.isEmpty(String.valueOf(Singleton.getInstance().property.getPurpose()))) {
             for (int x = 0; x < Singleton.getInstance().purposeOfList.size(); x++) {
-                if (Singleton.getInstance().property.getPurposeofloanId() != null && Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId() != null
-                        && Singleton.getInstance().purposeOfList.get(x) != null
-                        && Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId() != null
-                )
-                    if (Singleton.getInstance().property.getPurposeofloanId()
-                            .equals(Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId())) {
+                if (Singleton.getInstance().property.getPurposeofloanId() != null && Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId() != null && Singleton.getInstance().purposeOfList.get(x) != null && Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId() != null)
+                    if (Singleton.getInstance().property.getPurposeofloanId().equals(Singleton.getInstance().purposeOfList.get(x).getPurposeofloanId())) {
                         spinner_purpose.setSelection(x);
                         fsProgressCount = fsProgressCount + 1;
                         break;
@@ -2012,8 +2156,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 for (int i = 0; i < splitInitial.length; i++) {
 
                     if (itemCount > 2) {
-                        if (i != 0 && i != 1)
-                            nameofApplicant += splitInitial[i];
+                        if (i != 0 && i != 1) nameofApplicant += splitInitial[i];
                     } else {
                         if (i != 0) {
                             nameofApplicant += splitInitial[i] + " "; // pipe symbol "\\|"
@@ -2124,8 +2267,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 for (int i = 0; i < splitInitial.length; i++) {
 
                     if (itemCount > 2) {
-                        if (i != 0 && i != 1)
-                            nameofSeller += splitInitial[i];
+                        if (i != 0 && i != 1) nameofSeller += splitInitial[i];
                     } else {
                         if (i != 0) {
                             nameofSeller += splitInitial[i] + " "; // pipe symbol "\\|"
@@ -2236,8 +2378,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 for (int i = 0; i < splitInitial.length; i++) {
 
                     if (itemCount > 2) {
-                        if (i != 0 && i != 1)
-                            nameofOwner += splitInitial[i];
+                        if (i != 0 && i != 1) nameofOwner += splitInitial[i];
                     } else {
                         if (i != 0) {
                             nameofOwner += splitInitial[i] + " "; // pipe symbol "\\|"
@@ -2292,8 +2433,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             Log.e("spinner_qualityofcon", "::: " + Singleton.getInstance().indProperty.getTypeofSteelGradeId());
             for (int x = 0; x < Singleton.getInstance().typeOfFootingList.size(); x++) {
                 if (Singleton.getInstance().typeOfFootingList.get(x).getTypeoffootingfoundationId() != null)
-                    if (Singleton.getInstance().indProperty.getTypeofFootingFoundationId()
-                            .equals(Singleton.getInstance().typeOfFootingList.get(x).getTypeoffootingfoundationId())) {
+                    if (Singleton.getInstance().indProperty.getTypeofFootingFoundationId().equals(Singleton.getInstance().typeOfFootingList.get(x).getTypeoffootingfoundationId())) {
                         spinner_foundation.setSelection(x);
                         fsProgressCount = fsProgressCount + 1;
                         break;
@@ -2327,8 +2467,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             Log.e("spinner_soilType", "::: " + Singleton.getInstance().indProperty.getSoilTypeDd());
             for (int x = 0; x < Singleton.getInstance().soilTypeData.size(); x++) {
 
-                if (Singleton.getInstance().indProperty.getSoilTypeDd()
-                        .equals(Singleton.getInstance().soilTypeData.get(x).getId())) {
+                if (Singleton.getInstance().indProperty.getSoilTypeDd().equals(Singleton.getInstance().soilTypeData.get(x).getId())) {
                     spinner_soil_type.setSelection(x);
                     fsProgressCount = fsProgressCount + 1;
                     break;
@@ -2408,8 +2547,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             Log.e("spinner_concreteGrade", "::: " + Singleton.getInstance().indProperty.getEnvironmentExposureConditionDd());
             for (int x = 0; x < Singleton.getInstance().envExposureConditionData.size(); x++) {
 
-                if (Singleton.getInstance().indProperty.getEnvironmentExposureConditionDd()
-                        .equals(Singleton.getInstance().envExposureConditionData.get(x).getId())) {
+                if (Singleton.getInstance().indProperty.getEnvironmentExposureConditionDd().equals(Singleton.getInstance().envExposureConditionData.get(x).getId())) {
                     spinner_environment_exposure_condition.setSelection(x);
                     break;
                 }
@@ -2444,8 +2582,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             Log.e("spinner_concreteGrade", "::: " + Singleton.getInstance().indProperty.getConcreteGrade());
             for (int x = 0; x < Singleton.getInstance().concreteGrade.size(); x++) {
 
-                if (Singleton.getInstance().indProperty.getConcreteGradeDd()
-                        .equals(Singleton.getInstance().concreteGrade.get(x).getId())) {
+                if (Singleton.getInstance().indProperty.getConcreteGradeDd().equals(Singleton.getInstance().concreteGrade.get(x).getId())) {
                     spinner_concrete_grade.setSelection(x);
                     break;
                 }
@@ -2479,8 +2616,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             Log.e("spinner_qualityofcon", "::: " + Singleton.getInstance().indProperty.getTypeofMortarId());
             for (int x = 0; x < Singleton.getInstance().typeOfMortarsList.size(); x++) {
                 if (Singleton.getInstance().typeOfMortarsList.get(x).getTypeofmortarId() != null)
-                    if (Singleton.getInstance().indProperty.getTypeofMortarId().
-                            equals(Singleton.getInstance().typeOfMortarsList.get(x).getTypeofmortarId())) {
+                    if (Singleton.getInstance().indProperty.getTypeofMortarId().equals(Singleton.getInstance().typeOfMortarsList.get(x).getTypeofmortarId())) {
                         spinner_mortar.setSelection(x);
                         break;
                     }
@@ -2576,6 +2712,102 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         }
     }
 
+    private void function_interior_floor_property_dtls() {
+
+        textview_flooring_text_property_dtls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard(textview_flooring_text_property_dtls);
+                showdialog_dynamic("floor_prpty_dtls");
+            }
+        });
+
+
+        // clear the array and set the floor list in array
+        Inter_floors_list_property_dtls = new ArrayList<>();
+        Inter_floors_list_property_dtls = Singleton.getInstance().floors_list;
+
+        Singleton.getInstance().interior_flooring_id.clear();
+        Singleton.getInstance().interior_flooring_name.clear();
+
+        // check Floor Dropdown is empty
+        if (Inter_floors_list_property_dtls.size() > 0) {
+            String getIntFloorId = Singleton.getInstance().indProperty.getIntFloorId();
+//            Inter_floors_list_selected_id_dummy = getIntFloorId;
+            // check selected array is empty
+            if (!general.isEmpty(getIntFloorId)) {
+                // selected array convert to comma separate array
+                List<String> Inter_floors_list_selected_id_commo = new ArrayList<>();
+                Inter_floors_list_selected_id_commo = new ArrayList<String>(Arrays.asList(getIntFloorId.split(",")));
+                if (Inter_floors_list_selected_id_commo.size() > 0) {
+                    // Loop the Floor and get ID > check If selected array contains ID
+                    for (int x = 0; x < Inter_floors_list_property_dtls.size(); x++) {
+                        if (Inter_floors_list_selected_id_commo.toString().contains("" + Inter_floors_list_property_dtls.get(x).getIntFloorId())) {
+                            for (int y = 0; y < Inter_floors_list_selected_id_commo.size(); y++) {
+                                // Loop the selected array > If the selected array ID equal to Floor ID > save ID and name to Instance
+                                int one_by_one_id = Integer.parseInt(Inter_floors_list_selected_id_commo.get(y));
+                                if (Inter_floors_list_property_dtls.get(x).getIntFloorId() == one_by_one_id) {
+                                    Singleton.getInstance().interior_flooring_id.add(Inter_floors_list_property_dtls.get(x).getIntFloorId());
+                                    Singleton.getInstance().interior_flooring_name.add(Inter_floors_list_property_dtls.get(x).getName());
+                                }
+                            }
+                            textview_flooring_text_property_dtls.setText(general.remove_array_brac_and_space(Singleton.getInstance().interior_flooring_name.toString()));
+                        }
+                    }
+                }
+            } else {
+                textview_flooring_text_property_dtls.setText(getResources().getString(R.string.select));
+            }
+        }
+    }
+
+    private void function_exterior_structure_property_dtls() {
+
+        textview_exter_struc_text_property_dtls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard(textview_exter_struc_text_property_dtls);
+                showdialog_dynamic("exter_stru_prpty_dtls");
+            }
+        });
+
+        // clear the array and set the floor list in array
+        Exter_struc_list_property_dtls = new ArrayList<>();
+        Exter_struc_list_property_dtls = Singleton.getInstance().structures_list;
+
+        Singleton.getInstance().exter_stru_id.clear();
+        Singleton.getInstance().exter_stru_name.clear();
+
+        // check Floor Dropdown is empty
+        if (Exter_struc_list_property_dtls.size() > 0) {
+            String getIntFloorId = Singleton.getInstance().indProperty.getTypeOfStructureId();
+            // check selected array is empty
+            if (!general.isEmpty(getIntFloorId)) {
+                // selected array convert to comma separate array
+                List<String> Exter_struc_list_selected_id_commo = new ArrayList<>();
+                Exter_struc_list_selected_id_commo = new ArrayList<String>(Arrays.asList(getIntFloorId.split(",")));
+                if (Exter_struc_list_selected_id_commo.size() > 0) {
+                    // Loop the Floor and get ID > check If selected array contains ID
+                    for (int x = 0; x < Exter_struc_list_property_dtls.size(); x++) {
+                        if (Exter_struc_list_selected_id_commo.toString().contains("" + Exter_struc_list_property_dtls.get(x).getTypeOfStructureId())) {
+                            for (int y = 0; y < Exter_struc_list_selected_id_commo.size(); y++) {
+                                // Loop the selected array > If the selected array ID equal to Floor ID > save ID and name to Instance
+                                int one_by_one_id = Integer.parseInt(Exter_struc_list_selected_id_commo.get(y));
+                                if (Exter_struc_list_property_dtls.get(x).getTypeOfStructureId() == one_by_one_id) {
+                                    Singleton.getInstance().exter_stru_id.add(Exter_struc_list_property_dtls.get(x).getTypeOfStructureId());
+                                    Singleton.getInstance().exter_stru_name.add(Exter_struc_list_property_dtls.get(x).getName());
+                                }
+                            }
+                        }
+                        textview_exter_struc_text_property_dtls.setText(general.remove_array_brac_and_space(Singleton.getInstance().exter_stru_name.toString()));
+                    }
+                }
+            }
+        } else {
+            textview_exter_struc_text_property_dtls.setText(getResources().getString(R.string.select));
+        }
+    }
+
 
     private void hideSoftKeyboard(View addkeys) {
         if ((addkeys != null) && (getActivity() != null)) {
@@ -2655,6 +2887,18 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             String selectedId = Singleton.getInstance().indProperty.getIntFloorId();
             FlooringAdapter flooringAdapter = new FlooringAdapter(getActivity(), Inter_floors_list, selectedId);
             recyclerview_dialog.setAdapter(flooringAdapter);
+        } else if (type_of_dialog.equalsIgnoreCase("floor_prpty_dtls")) {
+            // Type -> Floor
+            textview_heading.setText(getResources().getString(R.string.flooring));
+            String selectedId = Singleton.getInstance().indProperty.getIntFloorId();
+            FlooringAdapter flooringAdapter = new FlooringAdapter(getActivity(), Inter_floors_list_property_dtls, selectedId);
+            recyclerview_dialog.setAdapter(flooringAdapter);
+        } else if (type_of_dialog.equalsIgnoreCase("exter_stru_prpty_dtls")) {
+            // Type -> Roofing
+            textview_heading.setText(getResources().getString(R.string.typeofstructure));
+            String selectedId = Singleton.getInstance().indProperty.getTypeOfStructureId();
+            ExterStructureAdapter exterStructureAdapter = new ExterStructureAdapter(getActivity(), Exter_struc_list_property_dtls, selectedId);
+            recyclerview_dialog.setAdapter(exterStructureAdapter);
         } else if (type_of_dialog.equalsIgnoreCase("roofing")) {
             // Type -> Roofing
             textview_heading.setText(getResources().getString(R.string.roofing));
@@ -2740,7 +2984,40 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                     }
                     Log.e("interior_roofing_id", "::: " + Singleton.getInstance().interior_roofing_id);
                     Log.e("interior_roofing_name", ":: " + Singleton.getInstance().interior_roofing_name);
+                } else if (type_of_dialog.equalsIgnoreCase("floor_prpty_dtls")) {
+                    // Type -> Floor
+                    if (Singleton.getInstance().interior_flooring_id.size() > 0) {
+                        String interior_flooring_id = general.remove_array_brac_and_space(Singleton.getInstance().interior_flooring_id.toString());
+                        // set the Inter floor ID
+                        Singleton.getInstance().indProperty.setIntFloorId(interior_flooring_id);
+                        // setText to the floor text
+                        String interior_flooring_name = general.remove_array_brac_and_space(Singleton.getInstance().interior_flooring_name.toString());
+                        textview_flooring_text_property_dtls.setText(interior_flooring_name);
+                    } else {
+                        // clear all the ID and dummy data and clear the settext
+                        Singleton.getInstance().indProperty.setIntFloorId("");
+                        textview_flooring_text.setText(getResources().getString(R.string.select));
+                    }
+                    Log.e("interior_flooring_id", "::: " + Singleton.getInstance().interior_flooring_id);
+                    Log.e("interior_flooring_name", ":: " + Singleton.getInstance().interior_flooring_name);
+                } else if (type_of_dialog.equalsIgnoreCase("exter_stru_prpty_dtls")) {
+                    // Type -> door
+                    if (Singleton.getInstance().exter_stru_id.size() > 0) {
+                        String exter_stru_id = general.remove_array_brac_and_space(Singleton.getInstance().exter_stru_id.toString());
+                        // set the Inter floor ID
+                        Singleton.getInstance().indProperty.setTypeOfStructureId(exter_stru_id);
+                        // setText to the floor text
+                        String exter_stru_name = general.remove_array_brac_and_space(Singleton.getInstance().exter_stru_name.toString());
+                        textview_exter_struc_text_property_dtls.setText(exter_stru_name);
+                    } else {
+                        // clear all the ID and dummy data and clear the settext
+                        Singleton.getInstance().indProperty.setTypeOfStructureId("");
+                        textview_exter_struc_text_property_dtls.setText(getResources().getString(R.string.select));
+                    }
+                    Log.e("exter_stru_id", "::: " + Singleton.getInstance().exter_stru_id);
+                    Log.e("exter_stru_name", ":: " + Singleton.getInstance().exter_stru_name);
                 }
+
                 alertDialog.dismiss();
             }
         });
@@ -2863,6 +3140,10 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         }
     }
 
+    private void setPropertyBank(String property_bank) {
+        isNPA = property_bank.contains("NPA");
+    }
+
     public static FieldsInspectionDetails getInstance() {
         return instance;
     }
@@ -2877,27 +3158,24 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         newCalendar.add(Calendar.YEAR, 0);
         long upperLimit = newCalendar.getTimeInMillis();
 
-        datePickerDialog = new DatePickerDialog(getActivity(), new
-                DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        siteVisiteInCalender = "";
-                        newCalendar.set(Calendar.YEAR, year);
-                        newCalendar.set(Calendar.MONTH, month);
-                        newCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale
-                                .getDefault());
-                        date_value.setText(sdf.format(newCalendar.getTime()));
+        datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                siteVisiteInCalender = "";
+                newCalendar.set(Calendar.YEAR, year);
+                newCalendar.set(Calendar.MONTH, month);
+                newCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                date_value.setText(sdf.format(newCalendar.getTime()));
 
-                        visitDate = sdf.format(newCalendar.getTime());
+                visitDate = sdf.format(newCalendar.getTime());
 
-                        siteVisiteInCalender = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                                .format(newCalendar.getTime());
-                        Log.e("Selected Date", "Calender.." + siteVisiteInCalender);
-                        date_error_msg.setVisibility(View.GONE);
+                siteVisiteInCalender = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(newCalendar.getTime());
+                Log.e("Selected Date", "Calender.." + siteVisiteInCalender);
+                date_error_msg.setVisibility(View.GONE);
 
-                    }
-                }, mYear, mMonth, mDay);
+            }
+        }, mYear, mMonth, mDay);
         //datePickerDialog.getDatePicker().setMinDate(newCalendar.get(Calendar.YEAR));
 
         datePickerDialog.getDatePicker().getTouchables().get(0).performClick();
@@ -2969,8 +3247,31 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
 
     public void geoCorodinate() {
-        etLat.setText(latvalue.getText().toString());
-        etLong.setText(longvalue.getText().toString());
+        String latlong = Singleton.getInstance().property.getLatLongDetails();
+        if (latlong == null || latlong.contains(":")) {
+            etLat.setText(latvalue.getText().toString());
+            etLong.setText(longvalue.getText().toString());
+            str_latvalue = PhotoLatLong.latvalue.getText().toString();
+            str_longvalue = PhotoLatLong.longvalue.getText().toString();
+            String strLatLong = str_latvalue + ":" + str_longvalue;
+            Singleton.getInstance().property.setLatLongDetails(strLatLong);
+        } else if (latlong.isEmpty()) {
+            etLat.setText(latvalue.getText().toString());
+            etLong.setText(longvalue.getText().toString());
+            str_latvalue = PhotoLatLong.latvalue.getText().toString();
+            str_longvalue = PhotoLatLong.longvalue.getText().toString();
+            String strLatLong = str_latvalue + ":" + str_longvalue;
+            Singleton.getInstance().property.setLatLongDetails(strLatLong);
+        } else {
+            String[] temp = latlong.split(":");
+            str_latvalue = temp[0].trim();
+            str_longvalue = temp[1].trim();
+            etLat.setText(str_latvalue);
+            etLong.setText(str_longvalue);
+            String strLatLong = str_latvalue + ":" + str_longvalue;
+            Singleton.getInstance().property.setLatLongDetails(strLatLong);
+        }
+
     }
 
 
@@ -3175,10 +3476,13 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
     public void save_function() {
         if (property_type.equalsIgnoreCase("building")) {
+            getProximityListData();
             function_save();
         } else if (property_type.equalsIgnoreCase("flat") || property_type.equalsIgnoreCase("penthouse")) {
+            getProximityListData();
             function_save_penthouse();
         } else if (property_type.equalsIgnoreCase("land")) {
+            getProximityListData();
             function_save_land();
         }
     }
@@ -3189,13 +3493,13 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             FieldsInspectionDetails.my_focuslayout.requestFocus();
         }
 
-        invisible_save_button();
+        //invisible_save_button();
         general.showloading(getActivity());
         // Setting values and sending to data
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                str_latvalue = latvalue.getText().toString();
+                str_latvalue = PhotoLatLong.latvalue.getText().toString();
                 str_longvalue = PhotoLatLong.longvalue.getText().toString();
                 Singleton.getInstance().latlng_details = str_latvalue + ":" + str_longvalue;
                 Singleton.getInstance().aCase.setStatus(Integer.valueOf(getResources().getString(R.string.edit_inspection)));
@@ -3204,6 +3508,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
                 /* valuation - Building */
                 FSLandBuildingValuation fsLandBuildingValuation = new FSLandBuildingValuation();
+
                 fsLandBuildingValuation.save_landval();
                 FSLandBuildingValuation.saveIndValuationFloorsCalculation();
 
@@ -3229,7 +3534,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         if (FieldsInspectionDetails.my_focuslayout != null) {
             FieldsInspectionDetails.my_focuslayout.requestFocus();
         }
-        invisible_save_button();
+      //  invisible_save_button();
         general.showloading(getActivity());
         // Setting values and sending to data
         new Handler().postDelayed(new Runnable() {
@@ -3288,7 +3593,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         if (FieldsInspectionDetails.my_focuslayout != null) {
             FieldsInspectionDetails.my_focuslayout.requestFocus();
         }
-        invisible_save_button();
+       // invisible_save_button();
         general.showloading(getActivity());
         // Setting values and sending to data
         new Handler().postDelayed(new Runnable() {
@@ -3317,10 +3622,11 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
                 FSLandValuation fsLandValuation = new FSLandValuation();
                 fsLandValuation.PostLandValues();
+                fsLandValuation.save_landval();
 
-
-                FragmentValuationLand fragmentValuationLand = new FragmentValuationLand();
-                fragmentValuationLand.save_landval();
+//
+//                FragmentValuationLand fragmentValuationLand = new FragmentValuationLand();
+//                fragmentValuationLand.save_landval();
 
                 // Visible the save button
                 visible_save_button();
@@ -3347,8 +3653,8 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     }
 
     private void visible_save_button() {
-        textview_save_top.setVisibility(View.VISIBLE);
-        textview_save_top_dashboard.setVisibility(View.VISIBLE);
+//        textview_save_top.setVisibility(View.VISIBLE);
+      textview_save_top_dashboard.setVisibility(View.VISIBLE);
         /*textview_save_bottom.setVisibility(View.VISIBLE);
         textview_save_bottom_dashboard.setVisibility(View.VISIBLE);*/
     }
@@ -3485,8 +3791,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         data.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
         data.setRequestBody(RequestParam.uploadimageRequestParams(data));
 
-        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), data,
-                SettingsUtils.POST_TOKEN);
+        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), data, SettingsUtils.POST_TOKEN);
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
@@ -3497,8 +3802,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                     General.sessionDialog(getActivity());
                 } else {
                     general.hideloading();
-                    General.customToast(getActivity().getString(R.string.something_wrong),
-                            getActivity());
+                    General.customToast(getActivity().getString(R.string.something_wrong), getActivity());
                 }
             }
         });
@@ -3544,7 +3848,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
                 Log.e("EditRequest", new Gson().toJson(requestData));
 
-                Log.e("EditRequest MainJson", new Gson().toJson(mainOb));
+                Log.e("EditRequest MainJson FS", new Gson().toJson(mainOb));
 
                 /*try{
                     JSONObject jsonObj = new JSONObject(new Gson().toJson(requestData.getMainJson()));
@@ -3554,8 +3858,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 }*/
 
 
-                WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(),
-                        requestData, SettingsUtils.POST_TOKEN);
+                WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), requestData, SettingsUtils.POST_TOKEN);
                 webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
                     @Override
                     public void onTaskComplete(JsonRequestData requestData) {
@@ -3826,8 +4129,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                             SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
                             SettingsUtils.getInstance().putValue("long", String.valueOf(general.getcurrent_longitude(activity)));
 
-                            new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "")
-                                    , SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 1);
+                            new LocationTrackerApi(getActivity()).shareLocation(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, ""), SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""), "Field Inspection Submit", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 1);
 
                         }
                     }
@@ -3865,8 +4167,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
         requestData.setRequestBody(RequestParam.UpdateCaseStatusRequestParams(requestData));
 
-        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), requestData,
-                SettingsUtils.PUT_TOKEN);
+        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), requestData, SettingsUtils.PUT_TOKEN);
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
@@ -3877,8 +4178,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                     General.sessionDialog(getActivity());
                 } else {
                     general.hideloading();
-                    General.customToast(getActivity().getString(R.string.something_wrong),
-                            getActivity());
+                    General.customToast(getActivity().getString(R.string.something_wrong), getActivity());
                 }
             }
         });
@@ -3976,17 +4276,13 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         Singleton.getInstance().property.setCaseId(Integer.parseInt(caseid));
         Singleton.getInstance().indProperty.setCaseId(Integer.parseInt(caseid));
 
-        if (llPurpose.getVisibility() == View.VISIBLE)
-            getPurpose();
+        if (llPurpose.getVisibility() == View.VISIBLE) getPurpose();
 
-        if (llNameOfBorrower.getVisibility() == View.VISIBLE)
-            getNameOfBorrower();
+        if (llNameOfBorrower.getVisibility() == View.VISIBLE) getNameOfBorrower();
 
-        if (llNameOfSeller.getVisibility() == View.VISIBLE)
-            getNameOfSeller();
+        if (llNameOfSeller.getVisibility() == View.VISIBLE) getNameOfSeller();
 
-        if (llNameOfOwner.getVisibility() == View.VISIBLE)
-            getNameOfOwner();
+        if (llNameOfOwner.getVisibility() == View.VISIBLE) getNameOfOwner();
 
 
         if (ll_calender.getVisibility() == View.VISIBLE) {
@@ -4019,8 +4315,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             if (Singleton.getInstance().indProperty != null) {
                 if (!general.isEmpty(et_seller_type.getText().toString()))
                     Singleton.getInstance().indProperty.setTypeofSeller(et_seller_type.getText().toString());
-                else
-                    Singleton.getInstance().indProperty.setTypeofSeller("");
+                else Singleton.getInstance().indProperty.setTypeofSeller("");
             }
         }
 
@@ -4047,6 +4342,14 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             }
         }
 
+
+        if (tl_unit_no.getVisibility() == View.VISIBLE) {
+            if (!general.isEmpty(editText_unit_no.getText().toString().trim())) {
+                Singleton.getInstance().property.setUnitNo(editText_unit_no.getText().toString().trim());
+            } else {
+                Singleton.getInstance().property.setUnitNo("");
+            }
+        }
 
         if (tl_plot_no.getVisibility() == View.VISIBLE) {
             if (!general.isEmpty(editText_plotno.getText().toString().trim())) {
@@ -4166,8 +4469,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             int spinner_typeoflocality_posClass = spinner_typeoflocality.getSelectedItemPosition();
             if (spinner_typeoflocality_posClass > 0) {
                 int classId = Singleton.getInstance().localities_list.get(spinner_typeoflocality_posClass).getTypeLocalityId();
-                if (classId != 0)
-                    Singleton.getInstance().property.setTypeLocalityId(classId);
+                if (classId != 0) Singleton.getInstance().property.setTypeLocalityId(classId);
             } else {
                 Singleton.getInstance().property.setTypeLocalityId(null);
             }
@@ -4201,19 +4503,32 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     private void getPropertyInputData() {
 
         if (ll_ownership.getVisibility() == View.VISIBLE) {
-            int posTenure = spinner_select_tenure_ownership.getSelectedItemPosition();
-            if (posTenure > 0) {
-                int tenureId = Singleton.getInstance().tenures_list.get(posTenure).getTenureId();
-                if (tenureId != 0)
-                    Singleton.getInstance().property.setTenureId(tenureId);
+            int posOwnership = spinner_select_tenure_ownership.getSelectedItemPosition();
+            if (posOwnership > 0) {
+                int id = Singleton.getInstance().ownershipTypes_list.get(posOwnership).getId();
+                if (id != 0) Singleton.getInstance().aCase.setTypeofOwnershipDd(id);
             } else {
                 Singleton.getInstance().property.setTenureId(null);
             }
         }
 
+        if (ll_contact_info_property.getVisibility() == View.VISIBLE) {
+            if (!General.isEmpty(etPersonName_property.getText().toString())) {
+                Singleton.getInstance().aCase.setContactPersonName(etPersonName_property.getText().toString());
+            } else {
+                Singleton.getInstance().aCase.setContactPersonName("");
+            }
+
+            if (!General.isEmpty(etPersonNo_property.getText().toString())) {
+                Singleton.getInstance().aCase.setContactPersonNumber(etPersonNo_property.getText().toString());
+            } else {
+                Singleton.getInstance().aCase.setContactPersonNumber("");
+            }
+        }
+
 
         if (checkbox_sanctioned_plan.getVisibility() == View.VISIBLE) {
-            Singleton.getInstance().indProperty.setIsConstructionDoneasPerSanctionedPlan(checkbox_sanctioned_plan.isChecked());
+            Singleton.getInstance().property.setIsConstructionDoneAsPerSanctionedPlan(checkbox_sanctioned_plan.isChecked());
         }
 
 
@@ -4225,9 +4540,13 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
 
         if (layout_engineer_license.getVisibility() == View.VISIBLE) {
-            if (!general.isEmpty(et_engineer_license.getText().toString()))
+            if (!General.isEmpty(et_engineer_license.getText().toString())) {
+                Singleton.getInstance().aCase.setArchitectEngineerLicenseNo(et_engineer_license.getText().toString());
                 Singleton.getInstance().indProperty.setArchitectEngineerLicenseNo(et_engineer_license.getText().toString());
-            else Singleton.getInstance().indProperty.setArchitectEngineerLicenseNo("");
+            } else {
+                Singleton.getInstance().aCase.setArchitectEngineerLicenseNo("");
+                Singleton.getInstance().indProperty.setArchitectEngineerLicenseNo("");
+            }
         }
 
 
@@ -4304,11 +4623,11 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             Singleton.getInstance().indProperty.setLiftInBuilding(checkbox_lift_in_building.isChecked());
 
 
-       /* if (tl_avg_construction_per.getVisibility() == View.VISIBLE) {
+        if (tl_avg_construction_per.getVisibility() == View.VISIBLE) {
             if (!general.isEmpty(etAverageConstruction.getText().toString()))
                 Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage(etAverageConstruction.getText().toString());
             else Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage("");
-        }*/
+        }
 
 
         if (tl_recommendation_per.getVisibility() == View.VISIBLE) {
@@ -4526,14 +4845,29 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         int spinner_marketabilitySelectedItemPosition = spinner_marketability.getSelectedItemPosition();
         if (spinner_marketabilitySelectedItemPosition > 0) {
             int landId = Singleton.getInstance().marketablities_list.get(spinner_marketabilitySelectedItemPosition).getMarketabilityId();
-            if (landId != 0)
-                Singleton.getInstance().indProperty.setMarketabilityId(landId);
+            if (landId != 0) Singleton.getInstance().indProperty.setMarketabilityId(landId);
         } else {
             Singleton.getInstance().indProperty.setMarketabilityId(null);
         }
     }
 
     private void getRemarkInputData() {
+        if (tl_recommendation_per_remark.getVisibility() == View.VISIBLE) {
+            if (!general.isEmpty(etRecommendationPercentage_remark.getText().toString())) {
+                Singleton.getInstance().indPropertyValuation.setRecommendationPercentage(etRecommendationPercentage_remark.getText().toString());
+            } else {
+                Singleton.getInstance().indPropertyValuation.setRecommendationPercentage("");
+            }
+        }
+
+        if (tl_construction_stage_remark.getVisibility() == View.VISIBLE) {
+            if (!general.isEmpty(et_construction_stage_remark.getText().toString())) {
+                Singleton.getInstance().indProperty.setDescriptionofConstructionStage(et_construction_stage_remark.getText().toString());
+            } else {
+                Singleton.getInstance().indProperty.setDescriptionofConstructionStage("");
+            }
+        }
+
         String remarks_id_ = general.remove_array_brac_and_space(Singleton.getInstance().Remarks_Id.toString());
         Log.e("other_save", "remarks_id_is: " + remarks_id_);
         Singleton.getInstance().property.setRemarks(remarks_id_);
@@ -4571,8 +4905,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             requestData.setCaseID(caseID); // id
             requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
             requestData.setUrl(RequestParam.FetchFSVisibleUI(requestData));
-            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(mContext, requestData,
-                    SettingsUtils.GET_TOKEN);
+            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(mContext, requestData, SettingsUtils.GET_TOKEN);
             webserviceTask.setFetchMyData((TaskCompleteListener<JsonRequestData>) requestData1 -> {
                 if (requestData1.isSuccessful()) {
                     RequestApiStatus requestApiStatus = new Gson().fromJson(requestData1.getResponse(), RequestApiStatus.class);
@@ -4637,11 +4970,15 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     }
 
     private void getCommonFsInputData() {
+        getProximityListData();
         getGeneralInputData();
         getLocalityInputData();
         getPropertyInputData();
         getPropertyDetailsInputData();
-        getNDMAParameters();
+        if (!isNPA) {
+            getNDMAParameters();
+        }
+
 
         getMarketInputData();
         getRemarkInputData();
@@ -4675,7 +5012,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         };
         localityArrayAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
         spinner_typeoflocality.setAdapter(localityArrayAdapter);
-        spinner_typeoflocality_property.setAdapter(localityArrayAdapter); //regional development in property section
+        //     spinner_typeoflocality_property.setAdapter(localityArrayAdapter); //regional development in property section
         spinner_typeoflocality.setOnTouchListener(this);
 
         if (!general.isEmpty(String.valueOf(Singleton.getInstance().property.getTypeLocalityId()))) {
@@ -4686,7 +5023,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 for (int x = 0; x < qualityConstructions_.size(); x++) {
                     if (qualityConstructions_.get(x).getTypeLocalityId() == Singleton.getInstance().property.getTypeLocalityId()) {
                         spinner_typeoflocality.setSelection(x);
-                        spinner_typeoflocality_property.setSelection(x);
+                        //      spinner_typeoflocality_property.setSelection(x);
                         fsProgressCount = fsProgressCount + 1;
                         //regional development in property section
                     }
@@ -4714,8 +5051,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             if (Singleton.getInstance().property.getIsPropertyInDemolitionList()) {
                 llPropertyRbtn.setVisibility(View.VISIBLE);
 
-                if (Singleton.getInstance().property.getDemolitionListValue() != null &&
-                        !Singleton.getInstance().property.getDemolitionListValue().isEmpty()) {
+                if (Singleton.getInstance().property.getDemolitionListValue() != null && !Singleton.getInstance().property.getDemolitionListValue().isEmpty()) {
 
                     String value = Singleton.getInstance().property.getDemolitionListValue();
                     RadioButton rbn = null;
@@ -4762,8 +5098,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             for (int x = 0; x < Singleton.getInstance().typeOfMasonryList.size(); x++) {
 
                 if (Singleton.getInstance().typeOfMasonryList.get(x).getTypeofmasonryId() != null)
-                    if (Singleton.getInstance().indProperty.getTypeofMasonryId()
-                            .equals(Singleton.getInstance().typeOfMasonryList.get(x).getTypeofmasonryId())) {
+                    if (Singleton.getInstance().indProperty.getTypeofMasonryId().equals(Singleton.getInstance().typeOfMasonryList.get(x).getTypeofmasonryId())) {
                         spinner_masonry.setSelection(x);
                         break;
                     }
@@ -4775,9 +5110,22 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         initGeneral();
         initLocality();
         initPropertyValues();
-        initPropertyDetailsValue();
+        if (property_type.equalsIgnoreCase("land") && isNPA) {
+            cardViewPropertyDetails.setVisibility(View.GONE);
 
-        initNDMAParameters();
+        } else {
+            cardViewPropertyDetails.setVisibility(View.VISIBLE);
+            initPropertyDetailsValue();
+
+        }
+
+        if (!isNPA) {
+            cardViewNdmaParamter.setVisibility(View.VISIBLE);
+            initNDMAParameters();
+        } else {
+            cardViewNdmaParamter.setVisibility(View.GONE);
+        }
+
 
         initiatePropertyFragmentViews();
 
@@ -4787,6 +5135,28 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     }
 
     void initRemarkData() {
+
+        if (general.getUIVisibility("Recommendation Percentage") && general.getSectionID("Recommendation Percentage") != 4) {
+            tl_recommendation_per_remark.setVisibility(View.VISIBLE);
+            if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getRecommendationPercentage())) {
+                fsProgressCount = fsProgressCount + 1;
+                etRecommendationPercentage_remark.setText(Singleton.getInstance().indPropertyValuation.getRecommendationPercentage());
+            }
+        } else tl_recommendation_per_remark.setVisibility(View.GONE);
+
+
+        if (general.getUIVisibility("Average construction percentage,Description of construction stage") && general.getSectionID("Average construction percentage,Description of construction stage") != 4) {
+            if (property_type.equalsIgnoreCase("land")) {
+                tl_construction_stage_remark.setVisibility(View.GONE);
+            } else {
+                if (!general.isEmpty(Singleton.getInstance().indProperty.getDescriptionofConstructionStage())) {
+                    fsProgressCount = fsProgressCount + 1;
+                    et_construction_stage_remark.setText(Singleton.getInstance().indProperty.getDescriptionofConstructionStage());
+                }
+            }
+        } else {
+            tl_construction_stage_remark.setVisibility(View.GONE);
+        }
         if (general.getUIVisibility("Marketability")) {
             ll_marketability.setVisibility(View.VISIBLE);
             initMarketability();
@@ -4794,7 +5164,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             ll_marketability.setVisibility(View.GONE);
         }
 
-        if (general.getUIVisibility("Document Received / Others")) {
+        if (general.getUIVisibility("Document Received / Others") && !isNPA) {
             if (!general.isEmpty(Singleton.getInstance().property.getOtherDocuments()))
                 et_additional_document.setText(Singleton.getInstance().property.getOtherDocuments());
             tl_additional_document.setVisibility(View.VISIBLE);
@@ -4875,8 +5245,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             }
             if (spinnerinitial.equalsIgnoreCase("Select"))
                 Singleton.getInstance().property.setNameOfSeller("");
-            else
-                Singleton.getInstance().property.setNameOfSeller(spinnerinitial);
+            else Singleton.getInstance().property.setNameOfSeller(spinnerinitial);
         }
     }
 
@@ -4900,40 +5269,23 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             }
             if (spinnerinitial.equalsIgnoreCase("Select"))
                 Singleton.getInstance().property.setNameOfPurchaser("");
-            else
-                Singleton.getInstance().property.setNameOfPurchaser(spinnerinitial);
+            else Singleton.getInstance().property.setNameOfPurchaser(spinnerinitial);
         }
     }
 
-    private void typeOfProprty() {
-        // spinner - Property
-       /* ArrayAdapter<DropDownResponse.Datum> localityArrayAdapter = new ArrayAdapter<DropDownResponse.Datum>(getActivity(), R.layout.row_spinner_item, Singleton.getInstance().typeOfProperty) {
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View v = super.getView(position, convertView, parent);
-                ((TextView) v).setTypeface(general.mediumtypeface());
-                return v;
-            }
-
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View v = super.getDropDownView(position, convertView, parent);
-                ((TextView) v).setTypeface(general.mediumtypeface());
-                return v;
-            }
-        };
-        localityArrayAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
-        spinner_property.setAdapter(localityArrayAdapter);
-        spinner_property_details.setAdapter(localityArrayAdapter);
-        spinner_property_ndma.setAdapter(localityArrayAdapter);
-        spinner_property.setOnTouchListener(this);*/
-
+    private void typeOfProperty(int caseid_int) {
         if (!general.isEmpty(String.valueOf(Singleton.getInstance().property.getTypeOfPropertyId()))) {
             for (int x = 0; x < Singleton.getInstance().typeOfProperty.size(); x++) {
                 if (Singleton.getInstance().typeOfProperty.get(x).getTypeOfPropertyId() != null)
-                    if (Singleton.getInstance().property.getTypeOfPropertyId() ==
-                            Singleton.getInstance().typeOfProperty.get(x).getTypeOfPropertyId()) {
-                        etpropertyTypeProperty.setText(Singleton.getInstance().typeOfProperty.get(x).getName());
-                        etpropertyTypePropertyDetails.setText(Singleton.getInstance().typeOfProperty.get(x).getName());
-                        etpropertyTypeNdma.setText(Singleton.getInstance().typeOfProperty.get(x).getName());
+                    if (Singleton.getInstance().property.getTypeOfPropertyId() == Singleton.getInstance().typeOfProperty.get(x).getTypeOfPropertyId()) {
+                        if (caseid_int == 3) {
+                            etpropertyTypeProperty.setText(Singleton.getInstance().typeOfProperty.get(x).getName());
+                        } else if (caseid_int == 5) {
+                            etpropertyTypeNdma.setText(Singleton.getInstance().typeOfProperty.get(x).getName());
+
+                        }
+//                    etpropertyTypePropertyDetails.setText(Singleton.getInstance().typeOfProperty.get(x).getName());
+//                        etpropertyTypeNdma.setText(Singleton.getInstance().typeOfProperty.get(x).getName());
                         break;
                     }
             }
@@ -4963,8 +5315,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         if (!general.isEmpty(String.valueOf(Singleton.getInstance().aCase.getLoanType()))) {
             for (int x = 0; x < Singleton.getInstance().loanType.size(); x++) {
 
-                if (Singleton.getInstance().aCase.getLoanType().equals(
-                        Singleton.getInstance().loanType.get(x).getName())) {
+                if (Singleton.getInstance().aCase.getLoanType().equals(Singleton.getInstance().loanType.get(x).getName())) {
                     // spinner_type_of_loan.setSelection(x);
                     etTypeOfLoan.setText("" + Singleton.getInstance().loanType.get(x).getName());
                     fsProgressCount = fsProgressCount + 1;
@@ -5095,9 +5446,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
 
     private void propertyMandatory() {
-        if (Singleton.getInstance().caseOtherDetailsModel.getData() == null ||
-                Singleton.getInstance().caseOtherDetailsModel.getData().get(0) == null ||
-                general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority())) {
+        if (Singleton.getInstance().caseOtherDetailsModel.getData() == null || Singleton.getInstance().caseOtherDetailsModel.getData().get(0) == null || general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority())) {
             et_authority.setError("Please enter Authority");
             cardViewProperty.callOnClick();
         }
@@ -5129,16 +5478,16 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             case R.id.same_as_doc_boundary_checkbox:
                 if (same_as_doc_boundary_checkbox.isPressed()) {
                     if (isChecked) {
-                        boolean check_boundary=same_as_doc_boundary_checkbox.isChecked();
+                        boolean check_boundary = same_as_doc_boundary_checkbox.isChecked();
                         Singleton.getInstance().property.setSameAsDocumentBoundary(check_boundary);
                         DispDocumentBoundary();
                         editText_ab_east.setText(db_east);
                         editText_ab_west.setText(db_west);
                         editText_ab_north.setText(db_north);
                         editText_ab_south.setText(db_south);
-                    }else{
-                        boolean check_boundary=same_as_doc_boundary_checkbox.isChecked();
-                       Log.e ("Same as Doc", String.valueOf(check_boundary));
+                    } else {
+                        boolean check_boundary = same_as_doc_boundary_checkbox.isChecked();
+                        Log.e("Same as Doc", String.valueOf(check_boundary));
                         Singleton.getInstance().property.setSameAsDocumentBoundary(check_boundary);
                     }
                 }

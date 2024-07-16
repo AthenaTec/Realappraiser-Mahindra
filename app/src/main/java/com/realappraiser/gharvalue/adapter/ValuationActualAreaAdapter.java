@@ -10,8 +10,10 @@ import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuati
 import static com.realappraiser.gharvalue.fragments.FragmentValuationBuilding.textview_totalconstructionvalue_result;
 
 import android.annotation.SuppressLint;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -44,7 +46,7 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
     public ArrayList<IndPropertyFloor> steps;
 
     AverageComPerInterface averageComPerInterface;
-    public ArrayList<IndPropertyFloorsValuation> stepsValuation;
+    public ArrayList<IndPropertyFloorsValuation> stepsValuation = new ArrayList<IndPropertyFloorsValuation>();
     @SuppressLint("StaticFieldLeak")
     public static General general;
     boolean docarea_initial = true;
@@ -74,8 +76,6 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
             textview_actual_unit.setTypeface(General.regularTypeface());
             textview_actual_value.setTypeface(General.regularTypeface());
             textview_actual_dep_value.setTypeface(General.regularTypeface());
-
-
 
 
             edittext_actual_rate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -139,7 +139,7 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
 
 
     public ValuationActualAreaAdapter(ArrayList<IndPropertyFloorsValuation> stepsValuation, ArrayList<IndPropertyFloor> steps,
-                                      FragmentActivity context/*,AverageComPerInterface averageComPerInterface*/) {
+                                      FragmentActivity context) {
         this.steps = steps;
         this.stepsValuation = stepsValuation;
         this.mContext = context;
@@ -273,7 +273,9 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
                 stepsModel.setMeasuredConstrValue("" + act_total);
                 stepsValuation.set(adapterPosition, stepsModel);
                 Singleton.getInstance().indPropertyFloorsValuations.set(adapterPosition, stepsModel);
-                averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,true);
+                if (averageComPerInterface != null) {
+                    averageComPerInterface.rateValueUpdate(stepsValuation, adapterPosition, true);
+                }
 
 
                 /*****total construction*****/
@@ -350,12 +352,11 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
 
                 //notifyItemChanged(adapterPosition);
 
-            }else {
-               // notifyItemChanged(adapterPosition);
+            } else {
+                // notifyItemChanged(adapterPosition);
             }
 
-        }
-        else {
+        } else {
             String initval = "0";
             textview_actual_value.setText("");
             if (textview_totalconstructionvalue_result != null)
@@ -371,8 +372,8 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
             stepsValuation.set(adapterPosition, stepsModel);
             Singleton.getInstance().indPropertyFloorsValuations.set(adapterPosition, stepsModel);
 
-
-            averageComPerInterface.rateValueUpdate(stepsValuation,adapterPosition,true);
+            if (averageComPerInterface != null)
+                averageComPerInterface.rateValueUpdate(stepsValuation, adapterPosition, true);
             if (FragmentValuationBuilding.textview_totalconstructionvalue_result != null)
                 FragmentValuationBuilding.textview_totalconstructionvalue_result.setText("");
             if (FragmentValuationBuilding.textview_insurancevaluepe_result != null)
@@ -446,9 +447,6 @@ public class ValuationActualAreaAdapter extends RecyclerView.Adapter<ValuationAc
             steps.set(adapterPosition, stepsmodelfloor);
         }
     }
-
-
-
 
 
 }

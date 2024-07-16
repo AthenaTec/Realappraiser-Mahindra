@@ -223,9 +223,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
 
 
     // calc
-    Button button0, button1, button2, button3, button4, button5, button6,
-            button7, button8, button9, buttonAdd, buttonSub, buttonDivision,
-            buttonMul, button10, buttonC, buttonEqual, button_set, button_close;
+    Button button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, buttonAdd, buttonSub, buttonDivision, buttonMul, button10, buttonC, buttonEqual, button_set, button_close;
     TextView edt1;
     float mValueOne, mValueCurrent;
     boolean mAddition, mSubtract, mMultiplication, mDivision, mClear;
@@ -248,8 +246,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     public static Runnable mJumpRunnable;
     public static long DELAY_TIME = 3000; //3 seconds
     public static Handler mHandler;
-
-
 
 
     // TODO - Textview
@@ -334,7 +330,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     public static TextView spinnerLoadingOverBuildup;
 
 
-
     // TODO - Spinner
     /*public static Spinner spinnerLoadingOverBuildup;*/
     public static Spinner spinnerAreaType;
@@ -346,7 +341,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     TextView textview_areatypetvalue;
     @BindView(R.id.textview_loadingoverbuildup)
     TextView textview_loadingoverbuildup;
-
 
 
     public static EditText etEstimateCost;
@@ -394,9 +388,8 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.fragment_f_s_flat_valuation, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_f_s_flat_valuation, container, false);
 
         ButterKnife.bind(this, view);
         general = new General(getActivity());
@@ -406,7 +399,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         initViewsStatic(view);
         initFlatValuation(view);
         initViews();
-         InitiatePentHouseValues();
+        InitiatePentHouseValues();
         /*AreaTextWatcher();*/
 
 
@@ -419,7 +412,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         open_calc_carpetarea.setOnClickListener(v -> Calculation_Popup_New(3));
 
 
-
         // TODO -  call the mandatory_valiadation
         if (Singleton.getInstance().enable_validation_error) {
             set_pentflathouse_mandatory();
@@ -429,7 +421,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         return view;
     }
 
-    private void initFlatValuation(View view){
+    private void initFlatValuation(View view) {
         initValues(view);
         setPropertyType();
 
@@ -441,7 +433,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         RealizeDistressTotalVal();
 
         DisplayValuation();
-
 
 
         tvCompareRate.setOnClickListener(new View.OnClickListener() {
@@ -550,25 +541,21 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         }
 
 
-
-
         caseid = SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "");
 
         ratePopupApi = new RatePopupApi(getActivity(), this);
 
         Log.e(TAG, "onCreateView: " + PhotoLatLong.latvalue.getText().toString());
 
-        if (latvalue.getText().toString()!=null) {
+        if (latvalue.getText().toString() != null) {
             ratePopupApi.getRatePopup(caseid, latvalue.getText().toString(), longvalue.getText().toString());
-        }else {
+        } else {
             ratePopupApi.getRatePopup(caseid, String.valueOf(SettingsUtils.Latitudes), String.valueOf(SettingsUtils.Longitudes));
         }
 
 
         subsequentRevaluation();
     }
-
-
 
 
     private void setMeasurementSpinner(int id, ArrayList<Measurements> measurements, Spinner internalspinner) {
@@ -909,8 +896,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     }
 
     public void getMeasurementonGeneralFloor() {
-        ArrayAdapter<Measurements> adapterMeasurements = new ArrayAdapter<>(getActivity(),
-                R.layout.row_spinner_item, Singleton.getInstance().measurements_list);
+        ArrayAdapter<Measurements> adapterMeasurements = new ArrayAdapter<>(getActivity(), R.layout.row_spinner_item, Singleton.getInstance().measurements_list);
         adapterMeasurements.setDropDownViewResource(R.layout.row_spinner_item_popup);
         spinnerMeasurement_doc.setAdapter(adapterMeasurements);
         spinnerMeasurement_doc.setOnTouchListener(this);
@@ -923,15 +909,14 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                 Singleton.getInstance().indProperty.setDocumentLandAreaUnit(Singleton.getInstance().measurements_list.get(position).getMeasureUnitId());
                 Singleton.getInstance().indProperty.setMeasuredLandAreaUnit(Singleton.getInstance().measurements_list.get(position).getMeasureUnitId());
 
-               }
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-        ArrayAdapter<Measurements> adapterMeasurements2 = new ArrayAdapter<Measurements>(getActivity(),
-                R.layout.row_spinner_item, Singleton.getInstance().measurements_list_flat);
+        ArrayAdapter<Measurements> adapterMeasurements2 = new ArrayAdapter<Measurements>(getActivity(), R.layout.row_spinner_item, Singleton.getInstance().measurements_list_flat);
         adapterMeasurements2.setDropDownViewResource(R.layout.row_spinner_item_popup);
         spinner_measurement_act.setAdapter(adapterMeasurements2);
         spinner_measurement_act.setSelection(1);
@@ -1096,8 +1081,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     }*/
 
     public void getConstructionStageSpinner() {
-        ArrayAdapter<Construction> adapterStageConstruct = new ArrayAdapter<>(getActivity(),
-                R.layout.row_spinner_item, Singleton.getInstance().constructions_list);
+        ArrayAdapter<Construction> adapterStageConstruct = new ArrayAdapter<>(getActivity(), R.layout.row_spinner_item, Singleton.getInstance().constructions_list);
 
         adapterStageConstruct.setDropDownViewResource(R.layout.row_spinner_item_popup);
 
@@ -1211,7 +1195,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         /* sugan Integration */
 
     }
-
 
 
     private void show_emptyFocus() {
@@ -1581,8 +1564,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
 
             if (Singleton.getInstance().indPropertyFloors.size() > 0) {
                 IndPropertyFloor indPropertyFloor = Singleton.getInstance().indPropertyFloors.get(0);
-                if (!general.isEmpty(caseid))
-                    indPropertyFloor.setCaseId(Integer.valueOf(caseid));
+                if (!general.isEmpty(caseid)) indPropertyFloor.setCaseId(Integer.valueOf(caseid));
                 indPropertyFloor.setFloorName(generalfloorname);
 
                 if (!general.isEmpty(et_permssible_area.getText().toString())) {
@@ -1603,12 +1585,12 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                 if (!general.isEmpty(flatage)) {
                     indPropertyFloor.setPropertyAge(Integer.valueOf(flatage));
                 } else {
-                    indPropertyFloor.setPropertyAge(null);
+                    indPropertyFloor.setPropertyAge(0);
                 }
                 if (!general.isEmpty(flatlife)) {
                     indPropertyFloor.setResidualLife(Integer.valueOf(flatlife));
                 } else {
-                    indPropertyFloor.setResidualLife(null);
+                    indPropertyFloor.setResidualLife(0);
                 }
 
                 indPropertyFloor.setFloorNo(1);
@@ -1659,8 +1641,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
             } else {
 
                 IndPropertyFloor indPropertyFloor = new IndPropertyFloor();
-                if (!general.isEmpty(caseid))
-                    indPropertyFloor.setCaseId(Integer.valueOf(caseid));
+                if (!general.isEmpty(caseid)) indPropertyFloor.setCaseId(Integer.valueOf(caseid));
                 indPropertyFloor.setFloorName(generalfloorname);
                 if (!general.isEmpty(flatcomp)) {
                     indPropertyFloor.setPercentageCompletion(Integer.valueOf(flatcomp));
@@ -1672,13 +1653,13 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                 if (!general.isEmpty(flatage)) {
                     indPropertyFloor.setPropertyAge(Integer.valueOf(flatage));
                 } else {
-                    indPropertyFloor.setPropertyAge(null);
+                    indPropertyFloor.setPropertyAge(0);
                 }
 
                 if (!general.isEmpty(flatlife)) {
                     indPropertyFloor.setResidualLife(Integer.valueOf(flatlife));
                 } else {
-                    indPropertyFloor.setResidualLife(null);
+                    indPropertyFloor.setResidualLife(0);
                 }
 
 
@@ -1981,10 +1962,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     private void calPercentage(EditText editText) {
 
         String carpetAreaPer = Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage();
-        if (carpetAreaPer != null && !carpetAreaPer.isEmpty()
-                && editText.getText().toString() != null &&
-                !editText.getText().toString().isEmpty()
-        ) {
+        if (carpetAreaPer != null && !carpetAreaPer.isEmpty() && editText.getText().toString() != null && !editText.getText().toString().isEmpty()) {
             double amount = Double.parseDouble(editText.getText().toString());
             double res = (amount / 100.0f);
             double resInPer = res * Integer.parseInt(carpetAreaPer);
@@ -1996,10 +1974,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     private void calPerthroughCarpetPer(boolean b) {
         if (b) {
             String selectedCarpetAreaTypeId = Singleton.getInstance().indPropertyValuation.getSelectedCarpetAreaTypeId();
-            if (selectedCarpetAreaTypeId != null && !selectedCarpetAreaTypeId.isEmpty() && selectedCarpetAreaTypeId != "0"
-                    && val_carpetloading_per != null &&
-                    !val_carpetloading_per.isEmpty()
-            ) {
+            if (selectedCarpetAreaTypeId != null && !selectedCarpetAreaTypeId.isEmpty() && selectedCarpetAreaTypeId != "0" && val_carpetloading_per != null && !val_carpetloading_per.isEmpty()) {
                 String areaValue = "";
 
                 if (selectedCarpetAreaTypeId.equalsIgnoreCase("1")) {
@@ -2012,12 +1987,12 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                 }
 
                 if (!areaValue.isEmpty()) {
-                    if (val_carpetloading_per != null && !val_carpetloading_per.equalsIgnoreCase("0")){
+                    if (val_carpetloading_per != null && !val_carpetloading_per.equalsIgnoreCase("0")) {
                         double amount = Double.parseDouble(areaValue);
                         double res = (amount / 100.0f);
                         double resInPer = res * Integer.parseInt(val_carpetloading_per);
                         edittext_general_carpetarea.setText(new DecimalFormat("##.##").format(resInPer));
-                    }else {
+                    } else {
                         edittext_general_carpetarea.setText(areaValue);
                     }
 
@@ -2389,9 +2364,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     }
 
 
-
-
-
     private void getDetails() {
         general.showloading(getActivity());
         String url = general.ApiBaseUrl() + SettingsUtils.GetPropertyDetails;
@@ -2400,8 +2372,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         requestData.setCaseId(SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, ""));
         requestData.setUrl(RequestParam.getPropertyDetails(requestData));
         requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
-        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), requestData,
-                SettingsUtils.GET_TOKEN);
+        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), requestData, SettingsUtils.GET_TOKEN);
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
@@ -2464,13 +2435,11 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         kmList.add("3");
 
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
-                R.layout.row_spinner_item_, compareList);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.row_spinner_item_, compareList);
         arrayAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
         spPropertyType.setAdapter(arrayAdapter);
 
-        ArrayAdapter<String> arrayAdapter_ = new ArrayAdapter<>(getActivity(),
-                R.layout.row_spinner_item_, kmList);
+        ArrayAdapter<String> arrayAdapter_ = new ArrayAdapter<>(getActivity(), R.layout.row_spinner_item_, kmList);
         arrayAdapter_.setDropDownViewResource(R.layout.row_spinner_item_popup);
         spDistance.setAdapter(arrayAdapter_);
 
@@ -2507,8 +2476,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                     requestData.setPropertyType(String.valueOf(spPropertyType.getSelectedItemPosition()));
                     requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
                     requestData.setRequestBody(RequestParam.GetPropertyCompareDetails(requestData));
-                    WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), requestData,
-                            SettingsUtils.PUT_TOKEN);
+                    WebserviceCommunicator webserviceTask = new WebserviceCommunicator(getActivity(), requestData, SettingsUtils.PUT_TOKEN);
                     webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
                         @Override
                         public void onTaskComplete(JsonRequestData requestData) {
@@ -2560,56 +2528,56 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
 
     }
 
-    private void getSubSequentRevaluation(){
-        if (!general.isEmpty(etEstimateCost.getText().toString())){
+    private void getSubSequentRevaluation() {
+        if (!general.isEmpty(etEstimateCost.getText().toString())) {
             Singleton.getInstance().indPropertyValuation.setEstimatedCostofConstructiononCompletion(etEstimateCost.getText().toString());
         }
-        if (!general.isEmpty(etLoanAmount.getText().toString())){
+        if (!general.isEmpty(etLoanAmount.getText().toString())) {
             Singleton.getInstance().indPropertyValuation.setLoanAmountInclusiveInsuranceOtherAmount(etLoanAmount.getText().toString());
         }
-        if (!general.isEmpty(etOwnContribution.getText().toString())){
+        if (!general.isEmpty(etOwnContribution.getText().toString())) {
             Singleton.getInstance().indPropertyValuation.setOwnContributionAmount(etOwnContribution.getText().toString());
         }
-        if (!general.isEmpty(etRecommendationPercentage.getText().toString())){
+        if (!general.isEmpty(etRecommendationPercentage.getText().toString())) {
             Singleton.getInstance().indPropertyValuation.setRecommendationPercentage(etRecommendationPercentage.getText().toString());
         }
-        if (!general.isEmpty(etAmountDisbursement.getText().toString())){
+        if (!general.isEmpty(etAmountDisbursement.getText().toString())) {
             Singleton.getInstance().indPropertyValuation.setAmounttobeDisbursement(etAmountDisbursement.getText().toString());
         }
-        if (!general.isEmpty(etAmountSpend.getText().toString())){
+        if (!general.isEmpty(etAmountSpend.getText().toString())) {
             Singleton.getInstance().indPropertyValuation.setAmountSpent(etAmountSpend.getText().toString());
         }
-        if (!general.isEmpty(etAverageConstruction.getText().toString())){
+        if (!general.isEmpty(etAverageConstruction.getText().toString())) {
             Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage(etAverageConstruction.getText().toString());
         }
     }
 
     private void subsequentRevaluation() {
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getEstimatedCostofConstructiononCompletion())){
+        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getEstimatedCostofConstructiononCompletion())) {
             etEstimateCost.setText(Singleton.getInstance().indPropertyValuation.getEstimatedCostofConstructiononCompletion());
         }
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getLoanAmountInclusiveInsuranceOtherAmount())){
+        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getLoanAmountInclusiveInsuranceOtherAmount())) {
             etLoanAmount.setText(Singleton.getInstance().indPropertyValuation.getLoanAmountInclusiveInsuranceOtherAmount());
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage())){
-         //   etAverageConstruction.setText(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage());
+        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage())) {
+            //   etAverageConstruction.setText(Singleton.getInstance().indPropertyValuation.getAverageConstructionPercentage());
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getRecommendationPercentage())){
-        //    etRecommendationPercentage.setText(Singleton.getInstance().indPropertyValuation.getRecommendationPercentage());
+        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getRecommendationPercentage())) {
+            //    etRecommendationPercentage.setText(Singleton.getInstance().indPropertyValuation.getRecommendationPercentage());
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAmounttobeDisbursement())){
+        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAmounttobeDisbursement())) {
             etAmountDisbursement.setText(Singleton.getInstance().indPropertyValuation.getAmounttobeDisbursement());
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAmountSpent())){
+        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getAmountSpent())) {
             etAmountSpend.setText(Singleton.getInstance().indPropertyValuation.getAmountSpent());
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getOwnContributionAmount())){
+        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getOwnContributionAmount())) {
             etOwnContribution.setText(Singleton.getInstance().indPropertyValuation.getOwnContributionAmount());
         }
 
@@ -2650,8 +2618,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     }
 
     private void ownContributionCal() {
-        if (etEstimateCost.getText().toString().length() > 0
-                && etLoanAmount.getText().toString().length() > 0) {
+        if (etEstimateCost.getText().toString().length() > 0 && etLoanAmount.getText().toString().length() > 0) {
             int est = Integer.parseInt(etEstimateCost.getText().toString());
             int loanAmt = Integer.parseInt(etLoanAmount.getText().toString());
             etOwnContribution.setText((est - loanAmt) + "");
@@ -2680,9 +2647,9 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         }
 
         if (property_type.equalsIgnoreCase("flat")) {
-          //  linear_penthouse_terrace_row.setVisibility(View.GONE);
+            //  linear_penthouse_terrace_row.setVisibility(View.GONE);
         } else {
-          //  linear_penthouse_terrace_row.setVisibility(View.VISIBLE);
+            //  linear_penthouse_terrace_row.setVisibility(View.VISIBLE);
         }
     }
 
@@ -2697,22 +2664,33 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
             /******Set Edittext area type values in Valuation******/
             if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetArea())) {
                 setEdittextCarpetArea(Singleton.getInstance().indPropertyValuation.getCarpetArea());
-                Singleton.getInstance().areaType.add(getResources().getString(R.string.carpet));
+                if (!Singleton.getInstance().areaType.contains("Carpet")) {
+                    Singleton.getInstance().areaType.add(getResources().getString(R.string.carpet));
+                }
 
             }
             if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getBuildUpArea())) {
                 setEdittextBuildupArea(Singleton.getInstance().indPropertyValuation.getBuildUpArea());
-                Singleton.getInstance().areaType.add(getResources().getString(R.string.builtup));
+                if (!Singleton.getInstance().areaType.contains("Built up")) {
+                    Singleton.getInstance().areaType.add(getResources().getString(R.string.builtup));
+
+                }
 
             }
             if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getSuperBuildUpArea())) {
                 setEdittextSaleableArea(Singleton.getInstance().indPropertyValuation.getSuperBuildUpArea());
-                Singleton.getInstance().areaType.add(getResources().getString(R.string.Saleable));
+                if (!Singleton.getInstance().areaType.contains("Saleable")) {
+                    Singleton.getInstance().areaType.add(getResources().getString(R.string.Saleable));
+                }
+
             }
 
             if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getPermissibleArea())) {
                 setEdittextPermissibleArea(Singleton.getInstance().indPropertyValuation.getPermissibleArea());
-                Singleton.getInstance().areaType.add(getResources().getString(R.string.permissible_area));
+                if (!Singleton.getInstance().areaType.contains("Permissible")) {
+                    Singleton.getInstance().areaType.add(getResources().getString(R.string.permissible_area));
+
+                }
             }
 
             /*****Set spinner Area type as per the id*****/
@@ -2792,7 +2770,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
 
             if (property_type.equalsIgnoreCase("penthouse")) {
                 if (!general.isEmpty(terrace_area)) {
-                  //  edittext_terrace_area.setText(terrace_area);
+                    //  edittext_terrace_area.setText(terrace_area);
                 }
                 if (!general.isEmpty(terrace_rate)) {
                     edittext_terrace_rate.setText(terrace_rate);
@@ -2893,7 +2871,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
 
         edittext_type_area = (EditText) view.findViewById(R.id.edittext_type_area);
         edittext_type_rate = (EditText) view.findViewById(R.id.edittext_type_rate);
-       // edittext_terrace_area = (EditText) view.findViewById(R.id.edittext_terrace_area);
+        // edittext_terrace_area = (EditText) view.findViewById(R.id.edittext_terrace_area);
         edittext_terrace_rate = (EditText) view.findViewById(R.id.edittext_terrace_rate);
         edittext_insurance_area = (EditText) view.findViewById(R.id.edittext_insurance_area);
         edittext_insurance_rate = (EditText) view.findViewById(R.id.edittext_insurance_rate);
@@ -2905,7 +2883,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         edittext_carpet_area = (EditText) view.findViewById(R.id.edittext_carpet_area);
         edittext_builtup_area = (EditText) view.findViewById(R.id.edittext_builtup_area);
         edittext_Saleable_area = (EditText) view.findViewById(R.id.edittext_Saleable_area);
-       // edittext_permissible_area = (EditText) view.findViewById(R.id.edittext_permissible_area);
+        // edittext_permissible_area = (EditText) view.findViewById(R.id.edittext_permissible_area);
         edittext_measurementunit = (EditText) view.findViewById(R.id.edittext_measurementunit);
         edittext_realizable_value_total = (EditText) view.findViewById(R.id.edittext_realizable_value_total);
         edittext_distress_total = (EditText) view.findViewById(R.id.edittext_distress_total);
@@ -2929,15 +2907,15 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         etEstimateCost = view.findViewById(R.id.etEstimateCost);
         etLoanAmount = view.findViewById(R.id.etLoanAmount);
         etOwnContribution = view.findViewById(R.id.etOwnContribution);
-       // etAverageConstruction = view.findViewById(R.id.etAverageConstruction);
-       // etRecommendationPercentage = view.findViewById(R.id.etRecommendationPercentage);
+        // etAverageConstruction = view.findViewById(R.id.etAverageConstruction);
+        // etRecommendationPercentage = view.findViewById(R.id.etRecommendationPercentage);
         etAmountSpend = view.findViewById(R.id.etAmountSpend);
         etAmountDisbursement = view.findViewById(R.id.etAmountDisbursement);
 
         edittext_carpet_area.setFocusable(false);
         edittext_builtup_area.setFocusable(false);
         edittext_Saleable_area.setFocusable(false);
-       // edittext_permissible_area.setFocusable(false);
+        // edittext_permissible_area.setFocusable(false);
         edittext_type_area.setFocusable(false);
         edittext_insurance_area.setFocusable(false);
         edittext_governmentvalue_area.setFocusable(false);
@@ -2952,7 +2930,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
 
 
         //  limit the 2 char after the decimal point
-        edittext_proposedvaluation_result.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(15,2)});
+        edittext_proposedvaluation_result.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(15, 2)});
 
 
        /* etEstimateCost = view.findViewById(R.id.etEstimateCost);
@@ -3026,8 +3004,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
 
     public void AreaTypeSpinner(final ArrayList<String> areaType, final String area_type) {
         if (mContext != null) {
-            adapterAreaType = new ArrayAdapter<>(mContext,
-                    R.layout.row_spinner_item, areaType);
+            adapterAreaType = new ArrayAdapter<>(mContext, R.layout.row_spinner_item, areaType);
             adapterAreaType.setDropDownViewResource(R.layout.row_spinner_item_popup);
             spinnerAreaType.setAdapter(adapterAreaType);
             spinnerAreaType.setOnTouchListener(new View.OnTouchListener() {
@@ -3070,10 +3047,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                         areaTypeID = "4";
                     }
                 }
-            }
-
-
-            else {
+            } else {
                 spinnerAreaType.setSelection(0);
                 areaTypeID = "0";
             }
@@ -3123,8 +3097,8 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                             } else {
                                 FlatSpinnerCalculation();
                             }
-                        } else if(areaType.get(position).equalsIgnoreCase("Permissible")){
-                           // setEdittextPermissibleArea(edittext_permissible_area.getText().toString().trim());
+                        } else if (areaType.get(position).equalsIgnoreCase("Permissible")) {
+                            // setEdittextPermissibleArea(edittext_permissible_area.getText().toString().trim());
                             areaTypeID = "4";
                             textview_type_of_area.setText(areaType.get(position));
                             if (property_type.equalsIgnoreCase("penthouse")) {
@@ -3359,12 +3333,12 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
             // textview_total_marketval.setText("" + sum_total);
             //  textview_totalpropertyvalue_result.setText("" + sum_total);
             textview_type_marketvalue.setText("" + general.DecimalFormattedCommaString(String.valueOf(sum_total)));
-           // textview_total_marketval.setText("" + general.DecimalFormattedCommaString(String.valueOf(sum_total)));
+            // textview_total_marketval.setText("" + general.DecimalFormattedCommaString(String.valueOf(sum_total)));
             textview_totalpropertyvalue_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(sum_total)));
 
         } else {
             textview_type_marketvalue.setText("" + 0);
-           // textview_total_marketval.setText("" + 0);
+            // textview_total_marketval.setText("" + 0);
             textview_totalpropertyvalue_result.setText("" + 0);
         }
     }
@@ -3396,7 +3370,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
           /*  textview_total_marketval.setText("" + sum_total);
             textview_totalpropertyvalue_result.setText("" + sum_total);*/
 
-           // textview_total_marketval.setText("" + general.DecimalFormattedCommaString(String.valueOf(sum_total)));
+            // textview_total_marketval.setText("" + general.DecimalFormattedCommaString(String.valueOf(sum_total)));
             textview_totalpropertyvalue_result.setText("" + general.DecimalFormattedCommaString(String.valueOf(sum_total)));
 
         } else if (!general.isEmpty(area_total)) {
@@ -3778,7 +3752,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
             Singleton.getInstance().indPropertyValuation.setTotalPropertyValue(general.ReplaceCommaSaveToString(textview_totalpropertyvalue_result.getText().toString().trim()));
 
             if (property_type.equalsIgnoreCase("penthouse")) {
-               // Singleton.getInstance().indPropertyValuation.setTerraceArea(edittext_terrace_area.getText().toString().trim());
+                // Singleton.getInstance().indPropertyValuation.setTerraceArea(edittext_terrace_area.getText().toString().trim());
                 Singleton.getInstance().indPropertyValuation.setTerraceRate(edittext_terrace_rate.getText().toString().trim());
                 Singleton.getInstance().indPropertyValuation.setTerraceValue(general.ReplaceCommaSaveToString(textview_terrace_marketvalue.getText().toString().trim()));
             }
@@ -4126,7 +4100,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     }
 
 
-
     @Override
     public void onRatePopupSucess(RatePopup ratePopup) {
 
@@ -4156,8 +4129,6 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
     public void onRatePopupFailed(String msg) {
         Toast.makeText(getActivity(), "Unable to fetch market rate value!", Toast.LENGTH_SHORT).show();
     }
-
-
 
 
 }

@@ -6,6 +6,7 @@ import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuati
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.internalfloorlistAdapter;
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.listActualAdapter;
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.listAdapter;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.recyclerview_actualarea;
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_actual_total;
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_comp;
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.textview_comp_total;
@@ -21,9 +22,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -105,7 +109,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        EditText edittext_general_doc_area, edittext_general_actual_area,et_permissiblearea;
+        EditText edittext_general_doc_area, edittext_general_actual_area, et_permissiblearea;
         EditText edittext_general_floor_name, edittext_general_comp, edittext_general_progress, edittext_general_age, edittext_general_life;
         TextView spinner_general_floor_usage;
         //Spinner spinner_stage;
@@ -115,7 +119,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
         FrameLayout frameUsagelay;
         final IndPropertyFloor stepsModel = new IndPropertyFloor();
-        ImageView open_calc_doc_area, open_calc_actual_area,img_permissible_calc;
+        ImageView open_calc_doc_area, open_calc_actual_area, img_permissible_calc;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -130,7 +134,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             edittext_general_life = (EditText) itemView.findViewById(R.id.edittext_general_life);
             //spinner_stage = (Spinner) itemView.findViewById(R.id.spinner_stage);
             spinner_stage = (TextView) itemView.findViewById(R.id.spinner_stage);
-            ll_spinner_statge = (LinearLayout)itemView.findViewById(R.id.ll_spinner_statge);
+            ll_spinner_statge = (LinearLayout) itemView.findViewById(R.id.ll_spinner_statge);
             spinner_general_floor_usage = (TextView) itemView.findViewById(R.id.spinner_general_floor_usage);
             frameUsagelay = (FrameLayout) itemView.findViewById(R.id.frameUsagelay);
             open_calc_doc_area = (ImageView) itemView.findViewById(R.id.open_calc_doc_area);
@@ -223,21 +227,18 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             // set Average
                             if (textview_comp_total != null) {
                                 textview_comp_total.setText("" + average_total);
-                            if (textview_comp_total != null) {
-                                /*FragmentBuilding.textview_comp_total.setText("" + average_total);*/
-                                textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
+                                if (textview_comp_total != null) {
+                                    /*FragmentBuilding.textview_comp_total.setText("" + average_total);*/
+                                    textview_comp_total.setText("" + new DecimalFormat(".##").format(average_total));
+                                }
+
+                                aspercompletion_val("" + average_total);
+
+
                             }
-
-                            aspercompletion_val("" + average_total);
-
-
-
-
-
                         }
                     }
                 }
-            }
             });
 
             edittext_general_progress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -274,7 +275,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             }
                             steps.set(getAdapterPosition(), stepsModel);
                             Singleton.getInstance().indPropertyFloors.set(getAdapterPosition(), stepsModel);
-                            permissible_area_module(toString,getAdapterPosition());
+                            permissible_area_module(toString, getAdapterPosition());
 
                         }
                     }
@@ -469,12 +470,18 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                         // ValuationPermissibleAreaAdapter
                                         if (listAdapter != null) {
                                             listAdapter.steps.set(getAdapterPosition(), stepsModel);
-                                            listAdapter.notifyItemChanged(getAdapterPosition());
+                                            Handler handler = new Handler(Looper.getMainLooper());
+                                            handler.post(() -> listAdapter.notifyItemChanged(getAdapterPosition()));
+
+//                                            listAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                         // ValuationActualAreaAdapter
                                         if (listActualAdapter != null) {
                                             listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
-                                            listActualAdapter.notifyItemChanged(getAdapterPosition());
+//                                            listActualAdapter.notifyItemChanged(getAdapterPosition());
+                                            Handler handler = new Handler(Looper.getMainLooper());
+                                            handler.post(() -> listActualAdapter.notifyItemChanged(getAdapterPosition()));
+
                                         }
                                     } else {
                                         stepsModel.setPropertyAge(null);
@@ -487,12 +494,16 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                         // ValuationPermissibleAreaAdapter
                                         if (listAdapter != null) {
                                             listAdapter.steps.set(getAdapterPosition(), stepsModel);
-                                            listAdapter.notifyItemChanged(getAdapterPosition());
+                                            Handler handler = new Handler(Looper.getMainLooper());
+                                            handler.post(() -> listAdapter.notifyItemChanged(getAdapterPosition()));
+                                         ///   listAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                         // ValuationActualAreaAdapter
                                         if (listActualAdapter != null) {
                                             listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
-                                            listActualAdapter.notifyItemChanged(getAdapterPosition());
+                                            Handler handler = new Handler(Looper.getMainLooper());
+                                            handler.post(() -> listActualAdapter.notifyItemChanged(getAdapterPosition()));
+                                         //   listActualAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                     }
                                 }
@@ -555,21 +566,21 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             open_calc_doc_area.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calculation_Popup_New(1, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area,et_permissiblearea);
+                    Calculation_Popup_New(1, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area, et_permissiblearea);
                 }
             });
 
             open_calc_actual_area.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Calculation_Popup_New(2, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area,et_permissiblearea);
+                    Calculation_Popup_New(2, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area, et_permissiblearea);
                 }
             });
 
             img_permissible_calc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Calculation_Popup_New(3,getAdapterPosition(),edittext_general_doc_area,edittext_general_actual_area,et_permissiblearea);
+                    Calculation_Popup_New(3, getAdapterPosition(), edittext_general_doc_area, edittext_general_actual_area, et_permissiblearea);
                 }
             });
 
@@ -765,8 +776,8 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
 
-        if (Singleton.getInstance().enable_validation_error){
-            if (general.isEmpty(steps.get(position).getMeasuredFloorArea())){
+        if (Singleton.getInstance().enable_validation_error) {
+            if (general.isEmpty(steps.get(position).getMeasuredFloorArea())) {
                 holder.edittext_general_actual_area.setError("actual area required!");
                 holder.edittext_general_actual_area.requestFocus();
             }
@@ -779,20 +790,20 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 Docarea_cursor = false;
                 holder.edittext_general_age.requestFocus();
             }
-            if (general.isEmpty(steps.get(position).getFloorName())){
+            if (general.isEmpty(steps.get(position).getFloorName())) {
                 holder.edittext_general_floor_name.setError("Field required!");
                 holder.edittext_general_floor_name.requestFocus();
             }
-            if (general.isEmpty(steps.get(position).getFloorName())){
+            if (general.isEmpty(steps.get(position).getFloorName())) {
                 holder.edittext_general_floor_name.setError("Field required!");
                 holder.edittext_general_floor_name.requestFocus();
             }
-            if (general.isEmpty(holder.spinner_stage.getText().toString())){
+            if (general.isEmpty(holder.spinner_stage.getText().toString())) {
                 holder.spinner_stage.setError("Stage required!");
                 holder.spinner_stage.requestFocus();
             }
 
-            if (general.isEmpty(holder.edittext_general_comp.getText().toString())){
+            if (general.isEmpty(holder.edittext_general_comp.getText().toString())) {
                 holder.edittext_general_comp.setError("Completion required!");
                 holder.edittext_general_comp.requestFocus();
             }
@@ -844,10 +855,10 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             holder.edittext_general_doc_area.setText("");
         }
 
-        String permissibleArea  = steps.get(position).getSanctionedFloorArea();
-        if(!general.isEmptyString(permissibleArea)){
-            holder.et_permissiblearea.setText(""+permissibleArea);
-        }else{
+        String permissibleArea = steps.get(position).getSanctionedFloorArea();
+        if (!general.isEmptyString(permissibleArea)) {
+            holder.et_permissiblearea.setText("" + permissibleArea);
+        } else {
             holder.et_permissiblearea.setText("");
         }
 
@@ -873,23 +884,23 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             holder.edittext_general_life.setText("");
         }
 
-        if (Singleton.getInstance().enable_validation_error){
+        if (Singleton.getInstance().enable_validation_error) {
 
-            if (steps.get(position).getConstructionStageId()==0){
+            if (steps.get(position).getConstructionStageId() == 0) {
                 holder.edittext_general_doc_area.setError("Stage required!");
                 holder.edittext_general_doc_area.requestFocus();
             }
 
-            if(general.isEmpty(steps.get(position).getSanctionedFloorArea())){
+            if (general.isEmpty(steps.get(position).getSanctionedFloorArea())) {
                 holder.et_permissiblearea.setError("Permissible are required!");
                 holder.et_permissiblearea.requestFocus();
             }
 
-            if (general.isEmpty(steps.get(position).getDocumentFloorArea())){
+            if (general.isEmpty(steps.get(position).getDocumentFloorArea())) {
                 holder.edittext_general_doc_area.setError("Sanction area required!");
                 holder.edittext_general_doc_area.requestFocus();
             }
-            if (general.isEmpty(steps.get(position).getMeasuredFloorArea())){
+            if (general.isEmpty(steps.get(position).getMeasuredFloorArea())) {
                 holder.edittext_general_actual_area.setError("Actual area required!");
                 holder.edittext_general_actual_area.requestFocus();
             }
@@ -931,8 +942,6 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                         }
                     }
                 }
-            } else {
-                steps.get(position).setPropertyFloorUsageId_str("");
             }
         }
 
@@ -1032,7 +1041,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     //textview_doc_total.setText("" + total_documentarea);
                     textview_doc_total.setText("" + total_documentarea_float);
                     if (txt_total_sanctioned_area != null)
-                    txt_total_sanctioned_area.setText(""+total_documentarea_float);
+                        txt_total_sanctioned_area.setText("" + total_documentarea_float);
                     constrction_measurment(String.valueOf(total_documentarea));
                 } else {
                     constrction_measurment("");
@@ -1060,7 +1069,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     //textview_doc_total.setText("" + total_documentarea);
                     textview_doc_total.setText("" + total_documentarea_float);
                     if (txt_total_sanctioned_area != null)
-                    txt_total_sanctioned_area.setText(""+ total_documentarea_float);
+                        txt_total_sanctioned_area.setText("" + total_documentarea_float);
                     constrction_measurment(String.valueOf(total_documentarea));
                 } else {
                     constrction_measurment("");
@@ -1097,16 +1106,16 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     //textview_actual_total.setText("" + total_actualarea);
                     textview_actual_total.setText("" + total_actualarea_float);
                     if (txt_total_actual_area != null)
-                       txt_total_actual_area.setText("" + total_actualarea_float);
+                        txt_total_actual_area.setText("" + total_actualarea_float);
                     constrction_actual(String.valueOf(total_actualarea));
                 } else {
                     constrction_actual("");
                 }
 
                 float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
-                if(txt_permissiable_area_value!=null){
+                if (txt_permissiable_area_value != null) {
                     txt_permissiable_area_value.setText("" + total_permissiblearea_float);
-                }else{
+                } else {
                     txt_permissiable_area_value.setText("");
                 }
 
@@ -1135,7 +1144,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     //textview_actual_total.setText("" + total_actualarea);
                     textview_actual_total.setText("" + total_actualarea_float);
                     if (txt_total_actual_area != null)
-                    txt_total_actual_area.setText("" + total_actualarea_float);
+                        txt_total_actual_area.setText("" + total_actualarea_float);
                     constrction_actual(String.valueOf(total_actualarea));
                 } else {
                     constrction_actual("");
@@ -1143,9 +1152,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
 
                 float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
-                if(txt_permissiable_area_value!=null){
+                if (txt_permissiable_area_value != null) {
                     txt_permissiable_area_value.setText("" + total_permissiblearea_float);
-                }else{
+                } else {
                     txt_permissiable_area_value.setText("");
                 }
 
@@ -1175,9 +1184,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 steps.set(adapterposition, stepsModel);
                 Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
                 float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
-                if(txt_permissiable_area_value!=null){
-                   txt_permissiable_area_value.setText("" + total_permissiblearea_float);
-                }else{
+                if (txt_permissiable_area_value != null) {
+                    txt_permissiable_area_value.setText("" + total_permissiblearea_float);
+                } else {
                     txt_permissiable_area_value.setText("");
                 }
 
@@ -1200,11 +1209,10 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
 
 
-
                 float total_permissiblearea_float = general.getPermissibleAreaSumValue_float(steps);
-                if(txt_permissiable_area_value!=null){
+                if (txt_permissiable_area_value != null) {
                     txt_permissiable_area_value.setText("" + total_permissiblearea_float);
-                }else{
+                } else {
                     txt_permissiable_area_value.setText("");
                 }
 
@@ -1291,7 +1299,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 // Age is not empty and construction stage is not under construction
                 if (Integer.valueOf(toString) < 46) {
                     stepsModel.setPropertyAge(Integer.valueOf(toString));
-                    if (Singleton.getInstance().caseOtherDetailsModel!=null && Singleton.getInstance().caseOtherDetailsModel.getData()!=null&&Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox() != null) {
+                    if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox() != null) {
                         if (Integer.parseInt(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox()) == 1) {
                             if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getPercentageDepreciation() != null)
                                 stepsModel.setPercentageDepreciation(String.valueOf(Integer.parseInt(toString) * Integer.parseInt(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getPercentageDepreciation())));
@@ -1316,7 +1324,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
                 } else {
                     stepsModel.setPropertyAge(Integer.valueOf(toString));
-                    if(Singleton.getInstance().caseOtherDetailsModel!=null && Singleton.getInstance().caseOtherDetailsModel.getData()!=null&&Singleton.getInstance().caseOtherDetailsModel.getData().get(0)!=null) {
+                    if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null) {
                         if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox() != null) {
                             if (Integer.parseInt(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox()) == 1) {
                                 if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getPercentageDepreciation() != null)
@@ -1330,7 +1338,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                         } else {
                             stepsModel.setPercentageDepreciation(toString);
                         }
-                    }else {
+                    } else {
                         stepsModel.setPercentageDepreciation(toString);
                     }
                     /*if (check_deper_first_time) {
@@ -1384,7 +1392,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             if (Integer.valueOf(toString) < 46) {
                 stepsModel.setPropertyAge(Integer.valueOf(toString));
                 // Added in n ew feature
-                if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null&&Singleton.getInstance().caseOtherDetailsModel.getData().get(0)!=null) {
+                if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null) {
                     if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox() != null) {
                         if (Integer.parseInt(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox()) == 1) {
                             if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getPercentageDepreciation() != null)
@@ -1411,7 +1419,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             } else {
                 stepsModel.setPropertyAge(Integer.valueOf(toString));
                 // Added in new feature
-                if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null&&Singleton.getInstance().caseOtherDetailsModel.getData().get(0)!=null) {
+                if (Singleton.getInstance().caseOtherDetailsModel != null && Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null) {
                     if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox() != null) {
                         if (Integer.parseInt(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getAgeCheckbox()) == 1) {
                             if (Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getPercentageDepreciation() != null)
@@ -1562,7 +1570,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     if (is_not_null) {
                         int average_total = 100;
                         if (textview_comp_total != null) {
-                            textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
+                            textview_comp_total.setText("" + new DecimalFormat(".##").format(average_total));
                         }
                         // Old condtion
                         /*if ((Singleton.getInstance().is_new_floor_created) && (Singleton.getInstance().as_per_com)) {
@@ -1575,7 +1583,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     } else {
                         int average_total = 0;
                         if (textview_comp_total != null) {
-                            textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
+                            textview_comp_total.setText("" + new DecimalFormat(".##").format(average_total));
                         }
                         // Added in new feature
                         aspercompletion_val("" + average_total);
@@ -1629,7 +1637,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             }
                             int average_total = general.getCompletedSumValue(steps);
                             if (textview_comp_total != null) {
-                                textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
+                                textview_comp_total.setText("" + new DecimalFormat(".##").format(average_total));
                             }
                             // set Aspercom
                             aspercompletion_val("" + average_total);
@@ -1674,7 +1682,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             }
                             int average_total = general.getCompletedSumValue(steps);
                             if (textview_comp_total != null) {
-                                textview_comp_total.setText(""+ new DecimalFormat(".##").format(average_total));
+                                textview_comp_total.setText("" + new DecimalFormat(".##").format(average_total));
                             }
                             // set Aspercom
                             aspercompletion_val("" + average_total);
@@ -2114,7 +2122,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             String toString = my_val_str;
                             edittext_general_actual_area.setText(toString);
                             Actual_area_module(toString, position_is);
-                        }else if(type_is == 3){
+                        } else if (type_is == 3) {
                             String toString = my_val_str;
                             et_permissiblearea.setText(toString);
                             IndPropertyFloor stepsModel = steps.get(position_is);
@@ -2125,7 +2133,7 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             }
                             steps.set(position_is, stepsModel);
                             Singleton.getInstance().indPropertyFloors.set(position_is, stepsModel);
-                            permissible_area_module(toString,position_is);
+                            permissible_area_module(toString, position_is);
                         }
                     }
                     dialog.dismiss();
