@@ -2009,6 +2009,27 @@
                         android:textSize="@dimen/_13sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!--Land approved for || Zoning as per Development Plan -->
+
+                <TextView
+                    android:id="@+id/txt_land_approved_for"
+                    style="@style/general_sub_section_txt_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:gravity="left"
+                    android:text="Zoning as per Development Plan"
+                    tools:ignore="RtlHardcoded" />
+
+                <Spinner
+                    android:id="@+id/spinner_landapprovedfor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/spinner_status"
+                    android:minWidth="@dimen/_140sdp"
+                    android:minHeight="@dimen/_30sdp"
+                    android:popupBackground="@drawable/spinner_pop_up_dialog_bg" />
+
 
                 <!--Type of Locality-->
                 <TextView

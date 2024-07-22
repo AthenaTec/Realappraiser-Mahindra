@@ -79,6 +79,7 @@ import com.realappraiser.gharvalue.model.ConcreteGrade;
 import com.realappraiser.gharvalue.model.EnvExposureCondition;
 import com.realappraiser.gharvalue.model.Floor;
 import com.realappraiser.gharvalue.model.GetPhoto;
+import com.realappraiser.gharvalue.model.Land;
 import com.realappraiser.gharvalue.model.LatLongDetails;
 import com.realappraiser.gharvalue.model.Locality;
 import com.realappraiser.gharvalue.model.Maintenance;
@@ -101,6 +102,7 @@ import com.realappraiser.gharvalue.model.TypeOfSteel;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
+import com.realappraiser.gharvalue.utils.ResponseStorage;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 import com.realappraiser.gharvalue.utils.Singleton;
 import com.realappraiser.gharvalue.worker.LocationTrackerApi;
@@ -485,6 +487,9 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     LinearLayout ll_masonry;
     @BindView(R.id.spinner_masonry)
     Spinner spinner_masonry;
+
+    @BindView(R.id.spinner_landapprovedfor)
+    Spinner spinner_landapprovedfor;
 
 
     private ArrayList<Proximity> list;
@@ -1059,6 +1064,10 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
         }
         caseid = SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "");
+
+        if (!General.isEmpty(caseid)) {
+            caseid_int = Integer.parseInt(caseid);
+        }
         is_offline = SettingsUtils.getInstance().getValue(SettingsUtils.is_offline, false);
 
 
@@ -1483,6 +1492,10 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             ll_ownership.setVisibility(View.GONE);
         }
 
+        if(general.getUIVisibility("Land Approved for")){
+            initLandApprovedFor();
+        }
+
 
         if (general.getUIVisibility("Is construction done as per sanctioned plan")) {
             checkbox_sanctioned_plan.setVisibility(View.VISIBLE);
@@ -1525,19 +1538,21 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("Authority")) {
             tl_authority.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null && !general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority())) {
-                fsProgressCount = fsProgressCount + 2;
-                et_authority.setText(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority());
-            }
-        } else {
+            if (Singleton.getInstance().aCase.getApprovedPlanApprovingAuthority()!= null) {
+                if(!General.isEmpty(Singleton.getInstance().aCase.getApprovedPlanApprovingAuthority())){
+                    fsProgressCount = fsProgressCount + 2;
+                    et_authority.setText(Singleton.getInstance().aCase.getApprovedPlanApprovingAuthority());
+                }
+
+            }} else {
             tl_authority.setVisibility(View.GONE);
         }
 
         if (general.getUIVisibility("Prepared By")) {
             tl_plan_prepared_by.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null && !general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanPreparedBy())) {
+            if (Singleton.getInstance().aCase.getApprovedPlanPreparedBy() != null  && !General.isEmpty(Singleton.getInstance().aCase.getApprovedPlanPreparedBy())){
                 fsProgressCount = fsProgressCount + 1;
-                et_plan_prepared_by.setText(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanPreparedBy());
+                et_plan_prepared_by.setText(Singleton.getInstance().aCase.getApprovedPlanPreparedBy());
             }
         } else {
             tl_plan_prepared_by.setVisibility(View.GONE);
@@ -1545,13 +1560,13 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         if (general.getUIVisibility("Plan Number, Date")) {
             ll_planno_date.setVisibility(View.VISIBLE);
-            if (Singleton.getInstance().caseOtherDetailsModel.getData() != null && Singleton.getInstance().caseOtherDetailsModel.getData().get(0) != null) {
-                if (!general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanNumber())) {
-                    et_approved_plan_no.setText(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanNumber());
+            if (Singleton.getInstance().aCase.getApprovedPlanDate() != null) {
+                if (!General.isEmpty(Singleton.getInstance().aCase.getApprovedPlanNumber())) {
+                    et_approved_plan_no.setText(Singleton.getInstance().aCase.getApprovedPlanNumber());
                 }
 
-                if (!general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanDate())) {
-                    et_approved_plan_date.setText(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanDate());
+                if (!General.isEmpty(Singleton.getInstance().aCase.getApprovedPlanDate())) {
+                    et_approved_plan_date.setText(Singleton.getInstance().aCase.getApprovedPlanDate());
                 }
             }
         } else ll_planno_date.setVisibility(View.GONE);
@@ -1576,6 +1591,32 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
         }
 
 
+    }
+
+    private void initLandApprovedFor() {
+
+        ArrayAdapter<Land> landArrayAdapter = new ArrayAdapter<Land>(mContext, R.layout.row_spinner_item, Singleton.getInstance().land_list) {
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTypeface(general.mediumtypeface());
+                return v;
+            }
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                ((TextView) v).setTypeface(general.mediumtypeface());
+                return v;
+            }
+        };
+        landArrayAdapter.setDropDownViewResource(R.layout.row_spinner_item_popup);
+        spinner_landapprovedfor.setAdapter(landArrayAdapter);
+        spinner_landapprovedfor.setOnTouchListener(this);
+
+        Integer id = Singleton.getInstance().property.getTypeOfLandId();
+        if (!general.isEmpty(String.valueOf(id))) {
+            fsProgressCount = fsProgressCount + 1;
+            spinner_landapprovedfor.setSelection(id);
+        }
     }
 
     private void initOwnerShipType() {
@@ -4230,45 +4271,48 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
         JSONArray jsonArray = new JSONArray();
         ArrayList<Proximity> proximityArrayList = new ArrayList<>();
-        list = listAdapter.getStepList();
-        for (int j = 0; j < list.size(); j++) {
-            if (Singleton.getInstance().proximities.size() > 0) {
-                // Update from the proximity values
-                Proximity proximity = new Proximity();
-                proximity.setId(list.get(j).getId());
-                proximity.setCaseId(Integer.valueOf(caseid)); //Integer.value(caseid);
-                proximity.setProximityId(list.get(j).getProximityId());
-                proximity.setProximityName(list.get(j).getProximityName());
-                proximity.setProximityDistance(list.get(j).getProximityDistance());
-                proximityArrayList.add(proximity);
-            } else {
-                // Add New proximity
-                try {
-                    JSONObject proximityObj = new JSONObject();
-                    proximityObj.put("CaseId    ", caseid);
-                    proximityObj.put("ProximityId", list.get(j).getProximityId());
-                    proximityObj.put("ProximityName", list.get(j).getProximityName());
-                    proximityObj.put("ProximityDistance", list.get(j).getProximityDistance());
-                    jsonArray.put(proximityObj);
-
+        if(listAdapter!=null){
+            list = listAdapter.getStepList();
+            for (int j = 0; j < list.size(); j++) {
+                if (Singleton.getInstance().proximities.size() > 0) {
+                    // Update from the proximity values
                     Proximity proximity = new Proximity();
-                    proximity.setCaseId(Integer.valueOf(caseid)); //list.get(j).getProximityId()
+                    proximity.setId(list.get(j).getId());
+                    proximity.setCaseId(Integer.valueOf(caseid)); //Integer.value(caseid);
                     proximity.setProximityId(list.get(j).getProximityId());
                     proximity.setProximityName(list.get(j).getProximityName());
                     proximity.setProximityDistance(list.get(j).getProximityDistance());
                     proximityArrayList.add(proximity);
+                } else {
+                    // Add New proximity
+                    try {
+                        JSONObject proximityObj = new JSONObject();
+                        proximityObj.put("CaseId    ", caseid);
+                        proximityObj.put("ProximityId", list.get(j).getProximityId());
+                        proximityObj.put("ProximityName", list.get(j).getProximityName());
+                        proximityObj.put("ProximityDistance", list.get(j).getProximityDistance());
+                        jsonArray.put(proximityObj);
+
+                        Proximity proximity = new Proximity();
+                        proximity.setCaseId(Integer.valueOf(caseid)); //list.get(j).getProximityId()
+                        proximity.setProximityId(list.get(j).getProximityId());
+                        proximity.setProximityName(list.get(j).getProximityName());
+                        proximity.setProximityDistance(list.get(j).getProximityDistance());
+                        proximityArrayList.add(proximity);
 
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
+
+                Singleton.getInstance().proximities = proximityArrayList;
 
             }
 
-            Singleton.getInstance().proximities = proximityArrayList;
-
         }
-    }
+ }
 
     private void getGeneralInputData() {
 
@@ -4508,9 +4552,20 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                 int id = Singleton.getInstance().ownershipTypes_list.get(posOwnership).getId();
                 if (id != 0) Singleton.getInstance().aCase.setTypeofOwnershipDd(id);
             } else {
-                Singleton.getInstance().property.setTenureId(null);
+                Singleton.getInstance().aCase.setTypeofOwnershipDd(0);
             }
         }
+
+            if (spinner_landapprovedfor.getVisibility() == View.VISIBLE) {
+                int landapprovedfor = spinner_landapprovedfor.getSelectedItemPosition();
+                if (landapprovedfor > 0) {
+                    int id = Singleton.getInstance().land_list.get(landapprovedfor).getTypeOfLandId();
+                    if (id != 0) Singleton.getInstance().property.setTypeOfLandId(id);
+                } else {
+                    Singleton.getInstance().property.setTypeOfLandId(null);
+                }
+            }
+
 
         if (ll_contact_info_property.getVisibility() == View.VISIBLE) {
             if (!General.isEmpty(etPersonName_property.getText().toString())) {
@@ -4924,6 +4979,11 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
             });
             webserviceTask.execute();
         } else {
+            if(ResponseStorage.getInstance().getSavedResponse()!=null){
+                ShowFSUIResponse savedResponse = ResponseStorage.getInstance().getSavedResponse();
+                if(savedResponse.getData()!=null){
+                validateAndShowUIOffline(savedResponse.getData());
+            }}
             General.customToast("Please check your Internet Connection!", getActivity());
         }
     }
@@ -4990,6 +5050,11 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
 
     private void validateAndShowUI(ArrayList<ShowFSUIResponse.Datum> data) {
         Singleton.getInstance().uiData.clear();
+        Singleton.getInstance().uiData = data;
+        setFsSurveyData();
+    }
+
+    private void validateAndShowUIOffline(ArrayList<ShowFSUIResponse.Datum> data) {
         Singleton.getInstance().uiData = data;
         setFsSurveyData();
     }
@@ -5329,7 +5394,7 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     private void fsMandatoryInputData() {
         generalMandatory();
         localityMandatory();
-        propertyMandatory();
+     //   propertyMandatory();
         cardViewFairMarketValuationLayout.callOnClick();
     }
 
@@ -5445,12 +5510,12 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
     }
 
 
-    private void propertyMandatory() {
-        if (Singleton.getInstance().caseOtherDetailsModel.getData() == null || Singleton.getInstance().caseOtherDetailsModel.getData().get(0) == null || general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority())) {
-            et_authority.setError("Please enter Authority");
-            cardViewProperty.callOnClick();
-        }
-    }
+//    private void propertyMandatory() {
+//        if (Singleton.getInstance().aCase.getApprovedPlanApprovingAuthority()==null && General.isEmpty(Singleton.getInstance().aCase.getApprovedPlanApprovingAuthority())) {
+//            et_authority.setError("Please enter Authority");
+//            cardViewProperty.callOnClick();
+//        }
+//    }
 
 
     private void updateFsProgress() {

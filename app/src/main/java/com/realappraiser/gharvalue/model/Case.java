@@ -147,7 +147,7 @@ public class Case {
     private String SiteVisitDate;
 
     @ColumnInfo(name = "ApprovedPlanApprovingAuthority")
-    private String approvedPlanApprovingAuthority;
+    private String ApprovedPlanApprovingAuthority;
 
     @ColumnInfo(name = "ApprovedPlanPreparedBy")
     private String ApprovedPlanPreparedBy;
@@ -725,10 +725,10 @@ public class Case {
     }
 
     public String getApprovedPlanApprovingAuthority() {
-        return approvedPlanApprovingAuthority;
+        return ApprovedPlanApprovingAuthority;
     }
 
     public void setApprovedPlanApprovingAuthority(String approvedPlanApprovingAuthority) {
-        this.approvedPlanApprovingAuthority = approvedPlanApprovingAuthority;
+        ApprovedPlanApprovingAuthority = approvedPlanApprovingAuthority;
     }
 }

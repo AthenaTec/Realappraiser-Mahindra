@@ -95,7 +95,7 @@
     <string name="landmark">Landmark</string>
     <string name="offlinecaselimited">Select the offline cases are equal to </string>
     <string name="alreadyexceeded">Maximum offline cases reached! </string>
-    <string name="select_one_case">Select atleast one case</string>
+    <string name="select_one_case">Select only one case</string>
     <string name="synchedmsg">Case successfully synched to server</string>
     <string name="same">Same</string>
     <string name="servey_persence">Survey in presence of</string>

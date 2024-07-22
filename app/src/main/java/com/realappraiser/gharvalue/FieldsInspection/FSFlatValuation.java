@@ -1968,6 +1968,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
             double resInPer = res * Integer.parseInt(carpetAreaPer);
             // edittext_general_carpetarea.setText(String.valueOf(resInPer));
             edittext_general_carpetarea.setText(new DecimalFormat("##.##").format(resInPer));
+            setEdittextCarpetArea(edittext_general_carpetarea.getText().toString());
         }
     }
 
@@ -3057,14 +3058,11 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Log.e("spinner_areatype", "::: " + areaType.get(position));
 
-                    if (position == 0) {
-                        System.err.println("Position zero on Spinner area type");
-                        areaTypeID = "0";
-                    } else {
+
                         if (areaType.get(position).equalsIgnoreCase("Carpet")) {
                             // For DB
-                            Singleton.getInstance().indPropertyValuation.setSelectedConstructionArea(edittext_carpet_area.getText().toString());
-                            setEdittextCarpetArea(edittext_carpet_area.getText().toString().trim());
+                            Singleton.getInstance().indPropertyValuation.setSelectedConstructionArea(edittext_general_carpetarea.getText().toString());
+                            setEdittextCarpetArea(edittext_general_carpetarea.getText().toString().trim());
                             textview_type_of_area.setText(areaType.get(position));
 
                             areaTypeID = "1";
@@ -3098,7 +3096,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                                 FlatSpinnerCalculation();
                             }
                         } else if (areaType.get(position).equalsIgnoreCase("Permissible")) {
-                            // setEdittextPermissibleArea(edittext_permissible_area.getText().toString().trim());
+                             setEdittextPermissibleArea(et_permssible_area.getText().toString().trim());
                             areaTypeID = "4";
                             textview_type_of_area.setText(areaType.get(position));
                             if (property_type.equalsIgnoreCase("penthouse")) {
@@ -3108,7 +3106,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
                             }
                         }
                     }
-                }
+
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {

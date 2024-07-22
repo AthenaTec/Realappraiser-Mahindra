@@ -80,6 +80,7 @@ import com.realappraiser.gharvalue.communicator.DataResponse;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.RequestParam;
 import com.realappraiser.gharvalue.communicator.ResponseParser;
+import com.realappraiser.gharvalue.communicator.ShowFSUIResponse;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
 import com.realappraiser.gharvalue.convenyancereport.ConvenyanceReport;
@@ -111,6 +112,7 @@ import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.GpsUtils;
 import com.realappraiser.gharvalue.utils.OfflineLocationInterface;
 import com.realappraiser.gharvalue.utils.OfflineLocationReceiver;
+import com.realappraiser.gharvalue.utils.ResponseStorage;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 import com.realappraiser.gharvalue.utils.Singleton;
 import com.realappraiser.gharvalue.utils.security.SafetyNetChecker;
@@ -1517,7 +1519,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void getPurpose(){
+    private void getPurpose() {
         String url = general.ApiBaseUrl() + SettingsUtils.TYPE_OF_PURPOSE;
         JsonRequestData requestData = new JsonRequestData();
         requestData.setUrl(url);
@@ -1536,14 +1538,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         webserviceTask.execute();
     }
 
-    private void purposeResponse(String response, int responseCode, boolean successful){
+    private void purposeResponse(String response, int responseCode, boolean successful) {
         if (successful) {
             Log.e(TAG, "dropDownResponse: Purpose" + response);
             TypeOfSteel typeOfMortar = new Gson().fromJson(response, TypeOfSteel.class);
             List<TypeOfSteel.Datum> data = new ArrayList<>();
             data.addAll(typeOfMortar.getData());
             data.add(0, new TypeOfSteel.Datum("Select"));
-           // Singleton.getInstance().purposeOfList = data;
+            // Singleton.getInstance().purposeOfList = data;
         } else if (!successful && (responseCode == 400 || responseCode == 401)) {
             General.sessionDialog(HomeActivity.this);
         } else {
@@ -1698,7 +1700,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         MenuItem item6 = menu.findItem(R.id.raiseticketsystem);
         MenuItem item7 = menu.findItem(R.id.viewticket);
         MenuItem item8 = menu.findItem(R.id.filter);
-       // MenuItem item6 = menu.findItem(R.id.changepassword);
+        // MenuItem item6 = menu.findItem(R.id.changepassword);
 
         item.setVisible(true);
         item1.setVisible(true);
@@ -1723,7 +1725,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 LogOutScheduler.cancelAlarm();
                             }
-                            general.LogoutDialog(this, SettingsUtils.Latitudes, SettingsUtils.Longitudes) ;
+                            general.LogoutDialog(this, SettingsUtils.Latitudes, SettingsUtils.Longitudes);
                         }
                     } else Log.e(TAG, "permission denied");
                 } else {
@@ -2305,7 +2307,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onClick(View v) {
                 int size = Singleton.getInstance().AddSelectValue.size();
-                if (size > 0) {
+                if (size > 0 && size == 1) {
                     LoadOfflineCaseAdapter(dialog, offlineDataModels);
                 } else {
                     general.CustomToast(getResources().getString(R.string.select_one_case));
@@ -2532,7 +2534,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
                 @Override
                 public void onTaskComplete(JsonRequestData requestData) {
-                    passDataResponse(requestData.getResponse(), requestData.getResponseCode(), requestData.isSuccessful(), property_id);
+                    Log.d("onTaskComplete", "EditCaseInspection");
+                    passDataResponse(requestData.getResponse(), requestData.getResponseCode(), requestData.isSuccessful(), property_id, case_id);
                 }
             });
             webserviceTask.execute();
@@ -2546,20 +2549,59 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void passDataResponse(String response, int responseCode, boolean successful, int property_id) {
+    private void passDataResponse(String response, int responseCode, boolean successful, int property_id, int case_id) {
         if (successful) {
             DataResponse dataResponse = ResponseParser.parseEditInspectionResponse_offline(response);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Log.e("offline_api", "Offline_StartInspection_Api");
-                    Offline_Photo_Api(property_id);
+                    showUIFSfield(case_id,property_id);
                 }
             }, 500);
         } else if (!successful && (responseCode == 400 || responseCode == 401)) {
             General.sessionDialog(HomeActivity.this);
         } else {
             General.customToast(getString(R.string.something_wrong), HomeActivity.this);
+        }
+    }
+
+    private void showUIFSfield(int case_id,int property_id) {
+        if (general.isNetworkAvailable()) {
+            Log.d("ShowFSUIRequest","ShowFSUIRequest offline");
+            String url = general.ApiBaseUrl() + SettingsUtils.ShowFSUIRequest;
+            String caseID = Integer.toString(case_id);
+            JsonRequestData requestData = new JsonRequestData();
+            requestData.setInitQueryUrl(url);
+            requestData.setCaseID(caseID); // id
+            requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
+            requestData.setUrl(RequestParam.FetchFSVisibleUI(requestData));
+            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(this, requestData, SettingsUtils.GET_TOKEN);
+            webserviceTask.setFetchMyData((TaskCompleteListener<JsonRequestData>) requestData1 -> {
+                if (requestData1.isSuccessful()) {
+                    RequestApiStatus requestApiStatus = new Gson().fromJson(requestData1.getResponse(), RequestApiStatus.class);
+                    if (requestApiStatus.getStatus() == 1) {
+                        ShowFSUIResponse showFSUIResponse = new Gson().fromJson(requestData1.getResponse(), ShowFSUIResponse.class);
+                        ResponseStorage.getInstance().setSavedResponse(showFSUIResponse);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("offline_api", "Offline_StartInspection_Api");
+                                Offline_Photo_Api(property_id);
+                            }
+                        }, 500);
+                        Log.e("offline ShowUIBasedOnProperty= ", new Gson().toJson(requestData1.getResponse()));
+
+                    } else if (requestApiStatus.getStatus() == 2) {
+                        General.customToast("Unable to fetch details from server", this);
+                    }
+                } else {
+                    General.customToast("Unable to fetch details from server", this);
+                }
+            });
+            webserviceTask.execute();
+        } else {
+            General.customToast("Please check your Internet Connection!", this);
         }
     }
 
@@ -3028,7 +3070,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             if (requestCode == SettingsUtils.GPS_REQUEST) {
                 isGPS = true;
                 makeLocationUpadte();
-            }else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
 
                 try {
                     File imgFile = new File(SettingsUtils.mPhotoPath);
@@ -3398,9 +3440,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 
-
-
-
     @Override
     protected int getLayoutResourceId() {
         return R.layout.home_screen;
@@ -3567,6 +3606,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     public static interface HomeClickListener {
         public void onClick(View view, int position);
+
         public void onLongClick(View view, int position);
     }
 
@@ -3600,7 +3640,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     TicketRaisePhoto ticketRaisePhoto = new TicketRaisePhoto();
                     ticketRaisePhoto.setQueryType(querySpinnerPosition);
                     ticketRaisePhoto.setTicketStatus("1");
-                    if(etOther.getVisibility() == View.VISIBLE){
+                    if (etOther.getVisibility() == View.VISIBLE) {
                         ticketRaisePhoto.setOtherQueries(etOther.getText().toString().trim());
                     }
                     ticketRaisePhoto.setDescription(etDescritpion.getText().toString().trim());
@@ -3805,6 +3845,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         });
         webserviceTask.execute();
     }
+
     private void TakePicture() {
         Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         File photoFile = null;
@@ -3829,7 +3870,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         private HomeClickListener clicklistener;
         private GestureDetector gestureDetector;
 
-        public  HomeRecyclerTouchListener(Context context, final RecyclerView recycleView, final HomeClickListener clicklistener) {
+        public HomeRecyclerTouchListener(Context context, final RecyclerView recycleView, final HomeClickListener clicklistener) {
 
             this.clicklistener = clicklistener;
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {

@@ -16,6 +16,7 @@ import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuati
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.txt_permissiable_area_value;
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.txt_total_actual_area;
 import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.txt_total_sanctioned_area;
+import static com.realappraiser.gharvalue.FieldsInspection.FSLandBuildingValuation.valuationPermissibleAreaAdapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -53,6 +54,7 @@ import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.fragments.OtherDetails;
 import com.realappraiser.gharvalue.model.FloorUsage;
 import com.realappraiser.gharvalue.model.IndPropertyFloor;
+import com.realappraiser.gharvalue.model.IndPropertyFloorsValuation;
 import com.realappraiser.gharvalue.utils.DecimalDigitsInputFilter;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.Singleton;
@@ -183,9 +185,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             internalfloorlistAdapter.notifyItemChanged(getAdapterPosition());
                         }
                         // ValuationPermissibleAreaAdapter
-                        if (listAdapter != null) {
-                            steps.set(getAdapterPosition(), stepsModel);
-                            //listAdapter.notifyItemChanged(getAdapterPosition());
+                        if (valuationPermissibleAreaAdapter != null) {
+                            valuationPermissibleAreaAdapter.steps.set(getAdapterPosition(), stepsModel);
+                            valuationPermissibleAreaAdapter.notifyItemChanged(getAdapterPosition());
                         }
                         // ValuationActualAreaAdapter
                         if (listActualAdapter != null) {
@@ -468,10 +470,10 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                             Singleton.getInstance().indPropertyFloors.set(getAdapterPosition(), stepsModel);
                                         }
                                         // ValuationPermissibleAreaAdapter
-                                        if (listAdapter != null) {
-                                            listAdapter.steps.set(getAdapterPosition(), stepsModel);
+                                        if (valuationPermissibleAreaAdapter != null) {
+                                            valuationPermissibleAreaAdapter.steps.set(getAdapterPosition(), stepsModel);
                                             Handler handler = new Handler(Looper.getMainLooper());
-                                            handler.post(() -> listAdapter.notifyItemChanged(getAdapterPosition()));
+                                            handler.post(() -> valuationPermissibleAreaAdapter.notifyItemChanged(getAdapterPosition()));
 
 //                                            listAdapter.notifyItemChanged(getAdapterPosition());
                                         }
@@ -492,18 +494,18 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                         steps.set(getAdapterPosition(), stepsModel);
                                         Singleton.getInstance().indPropertyFloors.set(getAdapterPosition(), stepsModel);
                                         // ValuationPermissibleAreaAdapter
-                                        if (listAdapter != null) {
-                                            listAdapter.steps.set(getAdapterPosition(), stepsModel);
+                                        if (valuationPermissibleAreaAdapter != null) {
+                                            valuationPermissibleAreaAdapter.steps.set(getAdapterPosition(), stepsModel);
                                             Handler handler = new Handler(Looper.getMainLooper());
-                                            handler.post(() -> listAdapter.notifyItemChanged(getAdapterPosition()));
-                                         ///   listAdapter.notifyItemChanged(getAdapterPosition());
+                                            handler.post(() -> valuationPermissibleAreaAdapter.notifyItemChanged(getAdapterPosition()));
+                                            ///   listAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                         // ValuationActualAreaAdapter
                                         if (listActualAdapter != null) {
                                             listActualAdapter.steps.set(getAdapterPosition(), stepsModel);
                                             Handler handler = new Handler(Looper.getMainLooper());
                                             handler.post(() -> listActualAdapter.notifyItemChanged(getAdapterPosition()));
-                                         //   listActualAdapter.notifyItemChanged(getAdapterPosition());
+                                            //   listActualAdapter.notifyItemChanged(getAdapterPosition());
                                         }
                                     }
                                 }
@@ -1047,9 +1049,10 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     constrction_measurment("");
                 }
                 // ValuationPermissibleAreaAdapter
-                if (listAdapter != null) {
-                    listAdapter.steps.set(adapterposition, stepsModel);
-                    listAdapter.notifyItemChanged(adapterposition);
+                if (valuationPermissibleAreaAdapter != null) {
+                    valuationPermissibleAreaAdapter.steps.set(adapterposition, stepsModel);
+                    valuationPermissibleAreaAdapter.notifyItemChanged(adapterposition);
+
                 }
                 // ValuationActualAreaAdapter
                 if (listActualAdapter != null) {
@@ -1075,9 +1078,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     constrction_measurment("");
                 }
                 // ValuationPermissibleAreaAdapter
-                if (listAdapter != null) {
-                    listAdapter.steps.set(adapterposition, stepsModel);
-                    listAdapter.notifyItemChanged(adapterposition);
+                if (valuationPermissibleAreaAdapter != null) {
+                    valuationPermissibleAreaAdapter.steps.set(adapterposition, stepsModel);
+                    valuationPermissibleAreaAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
                 if (listActualAdapter != null) {
@@ -1121,9 +1124,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
 
                 // ValuationPermissibleAreaAdapter
-                if (listAdapter != null) {
-                    listAdapter.steps.set(adapterposition, stepsModel);
-                    listAdapter.notifyItemChanged(adapterposition);
+                if (valuationPermissibleAreaAdapter != null) {
+                    valuationPermissibleAreaAdapter.steps.set(adapterposition, stepsModel);
+                    valuationPermissibleAreaAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
                 if (listActualAdapter != null) {
@@ -1160,9 +1163,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
 
                 // ValuationPermissibleAreaAdapter
-                if (listAdapter != null) {
-                    listAdapter.steps.set(adapterposition, stepsModel);
-                    listAdapter.notifyItemChanged(adapterposition);
+                if (valuationPermissibleAreaAdapter != null) {
+                    valuationPermissibleAreaAdapter.steps.set(adapterposition, stepsModel);
+                    valuationPermissibleAreaAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
                 if (listActualAdapter != null) {
@@ -1192,9 +1195,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
 
                 // ValuationPermissibleAreaAdapter
-                if (listAdapter != null) {
-                    listAdapter.steps.set(adapterposition, stepsModel);
-                    listAdapter.notifyItemChanged(adapterposition);
+                if (valuationPermissibleAreaAdapter != null) {
+                    valuationPermissibleAreaAdapter.steps.set(adapterposition, stepsModel);
+                    valuationPermissibleAreaAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
                 if (listActualAdapter != null) {
@@ -1218,9 +1221,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
 
 
                 // ValuationPermissibleAreaAdapter
-                if (listAdapter != null) {
-                    listAdapter.steps.set(adapterposition, stepsModel);
-                    listAdapter.notifyItemChanged(adapterposition);
+                if (valuationPermissibleAreaAdapter != null) {
+                    valuationPermissibleAreaAdapter.steps.set(adapterposition, stepsModel);
+                    valuationPermissibleAreaAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
                 if (listActualAdapter != null) {
@@ -1352,9 +1355,8 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                     Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
                 }
                 // ValuationPermissibleAreaAdapter
-                if (listAdapter != null) {
-                    listAdapter.steps.set(adapterposition, stepsModel);
-                    listAdapter.notifyItemChanged(adapterposition);
+                if (valuationPermissibleAreaAdapter != null) {
+                    valuationPermissibleAreaAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
                 if (listActualAdapter != null) {
@@ -1371,9 +1373,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 steps.set(adapterposition, stepsModel);
                 Singleton.getInstance().indPropertyFloors.set(adapterposition, stepsModel);
                 // ValuationPermissibleAreaAdapter
-                if (listAdapter != null) {
-                    listAdapter.steps.set(adapterposition, stepsModel);
-                    listAdapter.notifyItemChanged(adapterposition);
+                if (valuationPermissibleAreaAdapter != null) {
+                    valuationPermissibleAreaAdapter.steps.set(adapterposition, stepsModel);
+                    valuationPermissibleAreaAdapter.notifyItemChanged(adapterposition);
                 }
                 // ValuationActualAreaAdapter
                 if (listActualAdapter != null) {
@@ -1446,9 +1448,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                 Singleton.getInstance().indPropertyFloors.set(AdapterPosition, stepsModel);
             }
             // ValuationPermissibleAreaAdapter
-            if (listAdapter != null) {
-                listAdapter.steps.set(AdapterPosition, stepsModel);
-                listAdapter.notifyItemChanged(AdapterPosition);
+            if (valuationPermissibleAreaAdapter != null) {
+                valuationPermissibleAreaAdapter.steps.set(AdapterPosition, stepsModel);
+                valuationPermissibleAreaAdapter.notifyItemChanged(AdapterPosition);
                 Log.e("ListAdater :", new Gson().toJson(steps));
             }
             // ValuationActualAreaAdapter
@@ -1465,9 +1467,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
             steps.set(AdapterPosition, stepsModel);
             Singleton.getInstance().indPropertyFloors.set(AdapterPosition, stepsModel);
             // ValuationPermissibleAreaAdapter
-            if (listAdapter != null) {
-                listAdapter.steps.set(AdapterPosition, stepsModel);
-                listAdapter.notifyItemChanged(AdapterPosition);
+            if (valuationPermissibleAreaAdapter != null) {
+                valuationPermissibleAreaAdapter.steps.set(AdapterPosition, stepsModel);
+                valuationPermissibleAreaAdapter.notifyItemChanged(AdapterPosition);
             }
             // ValuationActualAreaAdapter
             if (listActualAdapter != null) {
@@ -1556,9 +1558,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             Singleton.getInstance().indPropertyFloors.set(pos, stepsModel);
 
                             // ValuationPermissibleAreaAdapter PercentageDepreciation
-                            if (listAdapter != null) {
-                                listAdapter.steps.set(x, stepsModel);
-                                listAdapter.notifyItemChanged(x);
+                            if (valuationPermissibleAreaAdapter != null) {
+                                valuationPermissibleAreaAdapter.steps.set(x, stepsModel);
+                                valuationPermissibleAreaAdapter.notifyItemChanged(x);
                             }
                             // ValuationActualAreaAdapter PercentageDepreciation
                             if (listActualAdapter != null) {
@@ -1622,9 +1624,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                                         Singleton.getInstance().indPropertyFloors.set(pos, stepsModel);
 
                                         // ValuationPermissibleAreaAdapter PercentageDepreciation
-                                        if (listAdapter != null) {
-                                            listAdapter.steps.set(x, stepsModel);
-                                            listAdapter.notifyItemChanged(x);
+                                        if (valuationPermissibleAreaAdapter != null) {
+                                            valuationPermissibleAreaAdapter.steps.set(x, stepsModel);
+                                            valuationPermissibleAreaAdapter.notifyItemChanged(x);
                                         }
                                         // ValuationActualAreaAdapter PercentageDepreciation
                                         if (listActualAdapter != null) {
@@ -1688,9 +1690,9 @@ public class PropertyGeneralFloorAdapter extends RecyclerView.Adapter<PropertyGe
                             aspercompletion_val("" + average_total);
 
                             // ValuationPermissibleAreaAdapter PercentageDepreciation
-                            if (listAdapter != null) {
-                                listAdapter.steps.set(pos, stepsModel);
-                                listAdapter.notifyItemChanged(pos);
+                            if (valuationPermissibleAreaAdapter != null) {
+                                valuationPermissibleAreaAdapter.steps.set(pos, stepsModel);
+                                valuationPermissibleAreaAdapter.notifyItemChanged(pos);
                             }
                             // ValuationActualAreaAdapter PercentageDepreciation
                             if (listActualAdapter != null) {

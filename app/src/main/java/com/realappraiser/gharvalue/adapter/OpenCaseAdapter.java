@@ -2262,16 +2262,16 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
                     is_valid = false;
                 }
                 // For Measurment Construction
-                String DocumentFloorAreaUnit = String.valueOf(floor_list.get(j).getDocumentFloorAreaUnit());
-                if (general.isEmpty(DocumentFloorAreaUnit)) {
-                    Log.e(TAG, "building_validation: DocumentFloorAreaUnit");
-                    is_valid = false;
-                } else {
-                    if (DocumentFloorAreaUnit.equalsIgnoreCase("0")) {
-                        Log.e(TAG, "building_validation: DocumentFloorAreaUnit");
-                        is_valid = false;
-                    }
-                }
+//                String DocumentFloorAreaUnit = String.valueOf(floor_list.get(j).getDocumentFloorAreaUnit());
+//                if (general.isEmpty(DocumentFloorAreaUnit)) {
+//                    Log.e(TAG, "building_validation: DocumentFloorAreaUnit");
+//                    is_valid = false;
+//                } else {
+//                    if (DocumentFloorAreaUnit.equalsIgnoreCase("0")) {
+//                        Log.e(TAG, "building_validation: DocumentFloorAreaUnit");
+//                        is_valid = false;
+//                    }
+//                }
             }
 
 
@@ -2328,8 +2328,7 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
             return false;
         }else if (general.isEmpty(Singleton.getInstance().property.getSurveyNo())) {
             return false;
-        }else if (Singleton.getInstance().caseOtherDetailsModel.getData() == null ||Singleton.getInstance().caseOtherDetailsModel.getData().get(0) == null
-                || general.isEmpty(Singleton.getInstance().caseOtherDetailsModel.getData().get(0).getApprovedPlanApprovingAuthority()) ) {
+        }else if (general.isEmpty(Singleton.getInstance().aCase.getApprovedPlanApprovingAuthority()) ) {
             return false;
         }
 
@@ -2449,26 +2448,26 @@ public class OpenCaseAdapter extends RecyclerView.Adapter<OpenCaseAdapter.ViewHo
         dialog.show();
     }
 
-    private void call_validation_popup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.AlertDialogCustom));
-        builder.setMessage(mContext.getResources().getString(R.string.mandatory_field))
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Singleton.getInstance().enable_validation_error = true;
-                        // online
-                        SettingsUtils.getInstance().putValue(SettingsUtils.is_offline, false);
-                        mContext.startActivity(new Intent(mContext, PhotoLatLngTab.class));
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
+//    private void call_validation_popup() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.AlertDialogCustom));
+//        builder.setMessage(mContext.getResources().getString(R.string.mandatory_field))
+//                .setCancelable(false)
+//                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        Singleton.getInstance().enable_validation_error = true;
+//                        // online
+//                        SettingsUtils.getInstance().putValue(SettingsUtils.is_offline, false);
+//                        mContext.startActivity(new Intent(mContext, PhotoLatLngTab.class));
+//                    }
+//                })
+//                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        AlertDialog alert = builder.create();
+//        alert.show();
+//    }
 
     private void parseGetDropDownsDataResponse(String response) {
         DataResponse dataResponse = ResponseParser.parseGetFieldDropDownResponse(response);

@@ -45,7 +45,7 @@ public class ValuationPermissibleAreaAdapter extends RecyclerView.Adapter<Valuat
 
     AverageComPerInterface averageComPerInterface;
 
-    public ArrayList<IndPropertyFloorsValuation> stepsValuation;
+    public ArrayList<IndPropertyFloorsValuation> stepsValuation =new ArrayList<IndPropertyFloorsValuation>();
     @SuppressLint("StaticFieldLeak")
     public static General general;
     boolean docarea_initial = true;
