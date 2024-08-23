@@ -144,6 +144,7 @@ public class Singleton {
     public String latlng_details = ":";
     public String propertyId = "";
     public String curent_statusID = "";
+    public String email="";
     public boolean hit_photo_api = false;
 
     /******

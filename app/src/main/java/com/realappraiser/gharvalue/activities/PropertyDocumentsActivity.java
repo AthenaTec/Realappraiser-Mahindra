@@ -50,6 +50,7 @@ import com.realappraiser.gharvalue.model.PropertyDocModel;
 import com.realappraiser.gharvalue.property.DeleteItemInterface;
 import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.General;
+import com.realappraiser.gharvalue.utils.ImageProcessor;
 import com.realappraiser.gharvalue.utils.SettingsUtils;
 import com.realappraiser.gharvalue.utils.Singleton;
 
@@ -62,7 +63,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import id.zelory.compressor.Compressor;
 
 public class PropertyDocumentsActivity extends BaseActivity implements View.OnClickListener, DeleteItemInterface {
 
@@ -558,16 +558,12 @@ public class PropertyDocumentsActivity extends BaseActivity implements View.OnCl
                 File imgFile = new File(SettingsUtils.mPhotoPath);
                 Uri.fromFile(imgFile);
                 Log.e("PathNew :", SettingsUtils.mPhotoPath);
-                try {
-                    File compressedImageFile = new Compressor(PropertyDocumentsActivity.this).compressToFile(imgFile);
-                    if (!general.isEmpty(SettingsUtils.mPhotoPath)) {
-                        String filename = compressedImageFile.getAbsolutePath().substring(compressedImageFile.getAbsolutePath().lastIndexOf("/") + 1);
-                        selectedDocumentList.add(new PropertyDocModel(caseId, General.convertImageToBase64(compressedImageFile.getAbsolutePath()), filename, compressedImageFile.getAbsolutePath()));
-                        newFileAdapter.notifyDataSetChanged();
-                        General.hideloading();
-                    }
-                } catch (IOException exception) {
-                    exception.printStackTrace();
+                File compressedImageFile = new ImageProcessor().compressImage(imgFile,this);
+                if (!General.isEmpty(SettingsUtils.mPhotoPath)) {
+                    String filename = compressedImageFile.getAbsolutePath().substring(compressedImageFile.getAbsolutePath().lastIndexOf("/") + 1);
+                    selectedDocumentList.add(new PropertyDocModel(caseId, General.convertImageToBase64(compressedImageFile.getAbsolutePath()), filename, compressedImageFile.getAbsolutePath()));
+                    newFileAdapter.notifyDataSetChanged();
+                    General.hideloading();
                 }
 
             } catch (Exception e) {

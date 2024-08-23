@@ -53,6 +53,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.realappraiser.gharvalue.AppDatabase;
+import com.realappraiser.gharvalue.Interface.AverageComPerInterface;
 import com.realappraiser.gharvalue.MyApplication;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.activities.HomeActivity;
@@ -71,6 +72,7 @@ import com.realappraiser.gharvalue.communicator.ResponseParser;
 import com.realappraiser.gharvalue.communicator.ShowFSUIResponse;
 import com.realappraiser.gharvalue.communicator.TaskCompleteListener;
 import com.realappraiser.gharvalue.communicator.WebserviceCommunicator;
+import com.realappraiser.gharvalue.fragments.FragmentBuilding;
 import com.realappraiser.gharvalue.fragments.FragmentLand;
 import com.realappraiser.gharvalue.fragments.FragmentValuationLand;
 import com.realappraiser.gharvalue.fragments.OtherDetailsFragment;
@@ -79,6 +81,7 @@ import com.realappraiser.gharvalue.model.ConcreteGrade;
 import com.realappraiser.gharvalue.model.EnvExposureCondition;
 import com.realappraiser.gharvalue.model.Floor;
 import com.realappraiser.gharvalue.model.GetPhoto;
+import com.realappraiser.gharvalue.model.IndPropertyFloorsValuation;
 import com.realappraiser.gharvalue.model.Land;
 import com.realappraiser.gharvalue.model.LatLongDetails;
 import com.realappraiser.gharvalue.model.Locality;
@@ -112,6 +115,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,13 +125,14 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.realappraiser.gharvalue.R.id;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link FieldsInspectionDetails#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FieldsInspectionDetails extends Fragment implements View.OnClickListener, View.OnTouchListener, CompoundButton.OnCheckedChangeListener {
+public class FieldsInspectionDetails extends Fragment implements View.OnClickListener, View.OnTouchListener, CompoundButton.OnCheckedChangeListener, AverageComPerInterface {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -5557,6 +5562,65 @@ public class FieldsInspectionDetails extends Fragment implements View.OnClickLis
                     }
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void rateValueUpdate(ArrayList<IndPropertyFloorsValuation> stepsValuation, int adapterPosition, boolean isActual) {
+        if(Singleton.getInstance().indPropertyFloors.size() > 1){
+            float totalValuePer = 0;
+            float totalValue = 0;
+            for(int i = 0;i < Singleton.getInstance().indPropertyFloors.size();i++){
+                if(!stepsValuation.get(i).getMeasuredConstrValue().isEmpty() &&
+                        Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion() != null &&
+                        Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion() != 0
+                        && Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion() != -1
+
+                ){
+                    float c =  Singleton.getInstance().indPropertyFloors.get(i).getPercentageCompletion();
+                    float a  = c / 100;
+                    if(isActual){
+                        totalValuePer = totalValuePer + (Integer.parseInt(stepsValuation.get(i).getMeasuredConstrValue()) * a);
+                        Log.e("totalValuePer", String.valueOf(totalValuePer));
+                        totalValue = totalValue + Integer.parseInt(stepsValuation.get(i).getMeasuredConstrValue());
+                        Log.e("totalValue", String.valueOf(totalValue));
+                    }else{
+                        totalValuePer = totalValuePer + (Integer.parseInt(stepsValuation.get(i).getDocumentConstrValue()) * a);
+                        Log.e("totalValuePer", String.valueOf(totalValuePer));
+                        totalValue = totalValue + Integer.parseInt(stepsValuation.get(i).getDocumentConstrValue());
+                        Log.e("totalValue", String.valueOf(totalValue));
+                    }
+                }
+            }
+            float finalValue = totalValuePer / totalValue;
+            Log.e("totalValueFraction", String.valueOf(finalValue));
+            float totalInPer = finalValue * 100;
+            if(totalValue > 0.0)
+            {
+                  /* etAverageConstruction.setText(String.valueOf(totalInPer));
+                   FragmentBuilding.textview_comp_total.setText(String.valueOf(totalInPer));*/
+
+                String totalAvg = ""+ new DecimalFormat(".##").format(totalInPer);
+
+                etAverageConstruction.setText(totalAvg);
+           //     FragmentBuilding.textview_comp_total.setText(totalAvg);
+                Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage(totalAvg);
+
+            }else{
+                etAverageConstruction.setText("");
+             //   FragmentBuilding.textview_comp_total.setText("");
+                Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage("");
+            }
+        }else{
+            Integer integer = Singleton.getInstance().indPropertyFloors.get(0).getPercentageCompletion();
+            if(integer !=null ){
+                String totalAvg = ""+ new DecimalFormat(".##").format(integer);
+                etAverageConstruction.setText(totalAvg);
+                //etAverageConstruction.setText(String.valueOf(integer));
+                //FragmentBuilding.textview_comp_total.setText(String.valueOf(integer));
+            //    FragmentBuilding.textview_comp_total.setText(totalAvg);
+                Singleton.getInstance().indPropertyValuation.setAverageConstructionPercentage(totalAvg);
+            }
         }
     }
 }

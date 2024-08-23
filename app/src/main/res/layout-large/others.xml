@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:viewBindingIgnore="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -1630,7 +1631,7 @@
                             android:textColorHint="@color/font_texthint">
 
                             <EditText
-                                android:id="@+id/et_seismic"
+                                android:id="@+id/et_regulatory_zone"
                                 style="@style/StyledTilEditText"
                                 android:hint="Coastal Regulatory Zone"
                                 android:inputType="textCapWords"

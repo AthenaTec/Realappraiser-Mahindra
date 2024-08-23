@@ -110,6 +110,7 @@ import com.realappraiser.gharvalue.utils.Connectivity;
 import com.realappraiser.gharvalue.utils.GPSService;
 import com.realappraiser.gharvalue.utils.General;
 import com.realappraiser.gharvalue.utils.GpsUtils;
+import com.realappraiser.gharvalue.utils.ImageProcessor;
 import com.realappraiser.gharvalue.utils.OfflineLocationInterface;
 import com.realappraiser.gharvalue.utils.OfflineLocationReceiver;
 import com.realappraiser.gharvalue.utils.ResponseStorage;
@@ -143,7 +144,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import id.zelory.compressor.Compressor;
 import me.itangqi.waveloadingview.WaveLoadingView;
 
 @SuppressWarnings("ALL")
@@ -1756,17 +1756,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.convyencereport:
                 getConvyenceReport();
                 break;
-//            case R.id.changepassword:
-//                 general.getChangePassword(this);
-//                 break;
-//
-//            case R.id.raiseticketsystem:
-//                raiseTickerPopup();
-//                break;
-//
-//            case R.id.viewticket:
-//                getViewTicketSystem();
-//                break;
+            case R.id.changepassword:
+                 general.getChangePassword(this);
+                 break;
+
+            case R.id.raiseticketsystem:
+                raiseTickerPopup();
+                break;
+
+            case R.id.viewticket:
+                getViewTicketSystem();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -3076,14 +3076,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     File imgFile = new File(SettingsUtils.mPhotoPath);
                     Uri.fromFile(imgFile);
                     Log.e("PathNew :", SettingsUtils.mPhotoPath);
-                    try {
-                        File compressedImageFile = new Compressor(this).compressToFile(imgFile);
-                        if (!general.isEmpty(SettingsUtils.mPhotoPath)) {
-                            Log.e(TAG, "onActivityResult: " + compressedImageFile.getAbsolutePath());
-                            convertToBase64(compressedImageFile.getAbsolutePath());
-                        }
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
+                    File compressedImageFile = new ImageProcessor().compressImage(imgFile,this);
+                    if (!general.isEmpty(SettingsUtils.mPhotoPath)) {
+                        Log.e(TAG, "onActivityResult: " + compressedImageFile.getAbsolutePath());
+                        convertToBase64(compressedImageFile.getAbsolutePath());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3097,18 +3093,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 Log.e(TAG, "show 1538");
                 for (int i = 0; i < imageAdapter.getCheckedItems().size(); i++) {
                     Log.e(TAG, "onActivityResult: " + imageAdapter.getCheckedItems().get(i));
-                    try {
 
-                        File imgFile = new File(imageAdapter.getCheckedItems().get(i));
+                    File imgFile = new File(imageAdapter.getCheckedItems().get(i));
 
-                        Log.d(TAG, "onActivityResult: " + imgFile.getAbsolutePath());
+                    Log.d(TAG, "onActivityResult: " + imgFile.getAbsolutePath());
 
-                        File compressedImageFile = new Compressor(this).compressToFile(imgFile);
-                        convertToBase64(compressedImageFile.getAbsolutePath());
+                    File compressedImageFile = new ImageProcessor().compressImage(imgFile,this);
+                    convertToBase64(compressedImageFile.getAbsolutePath());
 
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
                     if (i == imageAdapter.getCheckedItems().size() - 1) {
                         Log.e(TAG, "Hide 1564");
                     }

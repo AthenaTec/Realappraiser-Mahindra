@@ -376,8 +376,8 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
     @SuppressLint("StaticFieldLeak")
     public static PropertyFloorInternalAdapter propertylistAdapter;
-    private IndPropertyFloor stepsModel = new IndPropertyFloor();
-    private IndPropertyFloor steps2Model = new IndPropertyFloor();
+    private final IndPropertyFloor stepsModel = new IndPropertyFloor();
+    private final IndPropertyFloor steps2Model = new IndPropertyFloor();
     public static LinearLayoutManager llm, lfm, llactualArea, llsanctionedArea;
     public OthersFormListener listener;
     public static String measurment_floor_id = "0";
@@ -400,14 +400,6 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
     static int permission_check_construction = 0;
 
     AdapterView.OnItemSelectedListener listener1;
-
-
-    Button button0, button1, button2, button3, button4, button5, button6,
-            button7, button8, button9, buttonAdd, buttonSub, buttonDivision,
-            buttonMul, button10, buttonC, buttonEqual, button_set, button_close;
-    TextView edt1;
-    float mValueOne, mValueCurrent;
-    boolean mAddition, mSubtract, mMultiplication, mDivision, mClear;
 
     /***** Declaring Variable *****/
     TextView btnClear, btnSmallBracket, btnPercentage, btnSeven, btnNine, btnMultiply, btnEight, btnBack;
@@ -542,7 +534,8 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         initLandMeasurementView(view);
 
         // TODO -  call the mandatory_validation
-        if (Singleton.getInstance().enable_validation_error) {
+        Singleton.getInstance();
+        if (Singleton.enable_validation_error) {
             set_mandatory_building();
         }
 
@@ -560,7 +553,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         int total_floor_size = Singleton.getInstance().indPropertyFloors.size();
 
         if (total_floor_size > 0) {
-            if (!general.isEmpty(Singleton.getInstance().indPropertyFloors.get(0).getDocumentFloorAreaUnit())) {
+            if (!General.isEmpty(Singleton.getInstance().indPropertyFloors.get(0).getDocumentFloorAreaUnit())) {
                 measurment_unit_property_for_dlc = Integer.parseInt(Singleton.getInstance().indPropertyFloors.get(0).getDocumentFloorAreaUnit());
             }
         }
@@ -570,7 +563,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         if (total_floor_size > 0) {
             float rate_float = 0;
             for (int x = 0; x < total_floor_size; x++) {
-                if (!general.isEmpty(Singleton.getInstance().indPropertyFloors.get(x).getDocumentFloorArea())) {
+                if (!General.isEmpty(Singleton.getInstance().indPropertyFloors.get(x).getDocumentFloorArea())) {
                     float rate_check = general.convertTofloat(Singleton.getInstance().indPropertyFloors.get(x).getDocumentFloorArea());
                     rate_float = ((rate_float) + (rate_check));
                 }
@@ -582,7 +575,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         if (total_floor_size > 0) {
             float rate_float = 0;
             for (int x = 0; x < total_floor_size; x++) {
-                if (!general.isEmpty(Singleton.getInstance().indPropertyFloors.get(x).getMeasuredFloorArea())) {
+                if (!General.isEmpty(Singleton.getInstance().indPropertyFloors.get(x).getMeasuredFloorArea())) {
                     float rate_check = general.convertTofloat(Singleton.getInstance().indPropertyFloors.get(x).getMeasuredFloorArea());
                     rate_float = ((rate_float) + (rate_check));
                 }
@@ -600,7 +593,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
 
         // id_radio_considerforvaluation_permissiblearea_land and id_radio_considerforvaluation_actualarea_land
-        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indPropertyValuation.getDocumentedLandValueSel()))) {
+        if (!General.isEmpty(String.valueOf(Singleton.getInstance().indPropertyValuation.getDocumentedLandValueSel()))) {
             if (Singleton.getInstance().indPropertyValuation.getDocumentedLandValueSel()) {
                 permission_check = 1;
                 id_radio_considerforvaluation_permissiblearea_land.setChecked(true);
@@ -617,7 +610,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         }
 
         // id_radio_considerforvaluation_permissiblearea_construction and id_radio_considerforvaluation_actualarea_construction
-        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indPropertyValuation.getDocumentedConstrValueSel()))) {
+        if (!General.isEmpty(String.valueOf(Singleton.getInstance().indPropertyValuation.getDocumentedConstrValueSel()))) {
             if (Singleton.getInstance().indPropertyValuation.getDocumentedConstrValueSel()) {
                 permission_check_construction = 1;
                 id_radio_considerforvaluation_permissiblearea_construction.setChecked(true);
@@ -650,8 +643,8 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
 
     private void initLandMeasurementView(View view) {
-        spinner_measurement1 = (Spinner) view.findViewById(R.id.spinner_measurement1);
-        spinner_measurement2 = (Spinner) view.findViewById(R.id.spinner_measurement2);
+        spinner_measurement1 = view.findViewById(R.id.spinner_measurement1);
+        spinner_measurement2 = view.findViewById(R.id.spinner_measurement2);
 
         spinner_measurement1.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -660,26 +653,26 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 return false;
             }
         });
-        editText_approved_floors = (EditText) view.findViewById(R.id.editText_approved_floors);
-        recyclerview_actualarea = (RecyclerView) view.findViewById(R.id.recyclerview_actualarea);
-        recyclerview_permissiblearea = (RecyclerView) view.findViewById(R.id.recyclerview_permissiblearea);
+        editText_approved_floors = view.findViewById(R.id.editText_approved_floors);
+        recyclerview_actualarea = view.findViewById(R.id.recyclerview_actualarea);
+        recyclerview_permissiblearea = view.findViewById(R.id.recyclerview_permissiblearea);
 
         image_addFloors.setOnClickListener(this);
-        editText_floors_measu = (EditText) view.findViewById(R.id.editText_floors);
-        editText_Floor_details = (EditText) view.findViewById(R.id.editText_Floor_details);
+        editText_floors_measu = view.findViewById(R.id.editText_floors);
+        editText_Floor_details = view.findViewById(R.id.editText_Floor_details);
 
-        textview_comp_total = (TextView) view.findViewById(R.id.textview_comp_total);
-        textview_doc_total = (TextView) view.findViewById(R.id.textview_doc_total);
-        textview_actual_total = (TextView) view.findViewById(R.id.textview_actual_total);
+        textview_comp_total = view.findViewById(R.id.textview_comp_total);
+        textview_doc_total = view.findViewById(R.id.textview_doc_total);
+        textview_actual_total = view.findViewById(R.id.textview_actual_total);
 
-        txt_total_sanctioned_area = (TextView) view.findViewById(R.id.txt_total_sanctioned_area_value);
-        txt_total_actual_area = (TextView) view.findViewById(R.id.txt_total_actual_area_value);
-        txt_permissiable_area_value = (TextView) view.findViewById(R.id.txt_permissiable_area_value);
-        editText_construction_value = (EditText) view.findViewById(R.id.editText_construction_value);
-        editText_total_permissiblearea = (EditText) view.findViewById(R.id.editText_total_permissiblearea);
-        editText_total_actualarea = (EditText) view.findViewById(R.id.editText_total_actualarea);
-        textview_aspercompletion_result = (TextView) view.findViewById(R.id.textview_aspercompletion_result);
-        textview_totalconstructionvalue_result = (TextView) view.findViewById(R.id.textview_totalconstructionvalue_result);
+        txt_total_sanctioned_area = view.findViewById(R.id.txt_total_sanctioned_area_value);
+        txt_total_actual_area = view.findViewById(R.id.txt_total_actual_area_value);
+        txt_permissiable_area_value = view.findViewById(R.id.txt_permissiable_area_value);
+        editText_construction_value = view.findViewById(R.id.editText_construction_value);
+        editText_total_permissiblearea = view.findViewById(R.id.editText_total_permissiblearea);
+        editText_total_actualarea = view.findViewById(R.id.editText_total_actualarea);
+        textview_aspercompletion_result = view.findViewById(R.id.textview_aspercompletion_result);
+        textview_totalconstructionvalue_result = view.findViewById(R.id.textview_totalconstructionvalue_result);
 
 
     }
@@ -702,18 +695,21 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             rotateloading.start();
         }
 
-        if (!general.isEmpty(editText_floors_measu.getText().toString())) {
+        if (!General.isEmpty(editText_floors_measu.getText().toString())) {
 
-            if (!general.isEmpty(String.valueOf(Singleton.getInstance().indProperty.getNoOfFloors()))) {
+            if (!General.isEmpty(String.valueOf(Singleton.getInstance().indProperty.getNoOfFloors()))) {
                 if (Singleton.getInstance().indProperty.getNoOfFloors() == 0) {
                     // TODO - If floor is created from first time (Start Inspection)
-                    Singleton.getInstance().is_new_floor_created = true;
+                    Singleton.getInstance();
+                    Singleton.is_new_floor_created = true;
                 } else {
                     // TODO - If floor is created form second time (Edit Inspection)
-                    Singleton.getInstance().is_new_floor_created = false;
+                    Singleton.getInstance();
+                    Singleton.is_new_floor_created = false;
                 }
             } else {
-                Singleton.getInstance().is_new_floor_created = false;
+                Singleton.getInstance();
+                Singleton.is_new_floor_created = false;
             }
 
 
@@ -721,7 +717,8 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             is_offline = SettingsUtils.getInstance().getValue(SettingsUtils.is_offline, false);
             if (is_offline) {
                 // offline
-                Singleton.getInstance().is_new_floor_created = true;
+                Singleton.getInstance();
+                Singleton.is_new_floor_created = true;
             }
 
 
@@ -731,7 +728,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             final String floorno_textbox = editText_floors_measu.getText().toString().trim();
             int floorsnoList = Singleton.getInstance().indProperty.getNoOfFloors();
 
-            if (!general.isEmpty(floorno_textbox)) {
+            if (!General.isEmpty(floorno_textbox)) {
                 int floorno = Integer.valueOf(floorno_textbox);
 
                 if (floorsnoList != 0) {
@@ -775,15 +772,23 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                  * *****/
                 Snackbar.make(editText_floors_measu, getResources().getString(R.string.genearating_floors), Snackbar.LENGTH_SHORT).show();
                 // Set as true for Internal composition
-                Singleton.getInstance().is_edit_floor_satge = true;
-                Singleton.getInstance().is_edit_floor_docarea = true;
-                Singleton.getInstance().is_edit_floor_age = true;
+                Singleton.getInstance();
+                Singleton.is_edit_floor_satge = true;
+                Singleton.getInstance();
+                Singleton.is_edit_floor_docarea = true;
+                Singleton.getInstance();
+                Singleton.is_edit_floor_age = true;
                 // Set as true for Internal composition
-                Singleton.getInstance().is_edit_floor_hall = true;
-                Singleton.getInstance().is_edit_floor_kitchen = true;
-                Singleton.getInstance().is_edit_floor_bedroom = true;
-                Singleton.getInstance().is_edit_floor_bath = true;
-                Singleton.getInstance().is_edit_floor_shop = true;
+                Singleton.getInstance();
+                Singleton.is_edit_floor_hall = true;
+                Singleton.getInstance();
+                Singleton.is_edit_floor_kitchen = true;
+                Singleton.getInstance();
+                Singleton.is_edit_floor_bedroom = true;
+                Singleton.getInstance();
+                Singleton.is_edit_floor_bath = true;
+                Singleton.getInstance();
+                Singleton.is_edit_floor_shop = true;
             }
 
             editText_floors_measu.setError(null);
@@ -793,7 +798,8 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 public void run() {
 
 
-                    if (!Singleton.getInstance().is_new_floor_created) {
+                    Singleton.getInstance();
+                    if (!Singleton.is_new_floor_created) {
                         // Edit case
                         if (Singleton.getInstance().floorsDeleteList) {
                             // Delete case
@@ -888,6 +894,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         stepsModel.setResidualLife(Singleton.getInstance().indPropertyFloors.get(i).getResidualLife());
                         stepsModel.setPresentCondition(Singleton.getInstance().indPropertyFloors.get(i).getPresentCondition());
                         stepsModel.setFloorNo(Singleton.getInstance().indPropertyFloors.get(i).getFloorNo());
+                        stepsModel.setDocumentFloorAreaUnit("1");
 
                         String dep = Singleton.getInstance().indPropertyFloors.get(i).getPercentageDepreciation();
                         stepsModel.setPercentageDepreciation(Singleton.getInstance().indPropertyFloors.get(i).getPercentageDepreciation());
@@ -934,6 +941,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                             stepsModel.setFloorName(getResources().getString(R.string.floorname) + finalI);
                             stepsModel.setFloorUsage(floorusage);
                             stepsModel.setFloorNo(finalI);
+                            stepsModel.setDocumentFloorAreaUnit("1");
                             list.add(stepsModel);
 
 
@@ -971,6 +979,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         stepsModel.setConstructionStageId(0);
                         stepsModel.setFloorUsage(floorusage);
                         stepsModel.setFloorNo(floorname_dynamic);
+                        stepsModel.setDocumentFloorAreaUnit("1");
                         list.add(stepsModel);
 
                         Singleton.getInstance().indPropertyFloors.add(stepsModel);
@@ -1027,7 +1036,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         steps2Model.setFlatPoojaNo(Singleton.getInstance().indPropertyFloors.get(i).getFlatPoojaNo());
                         steps2Model.setFlatDinningNo(Singleton.getInstance().indPropertyFloors.get(i).getFlatDinningNo());
                         steps2Model.setFloorNo(Singleton.getInstance().indPropertyFloors.get(i).getFloorNo());
-
+steps2Model.setDocumentFloorAreaUnit("1");
                         floornolist.add(steps2Model);
 
                         Singleton.getInstance().floorFromBackend = true;
@@ -1045,6 +1054,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                             steps2Model.setCaseId(Singleton.getInstance().aCase.getCaseId());
                             steps2Model.setFloorName(getResources().getString(R.string.floorname) + i + 1);
                             steps2Model.setFloorNo(i+1);
+                            steps2Model.setDocumentFloorAreaUnit("1");
                             floornolist.add(steps2Model);
                         }
                     } else {
@@ -1078,6 +1088,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         steps2Model.setCaseId(caseid_int);
                         steps2Model.setFloorName(getResources().getString(R.string.floorname) + floorname_dynamic);
                         steps2Model.setFloorNo(floorname_dynamic);
+                        steps2Model.setDocumentFloorAreaUnit("1");
                         floornolist.add(steps2Model);
                         Singleton.getInstance().floorFromBackend = false;
                     }
@@ -1112,10 +1123,10 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         String status = "";
         if (Singleton.getInstance().aCase != null) {
             status = String.valueOf(Singleton.getInstance().aCase.getStatus());
-            if (!general.isEmpty(status)) {
+            if (!General.isEmpty(status)) {
                 //  if (status.equalsIgnoreCase("2")) { //Edit inspection
                 String floorsno = String.valueOf(Singleton.getInstance().indProperty.getNoOfFloors());
-                if (!general.isEmpty(floorsno)) {
+                if (!General.isEmpty(floorsno)) {
                     initValuationPermissibleFloors(floorsno);
                 } else {
                     general.CustomToast("Floor No. empty");
@@ -1127,7 +1138,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
     public void getValuationDynamicFloorsResult(String floorsno) {
 
         String status = "";
-        if (!general.isEmpty(floorsno)) {
+        if (!General.isEmpty(floorsno)) {
             Log.e("valuation_floor", floorsno);
             initValuationPermissibleFloors(floorsno);
         } else {
@@ -1138,7 +1149,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
     /****** Get Valuation for permissible floor *******/
     public void initValuationPermissibleFloors(String floors_no) {
         floorsValuation = new ArrayList<>();
-        if (general.isEmpty(floors_no)) {
+        if (General.isEmpty(floors_no)) {
             Log.e("ValuationPermissible", "Floors empty");
         } else {
 
@@ -1158,6 +1169,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                     stepsModel.setFloorNo(Singleton.getInstance().indPropertyFloorsValuations.get(i).getFloorNo());
                     stepsModel.setFloorDepreciationValue(Singleton.getInstance().indPropertyFloorsValuations.get(i).getFloorDepreciationValue());
                     stepsModel.setFloorCarpetArea(Singleton.getInstance().indPropertyFloorsValuations.get(i).getFloorCarpetArea());
+                    
                     floorsValuation.add(stepsModel);
                 }
 
@@ -1199,7 +1211,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
             } else {
 
-                if (!general.isEmpty(floors_no)) {
+                if (!General.isEmpty(floors_no)) {
 
                     int floors_valsize = Integer.valueOf(floors_no);
                     floorsValuation = new ArrayList<>();
@@ -1251,10 +1263,10 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
      * ******/
     private void InitiateDeleteFloorsWebservice() {
         if (Connectivity.isConnected(getActivity())) {
-            general.showloading(getActivity());
+            General.showloading(getActivity());
             InitiateDeleteFloorsTask();
         } else {
-            general.hideloading();
+            General.hideloading();
             Connectivity.showNoConnectionDialog(getActivity());
         }
     }
@@ -1288,10 +1300,10 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                     String response = requestData.getResponse();
                     parseDeleteFloorsDataResponse(response);
                 } else if (!requestData.isSuccessful() && (requestData.getResponseCode() == 400 || requestData.getResponseCode() == 401)) {
-                    general.hideloading();
+                    General.hideloading();
                     General.sessionDialog(getActivity());
                 } else {
-                    general.hideloading();
+                    General.hideloading();
                     General.customToast(getActivity().getString(R.string.something_wrong),
                             getActivity());
                 }
@@ -1309,7 +1321,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             msg = dataResponse.msg;
             info = dataResponse.info;
         } else {
-            general.hideloading();
+            General.hideloading();
             general.CustomToast(getResources().getString(R.string.serverProblem));
         }
 
@@ -1317,7 +1329,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             if (result.equals("1")) {
                 // general.CustomToast(msg);
 
-                general.hideloading();
+                General.hideloading();
 
                 hideSoftKeyboard(image_addFloors);
                 image_addFloors.setVisibility(View.VISIBLE);
@@ -1335,7 +1347,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 general.CustomToast(msg);
             }
         } else {
-            general.hideloading();
+            General.hideloading();
             general.CustomToast(getResources().getString(R.string.serverProblem));
         }
     }
@@ -1394,11 +1406,11 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
     @SuppressLint("SetTextI18n")
     public static void aspercompletion_val(String as_per_com) {
-        if (!general.isEmpty(as_per_com)) {
+        if (!General.isEmpty(as_per_com)) {
             if (as_per_com.contains(",")) {
                 editText_aspercompletion.setText(general.ReplaceCommaSaveToString(as_per_com));
             } else {
-                editText_aspercompletion.setText("" + as_per_com);
+                editText_aspercompletion.setText(as_per_com);
             }
         }
     }
@@ -1473,7 +1485,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         appDatabase.interfaceOfflineDataModelQuery().update_sync_edit_DataModel("" + Singleton.getInstance().aCase.getCaseId(), true);
 
                         // Add the offline case to the modal
-                        if (!general.isEmpty(String.valueOf(Singleton.getInstance().aCase.getCaseId()))) {
+                        if (!General.isEmpty(String.valueOf(Singleton.getInstance().aCase.getCaseId()))) {
                             // offline set the caseID and propertyID
                             OflineCase oflineCase = new OflineCase();
                             oflineCase.setCaseId(Singleton.getInstance().aCase.getCaseId());
@@ -1601,11 +1613,11 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
             if (Singleton.getInstance().indProperty.getApprovedNoOfFloors() != 0)
                 editText_approved_floors.setText("" + Singleton.getInstance().indProperty.getApprovedNoOfFloors());
-            if (!general.isEmpty(Singleton.getInstance().indProperty.getDocumentLandArea()))
+            if (!General.isEmpty(Singleton.getInstance().indProperty.getDocumentLandArea()))
                 editText_compound_permissiblearea.setText(Singleton.getInstance().indProperty.getDocumentLandArea());
-            if (!general.isEmpty(Singleton.getInstance().indProperty.getMeasuredLandArea()))
+            if (!General.isEmpty(Singleton.getInstance().indProperty.getMeasuredLandArea()))
                 editText_as_per_measurement.setText(Singleton.getInstance().indProperty.getMeasuredLandArea());
-            if (!general.isEmpty(Singleton.getInstance().indProperty.getFloorDetails()))
+            if (!General.isEmpty(Singleton.getInstance().indProperty.getFloorDetails()))
                 editText_Floor_details.setText(Singleton.getInstance().indProperty.getFloorDetails());
 
             final int completedSumValue = getCompletedSumValue(Singleton.getInstance().indPropertyFloors);
@@ -1662,7 +1674,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     String charSequence = editText_compound_permissiblearea.getText().toString();
-                    if (general.isEmpty(editText_as_per_measurement.getText().toString())) {
+                    if (General.isEmpty(editText_as_per_measurement.getText().toString())) {
                         // If its empty
                         editText_as_per_measurement.setText(charSequence);
                         //TODO Interface
@@ -1682,7 +1694,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     String charSequence = editText_compound_permissiblearea.getText().toString();
-                    if (general.isEmpty(editText_as_per_measurement.getText().toString())) {
+                    if (General.isEmpty(editText_as_per_measurement.getText().toString())) {
                         // If its empty
                         editText_as_per_measurement.setText(charSequence);
                         //TODO Interface
@@ -1772,7 +1784,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         if (Inter_floors_list.size() > 0) {
             String getIntFloorId = Singleton.getInstance().indProperty.getPropertyActualUsageId();
             // check selected array is empty
-            if (!general.isEmpty(getIntFloorId)) {
+            if (!General.isEmpty(getIntFloorId)) {
                 // selected array convert to comma separate array
                 List<String> Inter_floors_list_selected_id_commo = new ArrayList<>();
                 Inter_floors_list_selected_id_commo = new ArrayList<String>(Arrays.asList(getIntFloorId.split(",")));
@@ -1808,10 +1820,10 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         alertDialog.setCancelable(false);
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        TextView textview_heading = (TextView) alertDialog.findViewById(R.id.textview_heading);
-        Button btn_cancel = (Button) alertDialog.findViewById(R.id.btn_cancel);
-        Button btn_save = (Button) alertDialog.findViewById(R.id.btn_save);
-        RecyclerView recyclerview_dialog = (RecyclerView) alertDialog.findViewById(R.id.recyclerview_dialog);
+        TextView textview_heading = alertDialog.findViewById(R.id.textview_heading);
+        Button btn_cancel = alertDialog.findViewById(R.id.btn_cancel);
+        Button btn_save = alertDialog.findViewById(R.id.btn_save);
+        RecyclerView recyclerview_dialog = alertDialog.findViewById(R.id.recyclerview_dialog);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerview_dialog.setLayoutManager(linearLayoutManager);
 
@@ -1866,16 +1878,16 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             String asperComPercentage = Singleton.getInstance().indPropertyValuation.getCompletionPercentage();
             String asperCompValue = Singleton.getInstance().indPropertyValuation.getTotalValueAtCompletion();
 
-            if (!general.isEmpty(asperComPercentage)) {
+            if (!General.isEmpty(asperComPercentage)) {
                 if (asperComPercentage.contains(","))
                     editText_aspercompletion.setText(general.ReplaceCommaSaveToString(asperComPercentage));
                 else
                     editText_aspercompletion.setText(asperComPercentage);
             }
 
-            if (!general.isEmpty(asperCompValue)) {
+            if (!General.isEmpty(asperCompValue)) {
                 if (asperCompValue.contains(","))
-                    textview_aspercompletion_result.setText(general.DecimalFormattedCommaString(String.valueOf(asperCompValue)));
+                    textview_aspercompletion_result.setText(general.DecimalFormattedCommaString(asperCompValue));
 
                 else
                     textview_aspercompletion_result.setText(asperCompValue);
@@ -1887,14 +1899,14 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
     private void constructionValuation() {
         /* TODO - Display the final text after after some second  */
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getGuidelineValue())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getGuidelineValue())) {
             //  editText_guideline_value.setText(Singleton.getInstance().indPropertyValuation.getGuidelineValue());
             editText_guideline_value.setText(general.DecimalFormattedCommaString(Singleton.getInstance().indPropertyValuation.getGuidelineValue()));
         } else {
             editText_guideline_value.setText("");
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getConstructionDLCValue())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getConstructionDLCValue())) {
             //   editText_construction_value.setText(Singleton.getInstance().indPropertyValuation.getConstructionDLCValue());
             editText_construction_value.setText(general.DecimalFormattedCommaString(Singleton.getInstance().indPropertyValuation.getConstructionDLCValue()));
         } else {
@@ -1924,11 +1936,11 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
         realizableList = new ArrayList<>();
         realizableList = general.Constructionval_common_array();
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getRealizationPercentage())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getRealizationPercentage())) {
             /* values */
             boolean is_value_from_loop = false;
             for (int x = 0; x < realizableList.size(); x++) {
-                if (realizableList.get(x).toString().replace("%", "").trim().equalsIgnoreCase(Singleton.getInstance().indPropertyValuation.getRealizationPercentage())) {
+                if (realizableList.get(x).replace("%", "").trim().equalsIgnoreCase(Singleton.getInstance().indPropertyValuation.getRealizationPercentage())) {
                     is_value_from_loop = true;
                 }
             }
@@ -1942,7 +1954,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 spinner_realizable.setText(getResources().getString(R.string.custom));
                 editText_realizable_custom.setVisibility(View.VISIBLE);
                 String RealizationPercentage = Singleton.getInstance().indPropertyValuation.getRealizationPercentage();
-                if (!general.isEmpty(RealizationPercentage)) {
+                if (!General.isEmpty(RealizationPercentage)) {
                     editText_realizable_custom.setText(Singleton.getInstance().indPropertyValuation.getRealizationPercentage());
                 }
             }
@@ -1975,9 +1987,9 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
         carpetList = new ArrayList<>();
         carpetList = general.Constructionval_common_array_carpet();
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage())) {
             for (int x = 0; x < carpetList.size(); x++) {
-                if (carpetList.get(x).toString().replace("%", "").trim().equalsIgnoreCase(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage())) {
+                if (carpetList.get(x).replace("%", "").trim().equalsIgnoreCase(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage())) {
                     spinner_carpet.setText(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage());
                 }
             }
@@ -1998,11 +2010,11 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
         distressList = new ArrayList<>();
         distressList = general.Constructionval_common_array();
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getDistressPercentage())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getDistressPercentage())) {
             /* values */
             boolean is_value_from_loop = false;
             for (int x = 0; x < distressList.size(); x++) {
-                if (distressList.get(x).toString().replace("%", "").trim().equalsIgnoreCase(Singleton.getInstance().indPropertyValuation.getDistressPercentage())) {
+                if (distressList.get(x).replace("%", "").trim().equalsIgnoreCase(Singleton.getInstance().indPropertyValuation.getDistressPercentage())) {
                     is_value_from_loop = true;
                 }
             }
@@ -2016,7 +2028,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 spinner_distress.setText(getResources().getString(R.string.custom));
                 editText_distress_custom.setVisibility(View.VISIBLE);
                 String DistressPercentage = Singleton.getInstance().indPropertyValuation.getDistressPercentage();
-                if (!general.isEmpty(DistressPercentage)) {
+                if (!General.isEmpty(DistressPercentage)) {
                     editText_distress_custom.setText(Singleton.getInstance().indPropertyValuation.getDistressPercentage());
                 }
             }
@@ -2041,9 +2053,9 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         if (editText_distress_custom.getVisibility() == View.VISIBLE) {
             // distress_custom - > From Custom value
             String distress_custom = editText_distress_custom.getText().toString();
-            if (!general.isEmpty(distress_custom)) {
+            if (!General.isEmpty(distress_custom)) {
                 String total_value = textview_totalpropertyvalue_result.getText().toString();
-                if ((!general.isEmpty(total_value)) && (!general.isEmpty(distress_custom))) {
+                if ((!General.isEmpty(total_value)) && (!General.isEmpty(distress_custom))) {
                     int total_int = Integer.parseInt(general.ReplaceCommaSaveToString(total_value));
                     int distress_int = Integer.parseInt(distress_custom);
                     int final_realizationValue = general.getcutom_value(total_int, distress_int);
@@ -2060,9 +2072,9 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         } else {
             // distress_custom - > From getDistressPercentage from the spinner
             String distress_custom = Singleton.getInstance().indPropertyValuation.getDistressPercentage();
-            if (!general.isEmpty(distress_custom)) {
+            if (!General.isEmpty(distress_custom)) {
                 String total_value = textview_totalpropertyvalue_result.getText().toString();
-                if ((!general.isEmpty(total_value)) && (!general.isEmpty(distress_custom))) {
+                if ((!General.isEmpty(total_value)) && (!General.isEmpty(distress_custom))) {
                     int total_int = Integer.parseInt(general.ReplaceCommaSaveToString(total_value));
                     int distress_int = Integer.parseInt(distress_custom);
                     int final_realizationValue = general.getcutom_value(total_int, distress_int);
@@ -2078,9 +2090,9 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
     public static boolean valid_carpetValue() {
         boolean is_custom_valid = false;
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage())) {
             // not null
-            if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId())) {
+            if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId())) {
                 // not null
                 is_custom_valid = true;
             } else {
@@ -2103,17 +2115,17 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         dialog.setCanceledOnTouchOutside(true);
         dialog.setContentView(R.layout.carpet_popup);
 
-        TextView popuptitle = (TextView) dialog.findViewById(R.id.title);
+        TextView popuptitle = dialog.findViewById(R.id.title);
         popuptitle.setTypeface(general.mediumtypeface());
         popuptitle.setText(getActivity().getResources().getString(R.string.carpet_per_type));
 
-        ImageView close = (ImageView) dialog.findViewById(R.id.close);
-        RadioGroup id_radiogroup_stage = (RadioGroup) dialog.findViewById(R.id.id_radiogroup_stage);
+        ImageView close = dialog.findViewById(R.id.close);
+        RadioGroup id_radiogroup_stage = dialog.findViewById(R.id.id_radiogroup_stage);
 
-        RadioButton id_radio_select = (RadioButton) dialog.findViewById(R.id.id_radio_select);
-        RadioButton id_radio_per = (RadioButton) dialog.findViewById(R.id.id_radio_per);
-        RadioButton id_radio_act = (RadioButton) dialog.findViewById(R.id.id_radio_act);
-        RadioButton id_radio_sel = (RadioButton) dialog.findViewById(R.id.id_radio_sel);
+        RadioButton id_radio_select = dialog.findViewById(R.id.id_radio_select);
+        RadioButton id_radio_per = dialog.findViewById(R.id.id_radio_per);
+        RadioButton id_radio_act = dialog.findViewById(R.id.id_radio_act);
+        RadioButton id_radio_sel = dialog.findViewById(R.id.id_radio_sel);
 
         id_radio_select.setTypeface(general.mediumtypeface());
         id_radio_per.setTypeface(general.mediumtypeface());
@@ -2121,7 +2133,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         id_radio_sel.setTypeface(general.mediumtypeface());
 
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId())) {
             int carpet_id = Integer.parseInt(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId());
             if (carpet_id == 1) {
                 id_radio_per.setChecked(true);
@@ -2137,7 +2149,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         id_radiogroup_stage.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton id_radiogenearal = (RadioButton) dialog.findViewById(group.getCheckedRadioButtonId());
+                RadioButton id_radiogenearal = dialog.findViewById(group.getCheckedRadioButtonId());
                 //Log.e("id_radiogenearal_",": "+id_radiogenearal.getText().toString());
                 String str_radiogenearal = id_radiogenearal.getText().toString();
                 if (str_radiogenearal.equalsIgnoreCase("Select")) {
@@ -2180,7 +2192,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         // spinner - carpet_typeList
         carpet_typeList = new ArrayList<>();
         carpet_typeList = general.carpettype_array();
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId())) {
             int carpet_id = Integer.parseInt(Singleton.getInstance().indPropertyValuation.getCarpetAreaTypeId());
             spinner_carpet_type.setText(carpet_typeList.get(carpet_id));
         } else {
@@ -2197,24 +2209,24 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         dialog.setCanceledOnTouchOutside(true);
         dialog.setContentView(R.layout.distress_popup);
 
-        TextView popuptitle = (TextView) dialog.findViewById(R.id.title);
+        TextView popuptitle = dialog.findViewById(R.id.title);
         popuptitle.setTypeface(general.mediumtypeface());
 
-        ImageView close = (ImageView) dialog.findViewById(R.id.close);
-        RadioGroup id_radiogroup_stage = (RadioGroup) dialog.findViewById(R.id.id_radiogroup_stage);
-        RadioButton id_radio_select = (RadioButton) dialog.findViewById(R.id.id_radio_select);
-        RadioButton id_radio_50 = (RadioButton) dialog.findViewById(R.id.id_radio_50);
-        RadioButton id_radio_55 = (RadioButton) dialog.findViewById(R.id.id_radio_55);
-        RadioButton id_radio_60 = (RadioButton) dialog.findViewById(R.id.id_radio_60);
-        RadioButton id_radio_65 = (RadioButton) dialog.findViewById(R.id.id_radio_65);
-        RadioButton id_radio_70 = (RadioButton) dialog.findViewById(R.id.id_radio_70);
-        RadioButton id_radio_75 = (RadioButton) dialog.findViewById(R.id.id_radio_75);
-        RadioButton id_radio_80 = (RadioButton) dialog.findViewById(R.id.id_radio_80);
-        RadioButton id_radio_85 = (RadioButton) dialog.findViewById(R.id.id_radio_85);
-        RadioButton id_radio_90 = (RadioButton) dialog.findViewById(R.id.id_radio_90);
-        RadioButton id_radio_95 = (RadioButton) dialog.findViewById(R.id.id_radio_95);
-        RadioButton id_radio_100 = (RadioButton) dialog.findViewById(R.id.id_radio_100);
-        RadioButton id_radio_Custom = (RadioButton) dialog.findViewById(R.id.id_radio_Custom);
+        ImageView close = dialog.findViewById(R.id.close);
+        RadioGroup id_radiogroup_stage = dialog.findViewById(R.id.id_radiogroup_stage);
+        RadioButton id_radio_select = dialog.findViewById(R.id.id_radio_select);
+        RadioButton id_radio_50 = dialog.findViewById(R.id.id_radio_50);
+        RadioButton id_radio_55 = dialog.findViewById(R.id.id_radio_55);
+        RadioButton id_radio_60 = dialog.findViewById(R.id.id_radio_60);
+        RadioButton id_radio_65 = dialog.findViewById(R.id.id_radio_65);
+        RadioButton id_radio_70 = dialog.findViewById(R.id.id_radio_70);
+        RadioButton id_radio_75 = dialog.findViewById(R.id.id_radio_75);
+        RadioButton id_radio_80 = dialog.findViewById(R.id.id_radio_80);
+        RadioButton id_radio_85 = dialog.findViewById(R.id.id_radio_85);
+        RadioButton id_radio_90 = dialog.findViewById(R.id.id_radio_90);
+        RadioButton id_radio_95 = dialog.findViewById(R.id.id_radio_95);
+        RadioButton id_radio_100 = dialog.findViewById(R.id.id_radio_100);
+        RadioButton id_radio_Custom = dialog.findViewById(R.id.id_radio_Custom);
         id_radio_select.setTypeface(general.mediumtypeface());
         id_radio_50.setTypeface(general.mediumtypeface());
         id_radio_55.setTypeface(general.mediumtypeface());
@@ -2233,14 +2245,14 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         if (type_is == 1) {
             // RealizationPercentage
             popuptitle.setText(getActivity().getResources().getString(R.string.realizable_per));
-            if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getRealizationPercentage())) {
+            if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getRealizationPercentage())) {
                 is_empty = false;
                 selected_value = Singleton.getInstance().indPropertyValuation.getRealizationPercentage();
             }
         } else if (type_is == 2) {
             // DistressPercentage
             popuptitle.setText(getActivity().getResources().getString(R.string.distress_per));
-            if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getDistressPercentage())) {
+            if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getDistressPercentage())) {
                 is_empty = false;
                 selected_value = Singleton.getInstance().indPropertyValuation.getDistressPercentage();
             }
@@ -2248,7 +2260,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             id_radio_Custom.setVisibility(View.GONE);
             // DistressPercentage
             popuptitle.setText(getActivity().getResources().getString(R.string.carpet_per));
-            if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage())) {
+            if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage())) {
                 is_empty = false;
                 selected_value = Singleton.getInstance().indPropertyValuation.getCarpetAreaPercentage();
             }
@@ -2288,7 +2300,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         id_radiogroup_stage.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton id_radiogenearal = (RadioButton) dialog.findViewById(group.getCheckedRadioButtonId());
+                RadioButton id_radiogenearal = dialog.findViewById(group.getCheckedRadioButtonId());
 
                 //Log.e("id_radiogenearal_",": "+id_radiogenearal.getText().toString());
                 String str_radiogenearal = id_radiogenearal.getText().toString();
@@ -2364,12 +2376,12 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
     private void DisplayValuesLandBuilding() {
 
-        if (!general.isEmpty(caseid_str))
+        if (!General.isEmpty(caseid_str))
             Singleton.getInstance().indPropertyValuation.setCaseId(caseid_int);
 
 
         /* guideline rate and value and measurment */
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getGuidelineRate())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getGuidelineRate())) {
             editText_guideline_rate.setText(Singleton.getInstance().indPropertyValuation.getGuidelineRate());
         } else {
             editText_guideline_rate.setText("");
@@ -2405,7 +2417,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             }
         });
 
-        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indPropertyValuation.getGuidelineRateUnit()))) {
+        if (!General.isEmpty(String.valueOf(Singleton.getInstance().indPropertyValuation.getGuidelineRateUnit()))) {
             Log.e("spinner_qualityofcon", "::: " + Singleton.getInstance().indPropertyValuation.getGuidelineRateUnit());
             ArrayList<Measurements> qualityConstructions_ = new ArrayList<>();
             qualityConstructions_ = Singleton.getInstance().measurements_list_val_sqya;
@@ -2419,7 +2431,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         }
 
         /* Permission Area */
-        if (!general.isEmpty(Singleton.getInstance().indProperty.getDocumentLandArea())) {
+        if (!General.isEmpty(Singleton.getInstance().indProperty.getDocumentLandArea())) {
             editText_permissiblearea.setText(Singleton.getInstance().indProperty.getDocumentLandArea());
         } else {
             editText_permissiblearea.setText("");
@@ -2434,13 +2446,13 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             editText_unit_actualarea.setText("");
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getDocumentLandRate())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getDocumentLandRate())) {
             editText_rate_permissiblearea.setText(Singleton.getInstance().indPropertyValuation.getDocumentLandRate());
         } else {
             editText_rate_permissiblearea.setText("");
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getDocumentLandValue())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getDocumentLandValue())) {
             // editText_total_permissiblearea.setText(Singleton.getInstance().indPropertyValuation.getDocumentLandValue());
             editText_total_permissiblearea.setText(general.DecimalFormattedCommaString(Singleton.getInstance().indPropertyValuation.getDocumentLandValue()));
         } else {
@@ -2448,19 +2460,19 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         }
 
         /* Autual Area */
-        if (!general.isEmpty(Singleton.getInstance().indProperty.getMeasuredLandArea())) {
+        if (!General.isEmpty(Singleton.getInstance().indProperty.getMeasuredLandArea())) {
             editText_actualarea.setText(Singleton.getInstance().indProperty.getMeasuredLandArea());
         } else {
             editText_actualarea.setText("");
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getMeasuredLandRate())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getMeasuredLandRate())) {
             editText_rate_actualarea.setText(Singleton.getInstance().indPropertyValuation.getMeasuredLandRate());
         } else {
             editText_rate_actualarea.setText("");
         }
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getMeasuredLandValue())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getMeasuredLandValue())) {
             //  editText_total_actualarea.setText(Singleton.getInstance().indPropertyValuation.getMeasuredLandValue());
             editText_total_actualarea.setText(general.DecimalFormattedCommaString(Singleton.getInstance().indPropertyValuation.getMeasuredLandValue()));
         } else {
@@ -2556,7 +2568,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
         /* Construction value */
         /* Construction rate and value and measurment */
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getConstructionDLCRate())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getConstructionDLCRate())) {
             editText_construction_rate.setText(Singleton.getInstance().indPropertyValuation.getConstructionDLCRate());
         } else {
             editText_construction_rate.setText("");
@@ -2599,7 +2611,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             }
         });
 
-        if (!general.isEmpty(String.valueOf(Singleton.getInstance().indPropertyValuation.getConstructionDLCRateUnit()))) {
+        if (!General.isEmpty(String.valueOf(Singleton.getInstance().indPropertyValuation.getConstructionDLCRateUnit()))) {
             Log.e("spinner_qualityofcon", "::: " + Singleton.getInstance().indPropertyValuation.getConstructionDLCRateUnit());
             ArrayList<Measurements> qualityConstructions_ = new ArrayList<>();
             qualityConstructions_ = Singleton.getInstance().measurements_list_val_sqya;
@@ -2631,13 +2643,13 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         });
 
         /* ProposedValuation */
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getProposedValuation())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getProposedValuation())) {
             etProposedValuation.setText(Singleton.getInstance().indPropertyValuation.getProposedValuation());
         } else {
             etProposedValuation.setText("");
         }
         /* ProposedValuationComments */
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getProposedValuationComments())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getProposedValuationComments())) {
             editText_remarks.setText(Singleton.getInstance().indPropertyValuation.getProposedValuationComments());
         } else {
             editText_remarks.setText("");
@@ -2652,7 +2664,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         }
 
 
-        if (!general.isEmpty(Singleton.getInstance().indPropertyValuation.getPercentageofEstimate())) {
+        if (!General.isEmpty(Singleton.getInstance().indPropertyValuation.getPercentageofEstimate())) {
             etProposedPercentage.setText(Singleton.getInstance().indPropertyValuation.getPercentageofEstimate());
         } else {
             etProposedPercentage.setText("");
@@ -2672,7 +2684,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             /* 1 -> sq.ft */
             if (mea_unit_construction == 1) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(permissiblearea_str)) && (mea_unit_construction != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(permissiblearea_str)) && (mea_unit_construction != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -2735,7 +2747,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 /* 2 -> sq.m */
             } else if (mea_unit_construction == 2) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(permissiblearea_str)) && (mea_unit_construction != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(permissiblearea_str)) && (mea_unit_construction != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -2798,7 +2810,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 /* 3 -> sq.yard */
             } else if (mea_unit_construction == 3) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(permissiblearea_str)) && (mea_unit_construction != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(permissiblearea_str)) && (mea_unit_construction != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -2865,7 +2877,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             /* 1 -> sq.ft */
             if (mea_unit_construction == 1) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(actualarea_str)) && (mea_unit_construction != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(actualarea_str)) && (mea_unit_construction != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -2928,7 +2940,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 /* 2 -> sq.m */
             } else if (mea_unit_construction == 2) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(actualarea_str)) && (mea_unit_construction != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(actualarea_str)) && (mea_unit_construction != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -2991,7 +3003,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 /* 3 -> sq.yard */
             } else if (mea_unit_construction == 3) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(actualarea_str)) && (mea_unit_construction != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(actualarea_str)) && (mea_unit_construction != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -3057,7 +3069,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
     }
 
     private void getDetails() {
-        general.showloading(getActivity());
+        General.showloading(getActivity());
         String url = general.ApiBaseUrl() + SettingsUtils.GetPropertyDetails;
         JsonRequestData requestData = new JsonRequestData();
         requestData.setInitQueryUrl(url);
@@ -3072,7 +3084,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 try {
                     showPopup(requestData.isSuccessful(), requestData.getResponse(), requestData.getResponseCode());
                 } catch (Exception e) {
-                    general.hideloading();
+                    General.hideloading();
                     e.printStackTrace();
                 }
             }
@@ -3095,7 +3107,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             /* 1 -> sq.ft */
             if (mea_unit == 1) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(permissiblearea_str)) && (mea_unit != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(permissiblearea_str)) && (mea_unit != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -3157,7 +3169,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 /* 2 -> sq.m */
             } else if (mea_unit == 2) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(permissiblearea_str)) && (mea_unit != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(permissiblearea_str)) && (mea_unit != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -3220,7 +3232,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 /* 3 -> sq.yard */
             } else if (mea_unit == 3) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(permissiblearea_str)) && (mea_unit != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(permissiblearea_str)) && (mea_unit != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -3287,7 +3299,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             /* 1 -> sq.ft */
             if (mea_unit == 1) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(actualarea_str)) && (mea_unit != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(actualarea_str)) && (mea_unit != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -3350,7 +3362,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 /* 2 -> sq.m */
             } else if (mea_unit == 2) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(actualarea_str)) && (mea_unit != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(actualarea_str)) && (mea_unit != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -3414,7 +3426,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                 /* 3 -> sq.yard */
             } else if (mea_unit == 3) {
                 /* check the null based on permission str and unit */
-                if ((!general.isEmpty(actualarea_str)) && (mea_unit != 0) && (!general.isEmpty(guideline_rate_str))) {
+                if ((!General.isEmpty(actualarea_str)) && (mea_unit != 0) && (!General.isEmpty(guideline_rate_str))) {
                     if (measurment_unit_property == 1) {
                         float sumtotal = 0;
                         int sum_total = 0;
@@ -3483,7 +3495,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
 
     private void showPopup(boolean successful, String response, int responseCode) {
-        general.hideloading();
+        General.hideloading();
         if (successful && (responseCode == 200 || responseCode == 201)) {
 
             Log.e("showPopup", "showPopup: " + new Gson().toJson(response));
@@ -3554,13 +3566,10 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             public void onClick(View v) {
                 if (spPropertyType.getSelectedItemPosition() == 0) {
                     General.customToast("Choose property type!", getActivity());
-                    return;
                 } else if (spDistance.getSelectedItemPosition() == 0) {
                     General.customToast("Choose distance!", getActivity());
-                    return;
                 } else if (fromJson.getData().getPropertyCategoryId() == null) {
                     General.customToast("Property Type Id Required!", getActivity());
-                    return;
                 } else {
 
                     String url = general.ApiBaseUrl() + SettingsUtils.GetPropertyCompareDetails;
@@ -3631,26 +3640,26 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
         fragmentActivity = getActivity();
 
-        editText_compound_permissiblearea = (EditText) view.findViewById(R.id.editText_compound_permissiblearea);
-        editText_as_per_measurement = (EditText) view.findViewById(R.id.editText_as_per_measurement);
+        editText_compound_permissiblearea = view.findViewById(R.id.editText_compound_permissiblearea);
+        editText_as_per_measurement = view.findViewById(R.id.editText_as_per_measurement);
 
         caseid_str = SettingsUtils.getInstance().getValue(SettingsUtils.CASE_ID, "");
 
-        editText_distress_custom = (EditText) view.findViewById(R.id.editText_distress_custom);
+        editText_distress_custom = view.findViewById(R.id.editText_distress_custom);
 
-        editText_construction_value = (EditText) view.findViewById(R.id.editText_construction_value);
-        editText_construction_rate = (EditText) view.findViewById(R.id.editText_construction_rate);
-        editText_aspercompletion = (EditText) view.findViewById(R.id.editText_aspercompletion);
-
-
-        textview_insurancevaluepe_result = (TextView) view.findViewById(R.id.textview_insurancevaluepe_result);
+        editText_construction_value = view.findViewById(R.id.editText_construction_value);
+        editText_construction_rate = view.findViewById(R.id.editText_construction_rate);
+        editText_aspercompletion = view.findViewById(R.id.editText_aspercompletion);
 
 
-        editText_guideline_rate = (EditText) view.findViewById(R.id.editText_guideline_rate);
-        editText_guideline_value = (EditText) view.findViewById(R.id.editText_guideline_value);
-        editText_rate_permissiblearea = (EditText) view.findViewById(R.id.editText_rate_permissiblearea);
-        editText_rate_actualarea = (EditText) view.findViewById(R.id.editText_rate_actualarea);
-        etProposedValuation = (EditText) view.findViewById(R.id.etProposedValuation);
+        textview_insurancevaluepe_result = view.findViewById(R.id.textview_insurancevaluepe_result);
+
+
+        editText_guideline_rate = view.findViewById(R.id.editText_guideline_rate);
+        editText_guideline_value = view.findViewById(R.id.editText_guideline_value);
+        editText_rate_permissiblearea = view.findViewById(R.id.editText_rate_permissiblearea);
+        editText_rate_actualarea = view.findViewById(R.id.editText_rate_actualarea);
+        etProposedValuation = view.findViewById(R.id.etProposedValuation);
         cbProposedPercentage = view.findViewById(R.id.cbProposedPercentage);
         etProposedPercentage = view.findViewById(R.id.etProposedPercentage);
 
@@ -3670,20 +3679,20 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             }
         });
 
-        editText_remarks = (EditText) view.findViewById(R.id.editText_remarks);
+        editText_remarks = view.findViewById(R.id.editText_remarks);
 
 
-        spinner_realizable = (TextView) view.findViewById(R.id.spinner_realizable);
-        spinner_distress = (TextView) view.findViewById(R.id.spinner_distress);
-        spinner_carpet = (TextView) view.findViewById(R.id.spinner_carpet);
-        spinner_carpet_type = (TextView) view.findViewById(R.id.spinner_carpet_type);
+        spinner_realizable = view.findViewById(R.id.spinner_realizable);
+        spinner_distress = view.findViewById(R.id.spinner_distress);
+        spinner_carpet = view.findViewById(R.id.spinner_carpet);
+        spinner_carpet_type = view.findViewById(R.id.spinner_carpet_type);
 
-        carpet_error = (TextView) view.findViewById(R.id.carpet_error);
-        select_error = (TextView) view.findViewById(R.id.select_error);
+        carpet_error = view.findViewById(R.id.carpet_error);
+        select_error = view.findViewById(R.id.select_error);
 
-        editText_realizable_custom = (EditText) view.findViewById(R.id.editText_realizable_custom);
+        editText_realizable_custom = view.findViewById(R.id.editText_realizable_custom);
 
-        textview_totalpropertyvalue_result = (TextView) view.findViewById(R.id.textview_totalpropertyvalue_result);
+        textview_totalpropertyvalue_result = view.findViewById(R.id.textview_totalpropertyvalue_result);
 
 
         //  radiogroup_considerforvaluation_land - Radio Button
@@ -3693,7 +3702,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
                 hideSoftKeyboard(editText_guideline_rate);
 
-                RadioButton id_radiogenearal = (RadioButton) view.findViewById(group.getCheckedRadioButtonId());
+                RadioButton id_radiogenearal = view.findViewById(group.getCheckedRadioButtonId());
                 if (id_radiogenearal.getText().toString().equalsIgnoreCase(getResources().getString(R.string.documentarea))) {
                     linear_permissiblearea.setVisibility(View.VISIBLE);
                     linear_actualarea.setVisibility(View.GONE);
@@ -3724,7 +3733,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
                 hideSoftKeyboard(editText_guideline_rate);
 
-                RadioButton id_radiogenearal = (RadioButton) view.findViewById(group.getCheckedRadioButtonId());
+                RadioButton id_radiogenearal = view.findViewById(group.getCheckedRadioButtonId());
                 if (id_radiogenearal.getText().toString().equalsIgnoreCase("Sanctioned area")) {
                     textview_permissiblearea_head.setText("Sanctioned area");
                     recyclerview_permissiblearea.setVisibility(View.VISIBLE);
@@ -3784,40 +3793,40 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
 
         /***** Assigning Variable *****/
-        btnClear = (TextView) dialog.findViewById(R.id.btn_delete);
-        tvProcessor = (TextView) dialog.findViewById(R.id.tv_process);
-        tvResult = (TextView) dialog.findViewById(R.id.tv_result);
+        btnClear = dialog.findViewById(R.id.btn_delete);
+        tvProcessor = dialog.findViewById(R.id.tv_process);
+        tvResult = dialog.findViewById(R.id.tv_result);
 
         tvProcessor.setText("");
         tvResult.setText("");
 
 
-        txtOne = (TextView) dialog.findViewById(R.id.btn_one);
-        txtTwo = (TextView) dialog.findViewById(R.id.btn_two);
-        txtThree = (TextView) dialog.findViewById(R.id.btn_three);
-        btnFour = (TextView) dialog.findViewById(R.id.btn_four);
-        btnFive = (TextView) dialog.findViewById(R.id.btn_five);
-        btnSix = (TextView) dialog.findViewById(R.id.btn_six);
-        btnSeven = (TextView) dialog.findViewById(R.id.btn_seven);
-        btnEight = (TextView) dialog.findViewById(R.id.btn_eight);
-        btnNine = (TextView) dialog.findViewById(R.id.btn_nine);
-        txtZero = (TextView) dialog.findViewById(R.id.btn_zero);
+        txtOne = dialog.findViewById(R.id.btn_one);
+        txtTwo = dialog.findViewById(R.id.btn_two);
+        txtThree = dialog.findViewById(R.id.btn_three);
+        btnFour = dialog.findViewById(R.id.btn_four);
+        btnFive = dialog.findViewById(R.id.btn_five);
+        btnSix = dialog.findViewById(R.id.btn_six);
+        btnSeven = dialog.findViewById(R.id.btn_seven);
+        btnEight = dialog.findViewById(R.id.btn_eight);
+        btnNine = dialog.findViewById(R.id.btn_nine);
+        txtZero = dialog.findViewById(R.id.btn_zero);
 
 
-        btnMultiply = (TextView) dialog.findViewById(R.id.btn_multiply);
-        btnMinus = (TextView) dialog.findViewById(R.id.btn_minus);
-        txtPlus = (TextView) dialog.findViewById(R.id.btn_plus);
-        btnDivide = (TextView) dialog.findViewById(R.id.btn_divide);
+        btnMultiply = dialog.findViewById(R.id.btn_multiply);
+        btnMinus = dialog.findViewById(R.id.btn_minus);
+        txtPlus = dialog.findViewById(R.id.btn_plus);
+        btnDivide = dialog.findViewById(R.id.btn_divide);
 
-        btnDecimal = (TextView) dialog.findViewById(R.id.btn_dot);
-        btnBack = (TextView) dialog.findViewById(R.id.btn_back);
+        btnDecimal = dialog.findViewById(R.id.btn_dot);
+        btnBack = dialog.findViewById(R.id.btn_back);
 
-        btnSmallBracket = (TextView) dialog.findViewById(R.id.btn_small_bracket);
-        btnEqual = (TextView) dialog.findViewById(R.id.btn_equal);
-        btnPercentage = (TextView) dialog.findViewById(R.id.btn_percentage);
-        btnclose = (TextView) dialog.findViewById(R.id.btnclose);
-        btnsetvalue = (TextView) dialog.findViewById(R.id.btnsetvalue);
-        TextView calculatortitle = (TextView) dialog.findViewById(R.id.calculatortitle);
+        btnSmallBracket = dialog.findViewById(R.id.btn_small_bracket);
+        btnEqual = dialog.findViewById(R.id.btn_equal);
+        btnPercentage = dialog.findViewById(R.id.btn_percentage);
+        btnclose = dialog.findViewById(R.id.btnclose);
+        btnsetvalue = dialog.findViewById(R.id.btnsetvalue);
+        TextView calculatortitle = dialog.findViewById(R.id.calculatortitle);
 
         calculatortitle.setTypeface(general.regulartypeface());
         btnClear.setTypeface(general.regulartypeface());
@@ -4062,7 +4071,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
 
                     tvResult.setText("" + result_value);
                 } else {
-                    tvResult.setText("" + result);
+                    tvResult.setText(result);
                 }
             }
         });
@@ -4078,7 +4087,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             @Override
             public void onClick(View view) {
 
-                if (!general.isEmpty(tvResult.getText().toString())) {
+                if (!General.isEmpty(tvResult.getText().toString())) {
                     // - values not allowed
                     if (!tvResult.getText().toString().contains("-")) {
                         /*int my_val = general.convertToRoundoff(Float.parseFloat(tvResult.getText().toString()));
@@ -4087,7 +4096,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         if (type_is == 1) {
                             editText_compound_permissiblearea.setText(my_val_str);
                             String charSequence = editText_compound_permissiblearea.getText().toString();
-                            if (general.isEmpty(editText_as_per_measurement.getText().toString())) {
+                            if (General.isEmpty(editText_as_per_measurement.getText().toString())) {
                                 // If its empty
                                 editText_as_per_measurement.setText(charSequence);
                                 actual_measurment(charSequence);
@@ -4115,7 +4124,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         }
                     }
                     dialog.dismiss();
-                } else if (general.isEmpty(tvResult.getText().toString())) {
+                } else if (General.isEmpty(tvResult.getText().toString())) {
                     general.CustomToast("Press equals first and then set the value");
                 }
 
@@ -4140,7 +4149,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         editText_rate_actualarea.setText(rate_str);
         String permissiblearea_str = editText_permissiblearea.getText().toString();
 
-        if (!general.isEmpty(rate_str) && !general.isEmpty(permissiblearea_str)) {
+        if (!General.isEmpty(rate_str) && !General.isEmpty(permissiblearea_str)) {
             float sumtotal = 0;
             int sum_total = 0;
             sumtotal = (general.convertTofloat(rate_str)) * (general.convertTofloat(permissiblearea_str));
@@ -4151,7 +4160,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         }
 
         String actualarea_str = editText_actualarea.getText().toString();
-        if (!general.isEmpty(rate_str) && !general.isEmpty(actualarea_str)) {
+        if (!General.isEmpty(rate_str) && !General.isEmpty(actualarea_str)) {
             float sumtotal = 0;
             int sum_total = 0;
             sumtotal = (general.convertTofloat(rate_str)) * (general.convertTofloat(actualarea_str));
@@ -4177,19 +4186,19 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
             land_total_str = editText_total_actualarea.getText().toString();
         }
 
-        if ((!general.isEmpty(land_total_str)) && (!general.isEmpty(construction_total_str))) {
+        if ((!General.isEmpty(land_total_str)) && (!General.isEmpty(construction_total_str))) {
             float property = (general.convertTofloat(land_total_str)) + (general.convertTofloat(construction_total_str));
             int total_property = general.convertToRoundoff(property);
             //textview_totalpropertyvalue_result.setText("" + total_property);
             textview_totalpropertyvalue_result.setText(general.DecimalFormattedCommaString(String.valueOf(total_property)));
 
-        } else if (!general.isEmpty(land_total_str)) {
+        } else if (!General.isEmpty(land_total_str)) {
             float property = (general.convertTofloat(land_total_str));
             int total_property = general.convertToRoundoff(property);
             //textview_totalpropertyvalue_result.setText("" + total_property);
             textview_totalpropertyvalue_result.setText(general.DecimalFormattedCommaString(String.valueOf(total_property)));
 
-        } else if (!general.isEmpty(construction_total_str)) {
+        } else if (!General.isEmpty(construction_total_str)) {
             float property = (general.convertTofloat(construction_total_str));
             int total_property = general.convertToRoundoff(property);
             //textview_totalpropertyvalue_result.setText("" + total_property);
@@ -4206,7 +4215,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
         String asperCompletepercentage = editText_aspercompletion.getText().toString();
         if (!General.isEmpty(asperCompletepercentage)) {
             String total_property = textview_totalpropertyvalue_result.getText().toString();
-            if (!general.isEmpty(total_property)) {
+            if (!General.isEmpty(total_property)) {
                 percentageCompletetotal = (general.convertTofloat(total_property) * ((general.convertTofloat(asperCompletepercentage)) / 100));
                 percentageComplete_total = general.convertToRoundoff(percentageCompletetotal);
                 // textview_aspercompletion_result.setText("" + percentageComplete_total);
@@ -4226,7 +4235,7 @@ Log.d("Hari","HAri");
         editText_rate_permissiblearea.setText(rate_str);
         String permissiblearea_str = editText_actualarea.getText().toString();
 
-        if (!general.isEmpty(rate_str) && !general.isEmpty(permissiblearea_str)) {
+        if (!General.isEmpty(rate_str) && !General.isEmpty(permissiblearea_str)) {
             float sumtotal = 0;
             int sum_total = 0;
             sumtotal = (general.convertTofloat(rate_str)) * (general.convertTofloat(permissiblearea_str));
@@ -4237,7 +4246,7 @@ Log.d("Hari","HAri");
         }
 
         String actualarea_str = editText_permissiblearea.getText().toString();
-        if (!general.isEmpty(rate_str) && !general.isEmpty(actualarea_str)) {
+        if (!General.isEmpty(rate_str) && !General.isEmpty(actualarea_str)) {
             float sumtotal = 0;
             int sum_total = 0;
             sumtotal = (general.convertTofloat(rate_str)) * (general.convertTofloat(actualarea_str));
@@ -4254,13 +4263,13 @@ Log.d("Hari","HAri");
     /*Land Measurement*/
     public void permission_measurment(String str) {
         if (editText_permissiblearea != null) {
-            if (!general.isEmpty(str)) {
+            if (!General.isEmpty(str)) {
                 editText_permissiblearea.setText(str);
                 permission_check = 1;
                 permissionarea_dlc();
                 /* multiple the above compond into  */
                 String permissiblearea_str = editText_permissiblearea.getText().toString();
-                if (!general.isEmpty(editText_rate_permissiblearea.getText().toString()) && !general.isEmpty(permissiblearea_str)) {
+                if (!General.isEmpty(editText_rate_permissiblearea.getText().toString()) && !General.isEmpty(permissiblearea_str)) {
                     float sumtotal = 0;
                     int sum_total = 0;
                     sumtotal = (general.convertTofloat(editText_rate_permissiblearea.getText().toString())) * (general.convertTofloat(permissiblearea_str));
@@ -4282,13 +4291,13 @@ Log.d("Hari","HAri");
 
     public void actual_measurment(String str) {
         if (editText_actualarea != null) {
-            if (!general.isEmpty(str)) {
+            if (!General.isEmpty(str)) {
                 editText_actualarea.setText(str);
                 permission_check = 2;
                 permissionarea_dlc();
                 /* multiple the above compond into  */
                 String actualarea_str = editText_actualarea.getText().toString();
-                if (!general.isEmpty(editText_rate_permissiblearea.getText().toString()) && !general.isEmpty(actualarea_str)) {
+                if (!General.isEmpty(editText_rate_permissiblearea.getText().toString()) && !General.isEmpty(actualarea_str)) {
                     float sumtotal = 0;
                     int sum_total = 0;
                     sumtotal = (general.convertTofloat(editText_rate_permissiblearea.getText().toString())) * (general.convertTofloat(actualarea_str));
@@ -4335,7 +4344,7 @@ Log.d("Hari","HAri");
 
     /* construction DLC from floors */
     public static void constrction_measurment(String str) {
-        if (!general.isEmpty(str)) {
+        if (!General.isEmpty(str)) {
             permission_check_construction = 1;
             permissiblearea_str_dlc = str;
             Log.e("Construction_dlc", "measurment");
@@ -4344,7 +4353,7 @@ Log.d("Hari","HAri");
     }
 
     public static void constrction_actual(String str) {
-        if (!general.isEmpty(str)) {
+        if (!General.isEmpty(str)) {
             permission_check_construction = 2;
             actualarea_str_dlc = str;
             Log.e("Construction_dlc", "actual");
@@ -4380,21 +4389,21 @@ Log.d("Hari","HAri");
 
     public void save_landval() {
 
-        if (!general.isEmpty(editText_compound_permissiblearea.getText().toString().trim())) {
+        if (!General.isEmpty(editText_compound_permissiblearea.getText().toString().trim())) {
             Singleton.getInstance().indProperty.setDocumentLandArea(editText_compound_permissiblearea.getText().toString().trim());
         }
 
-        if (!general.isEmpty(editText_as_per_measurement.getText().toString().trim())) {
+        if (!General.isEmpty(editText_as_per_measurement.getText().toString().trim())) {
             Singleton.getInstance().indProperty.setMeasuredLandArea(editText_as_per_measurement.getText().toString().trim());
         }
 
 
-        if (!general.isEmpty(editText_approved_floors.getText().toString().trim())) {
+        if (!General.isEmpty(editText_approved_floors.getText().toString().trim())) {
             Singleton.getInstance().indProperty.setApprovedNoOfFloors(Integer.valueOf(editText_approved_floors.getText().toString()));
         }
 
 
-        if (!general.isEmpty(editText_Floor_details.getText().toString().trim())) {
+        if (!General.isEmpty(editText_Floor_details.getText().toString().trim())) {
             Singleton.getInstance().indProperty.setFloorDetails(editText_Floor_details.getText().toString());
         }
 
@@ -4585,7 +4594,7 @@ Log.d("Hari","HAri");
 
         // compound_permissiblearea
         String comp_permissiblearea = editText_compound_permissiblearea.getText().toString();
-        if (!general.isEmpty(comp_permissiblearea)) {
+        if (!General.isEmpty(comp_permissiblearea)) {
             editText_compound_permissiblearea.setError(null);
         } else {
             editText_compound_permissiblearea.requestFocus();
@@ -4593,7 +4602,7 @@ Log.d("Hari","HAri");
         }
         // as_per_measurement
         String aspermeasurement = editText_as_per_measurement.getText().toString();
-        if (!general.isEmpty(aspermeasurement)) {
+        if (!General.isEmpty(aspermeasurement)) {
             editText_as_per_measurement.setError(null);
         } else {
             editText_as_per_measurement.requestFocus();
@@ -4602,7 +4611,7 @@ Log.d("Hari","HAri");
 
         // Nooffloors
         String floor_no = editText_floors_measu.getText().toString();
-        if (!general.isEmpty(floor_no)) {
+        if (!General.isEmpty(floor_no)) {
             editText_floors_measu.setError(null);
 
             int measurementland = spinner_measurement1.getSelectedItemPosition();
@@ -4627,7 +4636,7 @@ Log.d("Hari","HAri");
                 // Check with Floor name
                 for (int j = 0; j < floor_list.size(); j++) {
                     String floorName = floor_list.get(j).getFloorName();
-                    if (general.isEmpty(floorName)) {
+                    if (General.isEmpty(floorName)) {
                         // If floor name is empty
                         editText_floors_measu.requestFocus();
                         textview_floor_name.setError(getResources().getString(R.string.err_msg_enter_floor_name));
@@ -4642,7 +4651,7 @@ Log.d("Hari","HAri");
                     }
 
                     String percentageCompletion = String.valueOf(floor_list.get(j).getPercentageCompletion());
-                    if (general.isEmpty(percentageCompletion)) {
+                    if (General.isEmpty(percentageCompletion)) {
                         // If PercentageCompletion is empty
                         editText_floors_measu.requestFocus();
                         textview_comp.setError(getResources().getString(R.string.err_msg_percentage_completion));

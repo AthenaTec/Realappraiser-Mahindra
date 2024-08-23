@@ -139,7 +139,7 @@ public class MultiPhotoSelectActivity extends BaseActivity {
                             old_imgresult = PhotoLatLong.GetPhoto_list_response.size();
                         } else {
                             // Kakode
-                            old_imgresult = PhotoLatLong_ka.GetPhoto_list_response.size();
+                            old_imgresult = PhotoLatLong.GetPhoto_list_response.size();
                         }
                         int new_addimage = selectedItems.size();
                         int finalImagecount = old_imgresult + new_addimage;

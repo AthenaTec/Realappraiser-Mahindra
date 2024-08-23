@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="450dp"
     android:layout_height="650dp"
+    android:padding="14dp"
     android:background="@color/White">
 
     <LinearLayout

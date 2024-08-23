@@ -33,6 +33,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.realappraiser.gharvalue.AppDatabase;
@@ -76,7 +77,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.itangqi.waveloadingview.WaveLoadingView;
-import uk.co.senab.photoview.PhotoViewAttacher;
+
 
 /**
  * Created by kaptas on 22/2/18.

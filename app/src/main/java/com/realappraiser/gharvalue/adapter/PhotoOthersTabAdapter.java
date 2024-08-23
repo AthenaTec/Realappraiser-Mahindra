@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.realappraiser.gharvalue.fragments.OtherDetailsFragment;
 import com.realappraiser.gharvalue.fragments.OtherDetailsFragment_ka;
 import com.realappraiser.gharvalue.fragments.PhotoLatLong;
-import com.realappraiser.gharvalue.fragments.PhotoLatLong_ka;
 
 /**
  * Created by kaptas on 19/12/17.
@@ -53,7 +52,7 @@ public class PhotoOthersTabAdapter extends FragmentStatePagerAdapter {
             // Kakode Tab
             switch (position) {
                 case 0:
-                    @SuppressWarnings("UnnecessaryLocalVariable") PhotoLatLong_ka tab1 = new PhotoLatLong_ka();
+                    @SuppressWarnings("UnnecessaryLocalVariable") PhotoLatLong tab1 = new PhotoLatLong();
                     return tab1;
                 case 1:
                     @SuppressWarnings("UnnecessaryLocalVariable") OtherDetailsFragment_ka tab2 = new OtherDetailsFragment_ka();

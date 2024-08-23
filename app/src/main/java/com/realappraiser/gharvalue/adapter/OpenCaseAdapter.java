@@ -36,6 +36,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.realappraiser.gharvalue.AppDatabase;
@@ -72,7 +73,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by kaptas on 16/12/17.

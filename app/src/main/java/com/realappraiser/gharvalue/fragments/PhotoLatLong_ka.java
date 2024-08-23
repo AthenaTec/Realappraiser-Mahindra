@@ -22,6 +22,8 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import androidx.annotation.Nullable;
+
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -121,7 +123,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static android.app.Activity.RESULT_OK;
 

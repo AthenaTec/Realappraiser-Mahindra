@@ -441,7 +441,6 @@
 
 
                     <ImageView
-                        style="@style/StyledImagedown_large"
                         android:layout_marginTop="@dimen/height_6"
                         tools:ignore="ContentDescription" />
 

@@ -1,5 +1,6 @@
 package com.realappraiser.gharvalue.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -27,6 +28,7 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.model.PropertyDocModel;
 import com.realappraiser.gharvalue.utils.General;
@@ -40,7 +42,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PropertyDocumentNewFileAdapter extends RecyclerView.Adapter<PropertyDocumentNewFileAdapter.Holder> {
 
@@ -72,7 +73,7 @@ public class PropertyDocumentNewFileAdapter extends RecyclerView.Adapter<Propert
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, int position) {
+    public void onBindViewHolder(@NonNull Holder holder, @SuppressLint("RecyclerView") int position) {
 
         PropertyDocModel model = arrayList.get(position);
 

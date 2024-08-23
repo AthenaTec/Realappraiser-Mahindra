@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.realappraiser.gharvalue.R;
 import com.realappraiser.gharvalue.model.Document_list;
 import com.realappraiser.gharvalue.property.DeleteItemInterface;
@@ -42,7 +43,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by kaptas on 18/1/18.

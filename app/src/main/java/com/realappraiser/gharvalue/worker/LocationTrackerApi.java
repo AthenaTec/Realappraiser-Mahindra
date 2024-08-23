@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.realappraiser.gharvalue.communicator.JsonRequestData;
 import com.realappraiser.gharvalue.communicator.RequestParam;
@@ -91,16 +93,7 @@ public class LocationTrackerApi {
 
             Log.e("Location Params", new Gson().toJson(requestData));
 
-            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(context,
-                    requestData, SettingsUtils.POST_TOKEN);
-            webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
-                public void onTaskComplete(JsonRequestData requestData) {
-                    String sb = "Location updated sucessfully" +
-                            requestData.getResponse();
-                    Log.e(TAG, sb);
-                    success = true;
-                }
-            });
+            WebserviceCommunicator webserviceTask = getWebserviceCommunicator(requestData);
             webserviceTask.execute();
 
 
@@ -112,5 +105,20 @@ public class LocationTrackerApi {
             success = false;
         }
         return success;
+    }
+
+    @NonNull
+    private WebserviceCommunicator getWebserviceCommunicator(JsonRequestData requestData) {
+        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(context,
+                requestData, SettingsUtils.POST_TOKEN);
+        webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+            public void onTaskComplete(JsonRequestData requestData) {
+                String sb = "Location updated sucessfully" +
+                        requestData.getResponse();
+                Log.e(TAG, sb);
+                success = true;
+            }
+        });
+        return webserviceTask;
     }
 }

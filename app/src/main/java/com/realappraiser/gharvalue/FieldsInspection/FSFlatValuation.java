@@ -770,11 +770,13 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.d("carpetarea","onTextChanged");
                 setEdittextCarpetArea(charSequence.toString());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.d("carpetarea","afterTextChanged");
                 checkSpinnerAreaType(editable.toString(), getResources().getString(R.string.carpet));
 
             }
@@ -1957,6 +1959,7 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
         } else if (position == 3) {
             calPercentage(et_permssible_area);
         }
+
     }
 
     private void calPercentage(EditText editText) {
@@ -1969,6 +1972,8 @@ public class FSFlatValuation extends Fragment implements View.OnTouchListener, R
             // edittext_general_carpetarea.setText(String.valueOf(resInPer));
             edittext_general_carpetarea.setText(new DecimalFormat("##.##").format(resInPer));
             setEdittextCarpetArea(edittext_general_carpetarea.getText().toString());
+            String s=edittext_general_carpetarea.getText().toString();
+           checkSpinnerAreaType(s,getResources().getString(R.string.carpet));
         }
     }
 

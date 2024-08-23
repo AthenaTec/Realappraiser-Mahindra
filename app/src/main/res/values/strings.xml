@@ -549,6 +549,7 @@
     <string name="proposed_valuation">Proposed Valuation</string>
     <string name="deleted_successfully">Deleted SuccessFully</string>
     <string name="unable_to_delete">Unable to Delete File</string>
+    <string name="reset_password">Reset Password</string>
 
     <array name="compare">
         <item>Select</item>

@@ -628,7 +628,8 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             if (mGoogleApiClient.isConnected()) {
                 int permissionLocation = ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION);
-                if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+                int permission=ContextCompat.checkSelfPermission(this,Manifest.permission.FOREGROUND_SERVICE_LOCATION);
+                if (permissionLocation == PackageManager.PERMISSION_GRANTED && permission == PackageManager.PERMISSION_GRANTED) {
                     mylocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setInterval(5 * 3000);

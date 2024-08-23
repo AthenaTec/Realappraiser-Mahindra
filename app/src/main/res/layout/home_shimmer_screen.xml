@@ -701,7 +701,6 @@
                 android:padding="9dp">
 
                 <View
-                    android:id="@+id/case_id"
                     android:layout_width="@dimen/_90sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:text=""
