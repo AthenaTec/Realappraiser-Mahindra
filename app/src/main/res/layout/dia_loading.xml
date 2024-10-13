@@ -15,7 +15,8 @@
         android:layout_centerVertical="true"
         android:layout_marginTop="0dp"
         app:indicatorColor="@color/colorPrimary"
-        app:indicatorName="BallPulseIndicator" />
+        app:indicatorName="BallPulseIndicator"
+        tools:ignore="NotSibling" />
 
     <TextView
         android:layout_below="@+id/loading_id"

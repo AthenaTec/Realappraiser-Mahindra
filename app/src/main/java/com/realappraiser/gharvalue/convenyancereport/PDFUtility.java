@@ -30,6 +30,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PDFUtility
@@ -486,7 +487,11 @@ public class PDFUtility
             cell.setBackgroundColor(BaseColor.WHITE);
             table1.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(String.valueOf(data.get(i).getDateofTravel()), FONT_CELL));
+            String dateOfTravel = data.get(i).getDateofTravel();
+            String formattedDate = dateOfTravel.substring(0, 10);
+
+
+            cell = new PdfPCell(new Phrase(formattedDate, FONT_CELL));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setPaddingLeft(left_right_Padding);

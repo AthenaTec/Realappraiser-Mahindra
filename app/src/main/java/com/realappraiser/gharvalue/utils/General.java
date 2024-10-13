@@ -2325,7 +2325,8 @@ public class General implements OnPageChangeListener, OnLoadCompleteListener,
 
     private boolean validatePassword(String password) {
         String passwd = password;
-        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+       // String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()\\-_=+{};:,<.>?|~`])(?=\\S+$).{8,}";
         System.out.println("Validation for   " + passwd.matches(pattern));
         if (!passwd.matches(pattern)) {
             return false;

@@ -122,6 +122,8 @@
                             android:layout_weight="1"
                             android:inputType="text"
                             android:textSize="@dimen/font_samll"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:visibility="visible" />
                     </LinearLayout>
 

@@ -2998,7 +2998,7 @@
                         android:padding="@dimen/height_1"
                         android:visibility="gone"
                         android:src="@drawable/icon_more"
-                        tools:ignore="ContentDescription,RtlHardcoded" />
+                        tools:ignore="ContentDescription,NotSibling,RtlHardcoded" />
                 </RelativeLayout>
 
                 <LinearLayout

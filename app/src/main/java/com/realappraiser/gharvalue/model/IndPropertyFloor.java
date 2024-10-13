@@ -229,6 +229,19 @@ public class IndPropertyFloor {
     @ColumnInfo(name = "FlatPassageNo")
     private int FlatPassageNo;
 
+    @SerializedName("RD_FloorArea")
+    @Expose
+    @ColumnInfo(name = "RD_FloorArea")
+    private int RD_FloorArea;
+
+
+    public int getRD_FloorArea() {
+        return RD_FloorArea;
+    }
+
+    public void setRD_FloorArea(int RD_FloorArea) {
+        this.RD_FloorArea = RD_FloorArea;
+    }
 
     public int getFlatPoojaNo() {
         return flatPoojaNo;
@@ -290,6 +303,7 @@ public class IndPropertyFloor {
     public void setFloorUsage(ArrayList<String> floorUsage) {
         this.floorUsage = floorUsage;
     }
+
     /********************/
 
     public Integer getPercentageCompletion() {

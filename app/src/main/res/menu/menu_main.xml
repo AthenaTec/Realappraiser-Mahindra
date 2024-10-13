@@ -62,14 +62,12 @@
                 android:title="@string/convenyance_report"
                 app:showAsAction="ifRoom" />
             <item
-                android:visible="false"
                 android:id="@+id/changepassword"
                 android:icon="@drawable/lock"
                 android:theme="@style/OverflowMenu"
                 android:title="CHANGE PASSWORD"
                 app:showAsAction="ifRoom" />
             <item
-                android:visible="false"
                 android:id="@+id/raiseticketsystem"
                 android:icon="@drawable/recreate_ticket"
                 android:theme="@style/OverflowMenu"
@@ -77,7 +75,6 @@
                 app:showAsAction="ifRoom" />
 
             <item
-                android:visible="false"
                 android:id="@+id/viewticket"
                 android:icon="@drawable/view_tickets"
                 android:theme="@style/OverflowMenu"

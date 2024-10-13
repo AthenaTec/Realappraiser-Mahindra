@@ -428,7 +428,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.forgotpassword:
                 forgetPasswordDialog();
-              //  passwordExpiryDialog();
+                break;
+            case R.id.txt_raiseTicket:
+                raiseTicket();
+                break;
         }
     }
 
@@ -752,7 +755,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public void getUserInfo() {
         lemail = email_input.getText().toString().trim();
-        Singleton.getInstance().email=email_input.getText().toString().trim();
+        Singleton.getInstance().email = email_input.getText().toString().trim();
         lpwd = pwd_input.getText().toString().trim();
     }
 
@@ -1386,7 +1389,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.e("PathNew :", SettingsUtils.mPhotoPath);
 
 
-                File compressedImageFile = new ImageProcessor().compressImage(imgFile,this);
+                File compressedImageFile = new ImageProcessor().compressImage(imgFile, this);
                 if (!general.isEmpty(SettingsUtils.mPhotoPath)) {
                     Log.e(TAG, "onActivityResult: " + compressedImageFile.getAbsolutePath());
                     convertToBase64(compressedImageFile.getAbsolutePath());
@@ -1409,7 +1412,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 Log.d(TAG, "onActivityResult: " + imgFile.getAbsolutePath());
 
-                File compressedImageFile = new ImageProcessor().compressImage(imgFile,this);
+                File compressedImageFile = new ImageProcessor().compressImage(imgFile, this);
                 convertToBase64(compressedImageFile.getAbsolutePath());
 
                 if (i == imageAdapter.getCheckedItems().size() - 1) {
@@ -1687,6 +1690,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+//    private void InitiateGetTicketQueryDropDownTask() {
+//        String url = general.ApiBaseUrl() + SettingsUtils.getTicketQuery;
+//        JsonRequestData requestData = new JsonRequestData();
+//        requestData.setUrl(url);
+//        // requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
+//        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this,
+//                requestData, SettingsUtils.GET);
+//        webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+//            @Override
+//            public void onTaskComplete(JsonRequestData requestData) {
+//
+//                if (requestData.isSuccessful()) {
+//                    TicketQueryDataModel ticketQueryDataModel = new Gson().fromJson(requestData.getResponse(), TicketQueryDataModel.class);
+//                    String result = "";
+//                    if (ticketQueryDataModel != null) {
+//                        SettingsUtils.getInstance().putValue(SettingsUtils.TicketQuery, requestData.getResponse());
+//                        initiateTicketQueryPopup();
+//                    }
+//                } else {
+//
+//                }
+//            }
+//        });
+//        webserviceTask.execute();
+//    }
+
     private void InitiateGetTicketQueryDropDownTask() {
         String url = general.ApiBaseUrl() + SettingsUtils.getTicketQuery;
         JsonRequestData requestData = new JsonRequestData();
@@ -1694,24 +1723,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
         WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this,
                 requestData, SettingsUtils.GET);
+
         webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
-
                 if (requestData.isSuccessful()) {
-                    TicketQueryDataModel ticketQueryDataModel = new Gson().fromJson(requestData.getResponse(), TicketQueryDataModel.class);
-                    String result = "";
+                    String jsonResponse = requestData.getResponse();
+                    Log.d("API Response", jsonResponse); // Log the response for debugging
+
+                    TicketQueryDataModel ticketQueryDataModel = new Gson().fromJson(jsonResponse, TicketQueryDataModel.class);
+
                     if (ticketQueryDataModel != null) {
-                        SettingsUtils.getInstance().putValue(SettingsUtils.TicketQuery, requestData.getResponse());
+                        SettingsUtils.getInstance().putValue(SettingsUtils.TicketQuery, jsonResponse);
                         initiateTicketQueryPopup();
+                    } else {
+                        Log.e("Parsing Error", "Failed to parse TicketQueryDataModel");
                     }
                 } else {
-
+                    Log.e("API Error", "Failed to fetch data: " + requestData.getResponse());
                 }
             }
         });
         webserviceTask.execute();
     }
+
 
     private void initiateTicketQueryPopup() {
 
@@ -1720,8 +1755,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
-        //dialog.setContentView(R.layout.ticket_raise_system_without_login);
-        dialog.setContentView(R.layout.activity_ticket_raise_system);
+        dialog.setContentView(R.layout.ticket_raise_system_without_login);
+        //  dialog.setContentView(R.layout.activity_ticket_raise_system);
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
 
@@ -1937,6 +1972,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 //        }
     }
+
     class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         private ClickListener clicklistener;
@@ -1968,142 +2004,143 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 clicklistener.onClick(child, rv.getChildAdapterPosition(child));
             }
 
-        return false;
+            return false;
         }
 
         @Override
-        public void onTouchEvent (RecyclerView rv, MotionEvent e){
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
         }
 
         @Override
-        public void onRequestDisallowInterceptTouchEvent ( boolean disallowIntercept){
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
         }
 
 
     }
-        public static interface ClickListener {
-            public void onClick(View view, int position);
 
-            public void onLongClick(View view, int position);
-        }
+    public static interface ClickListener {
+        public void onClick(View view, int position);
 
-
-        private String convertToBase64(String imagePath) {
-            Bitmap bmp = null;
-            ByteArrayOutputStream bos = null;
-            byte[] bt = null;
-            String encodedImage = null;
-            try {
-                bmp = BitmapFactory.decodeFile(imagePath);
-                bos = new ByteArrayOutputStream();
-
-                long current_time_cam_image = Calendar.getInstance().getTimeInMillis();
-                String fileName = "RA_" + current_time_cam_image + ".jpg";
-
-                if (bmp != null) {
-                    bmp = printLatLong(fileName, bmp);
-                }
-                bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        public void onLongClick(View view, int position);
+    }
 
 
-                bt = bos.toByteArray();
-                encodedImage = Base64.encodeToString(bt, Base64.DEFAULT);
-                String mBase64 = "";
-                mBase64 = encodedImage;
+    private String convertToBase64(String imagePath) {
+        Bitmap bmp = null;
+        ByteArrayOutputStream bos = null;
+        byte[] bt = null;
+        String encodedImage = null;
+        try {
+            bmp = BitmapFactory.decodeFile(imagePath);
+            bos = new ByteArrayOutputStream();
 
+            long current_time_cam_image = Calendar.getInstance().getTimeInMillis();
+            String fileName = "RA_" + current_time_cam_image + ".jpg";
 
-                if (mBase64 != null) {
-                    //Log.e("encode_is", "encode_is: " + mBase64);
-                    GetPhoto getPhoto_new_image = new GetPhoto();
-                    getPhoto_new_image.setNewimage(true);
-                    getPhoto_new_image.setLogo(mBase64);
-                    getPhoto_new_image.setId(0);
-                    getPhoto_new_image.setFileName(fileName);
-
-                    getPhoto_new_image.setPropertyId(0);
-
-                    GetPhoto_list_response.add(getPhoto_new_image);
-                    ticketRaiseImageAdapter.setphoto_adapter(GetPhoto_list_response);
-                }
-
-
-            } catch (Exception e1) {
-                e1.printStackTrace();
+            if (bmp != null) {
+                bmp = printLatLong(fileName, bmp);
             }
-            return encodedImage;
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+
+
+            bt = bos.toByteArray();
+            encodedImage = Base64.encodeToString(bt, Base64.DEFAULT);
+            String mBase64 = "";
+            mBase64 = encodedImage;
+
+
+            if (mBase64 != null) {
+                //Log.e("encode_is", "encode_is: " + mBase64);
+                GetPhoto getPhoto_new_image = new GetPhoto();
+                getPhoto_new_image.setNewimage(true);
+                getPhoto_new_image.setLogo(mBase64);
+                getPhoto_new_image.setId(0);
+                getPhoto_new_image.setFileName(fileName);
+
+                getPhoto_new_image.setPropertyId(0);
+
+                GetPhoto_list_response.add(getPhoto_new_image);
+                ticketRaiseImageAdapter.setphoto_adapter(GetPhoto_list_response);
+            }
+
+
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
+        return encodedImage;
+    }
 
 
-        private Bitmap printLatLong(String fileName, Bitmap toEdit) {
-            try {
-                //  Log.e(TAG, "printLatLong: " + latValue + "\n" + longvalue);
+    private Bitmap printLatLong(String fileName, Bitmap toEdit) {
+        try {
+            //  Log.e(TAG, "printLatLong: " + latValue + "\n" + longvalue);
 
 //        Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), Bitmap.Config.ARGB_8888);
-                Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), toEdit.getConfig());
-                Canvas cs = new Canvas(dest);
-                cs.drawBitmap(toEdit, 0, 0, null);
-                Paint tPaint = new Paint();
-                tPaint.setTextSize(20.0f);
-                tPaint.setColor(-16776961);
-                tPaint.setTextAlign(Paint.Align.CENTER);
-                tPaint.setStyle(Paint.Style.FILL);
-                float height = tPaint.measureText("yY");
+            Bitmap dest = Bitmap.createBitmap(toEdit.getWidth(), toEdit.getHeight(), toEdit.getConfig());
+            Canvas cs = new Canvas(dest);
+            cs.drawBitmap(toEdit, 0, 0, null);
+            Paint tPaint = new Paint();
+            tPaint.setTextSize(20.0f);
+            tPaint.setColor(-16776961);
+            tPaint.setTextAlign(Paint.Align.CENTER);
+            tPaint.setStyle(Paint.Style.FILL);
+            float height = tPaint.measureText("yY");
 
-                Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
-                StringBuilder sb2 = new StringBuilder();
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
+            StringBuilder sb2 = new StringBuilder();
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 
-                    sb2.append(Environment.getExternalStorageDirectory());
+                sb2.append(Environment.getExternalStorageDirectory());
 
-                } else {
-                    sb2.append(this.getExternalFilesDir(""));
-                }
-                sb2.append(File.separator);
-
-                sb2.append(fileName);
-                sb2.append(".jpg");
-                dest.compress(compressFormat, 100, new FileOutputStream(new File(sb2.toString())));
-                return dest;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return null;
+            } else {
+                sb2.append(this.getExternalFilesDir(""));
             }
+            sb2.append(File.separator);
+
+            sb2.append(fileName);
+            sb2.append(".jpg");
+            dest.compress(compressFormat, 100, new FileOutputStream(new File(sb2.toString())));
+            return dest;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
+    }
 
-        private void createTicketApi(TicketRaisePhoto ticketRaisePhoto, Dialog dialog) {
-            String url = general.ApiBaseUrl() + SettingsUtils.createQuery;
-            JsonRequestData requestData = new JsonRequestData();
-            requestData.setUrl(url);
-            requestData.setMainJson(new Gson().toJson(ticketRaisePhoto));
-            requestData.setRequestBody(RequestParam.SaveCaseInspectionRequestParams(requestData));
-            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this,
-                    requestData, SettingsUtils.POST);
+    private void createTicketApi(TicketRaisePhoto ticketRaisePhoto, Dialog dialog) {
+        String url = general.ApiBaseUrl() + SettingsUtils.createQuery;
+        JsonRequestData requestData = new JsonRequestData();
+        requestData.setUrl(url);
+        requestData.setMainJson(new Gson().toJson(ticketRaisePhoto));
+        requestData.setRequestBody(RequestParam.SaveCaseInspectionRequestParams(requestData));
+        WebserviceCommunicator webserviceTask = new WebserviceCommunicator(LoginActivity.this,
+                requestData, SettingsUtils.POST);
 
-            Log.e(LoginActivity.class.getName(), new Gson().toJson(requestData));
-            webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
-                @Override
-                public void onTaskComplete(JsonRequestData requestData) {
+        Log.e(LoginActivity.class.getName(), new Gson().toJson(requestData));
+        webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+            @Override
+            public void onTaskComplete(JsonRequestData requestData) {
 
-                    try {
-                        TicketCreationResponse ticketCreationResponse = new Gson().fromJson(requestData.getResponse(), TicketCreationResponse.class);
-                        if (ticketCreationResponse.getStatus() == 1) {
-                            if (ticketCreationResponse.getData() != null) {
-                                General.customToast("Ticket ID " + ticketCreationResponse.getData().getTicketIDVal() + " Created!", LoginActivity.this);
-                                if (dialog != null)
-                                    dialog.cancel();
-                            }
+                try {
+                    TicketCreationResponse ticketCreationResponse = new Gson().fromJson(requestData.getResponse(), TicketCreationResponse.class);
+                    if (ticketCreationResponse.getStatus() == 1) {
+                        if (ticketCreationResponse.getData() != null) {
+                            General.customToast("Ticket ID " + ticketCreationResponse.getData().getTicketIDVal() + " Created!", LoginActivity.this);
+                            if (dialog != null)
+                                dialog.cancel();
                         }
-                        General.hideloading();
-                    } catch (Exception e) {
-                        e.getMessage();
-                        General.hideloading();
                     }
+                    General.hideloading();
+                } catch (Exception e) {
+                    e.getMessage();
+                    General.hideloading();
                 }
-            });
-            webserviceTask.execute();
-        }
+            }
+        });
+        webserviceTask.execute();
+    }
 
 
 }

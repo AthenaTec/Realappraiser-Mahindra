@@ -1707,7 +1707,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         item3.setVisible(true);
         item4.setVisible(true);
         item5.setVisible(true);
-        //item6.setVisible(true);
+        item6.setVisible(true);
         item2.setVisible(false);
         item8.setVisible(false);
         return true;
@@ -1757,8 +1757,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 getConvyenceReport();
                 break;
             case R.id.changepassword:
-                 general.getChangePassword(this);
-                 break;
+                general.getChangePassword(this);
+                break;
 
             case R.id.raiseticketsystem:
                 raiseTickerPopup();
@@ -2140,7 +2140,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             requestData.setBankRefNo(bankRef);
             requestData.setRequestBody(RequestParam.CreateCaseNewRequestParams(requestData));
             requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
-
             WebserviceCommunicator webserviceTask = new WebserviceCommunicator(this, requestData, SettingsUtils.POST_TOKEN);
             webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
                 @Override
@@ -2556,7 +2555,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 @Override
                 public void run() {
                     Log.e("offline_api", "Offline_StartInspection_Api");
-                    showUIFSfield(case_id,property_id);
+                    showUIFSfield(case_id, property_id);
                 }
             }, 500);
         } else if (!successful && (responseCode == 400 || responseCode == 401)) {
@@ -2566,9 +2565,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void showUIFSfield(int case_id,int property_id) {
+    private void showUIFSfield(int case_id, int property_id) {
         if (general.isNetworkAvailable()) {
-            Log.d("ShowFSUIRequest","ShowFSUIRequest offline");
+            Log.d("ShowFSUIRequest", "ShowFSUIRequest offline");
             String url = general.ApiBaseUrl() + SettingsUtils.ShowFSUIRequest;
             String caseID = Integer.toString(case_id);
             JsonRequestData requestData = new JsonRequestData();
@@ -3076,7 +3075,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     File imgFile = new File(SettingsUtils.mPhotoPath);
                     Uri.fromFile(imgFile);
                     Log.e("PathNew :", SettingsUtils.mPhotoPath);
-                    File compressedImageFile = new ImageProcessor().compressImage(imgFile,this);
+                    File compressedImageFile = new ImageProcessor().compressImage(imgFile, this);
                     if (!general.isEmpty(SettingsUtils.mPhotoPath)) {
                         Log.e(TAG, "onActivityResult: " + compressedImageFile.getAbsolutePath());
                         convertToBase64(compressedImageFile.getAbsolutePath());
@@ -3098,7 +3097,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
                     Log.d(TAG, "onActivityResult: " + imgFile.getAbsolutePath());
 
-                    File compressedImageFile = new ImageProcessor().compressImage(imgFile,this);
+                    File compressedImageFile = new ImageProcessor().compressImage(imgFile, this);
                     convertToBase64(compressedImageFile.getAbsolutePath());
 
                     if (i == imageAdapter.getCheckedItems().size() - 1) {
@@ -3619,6 +3618,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         final Spinner spTicketQuery = dialog.findViewById(R.id.spinnerTicketQuery);
         final EditText etDescritpion = dialog.findViewById(R.id.etDescritpion);
         final EditText etEmail = dialog.findViewById(R.id.et_email);
+        String email = SettingsUtils.getInstance().getValue(SettingsUtils.KEY_EMAIL, "");
+        etEmail.setText(email.trim());
         final EditText etSapID = dialog.findViewById(R.id.et_sapID);
         final EditText etContact = dialog.findViewById(R.id.et_contactNumber);
         btn.setOnClickListener(new View.OnClickListener() {

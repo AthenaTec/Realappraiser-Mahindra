@@ -551,6 +551,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                         stepsModel.setPresentCondition(Singleton.getInstance().indPropertyFloors.get(i).getPresentCondition());
                         stepsModel.setFloorNo(Singleton.getInstance().indPropertyFloors.get(i).getFloorNo());
                         stepsModel.setDocumentFloorAreaUnit("1");
+                        stepsModel.setRD_FloorArea(1);
 
                         String dep = Singleton.getInstance().indPropertyFloors.get(i).getPercentageDepreciation();
                         stepsModel.setPercentageDepreciation(Singleton.getInstance().indPropertyFloors.get(i).getPercentageDepreciation());
@@ -597,6 +598,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                             stepsModel.setFloorName(getResources().getString(R.string.floorname) + finalI);
                             stepsModel.setFloorUsage(floorusage);
                             stepsModel.setDocumentFloorAreaUnit("1");
+                            stepsModel.setRD_FloorArea(1);
                             list.add(stepsModel);
 
 
@@ -634,6 +636,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                         stepsModel.setConstructionStageId(0);
                         stepsModel.setFloorUsage(floorusage);
                         stepsModel.setDocumentFloorAreaUnit("1");
+                        stepsModel.setRD_FloorArea(1);
                         list.add(stepsModel);
 
                         Singleton.getInstance().indPropertyFloors.add(stepsModel);
@@ -685,6 +688,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                         steps2Model.setFlatPoojaNo(Singleton.getInstance().indPropertyFloors.get(i).getFlatPoojaNo());
                         steps2Model.setFlatDinningNo(Singleton.getInstance().indPropertyFloors.get(i).getFlatDinningNo());
                         steps2Model.setDocumentFloorAreaUnit("1");
+                        steps2Model.setRD_FloorArea(1);
 
                         floornolist.add(steps2Model);
 
@@ -703,6 +707,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                             steps2Model.setCaseId(Integer.valueOf(case_id));
                             steps2Model.setFloorName(getResources().getString(R.string.floorname) + i + 1);
                             steps2Model.setDocumentFloorAreaUnit("1");
+                            steps2Model.setRD_FloorArea(1);
                             floornolist.add(steps2Model);
                         }
                     } else {
@@ -736,6 +741,7 @@ FragmentBuilding extends Fragment implements View.OnClickListener {
                         steps2Model.setCaseId(Integer.valueOf(case_id));
                         steps2Model.setFloorName(getResources().getString(R.string.floorname) + floorname_dynamic);
                         steps2Model.setDocumentFloorAreaUnit("1");
+                        steps2Model.setRD_FloorArea(1);
                         floornolist.add(steps2Model);
                         Singleton.getInstance().floorFromBackend = false;
                     }

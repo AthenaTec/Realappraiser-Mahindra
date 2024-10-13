@@ -39,7 +39,7 @@
 
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 -optimizations !class/unboxing/enum
--optimizationpasses 5
+-optimizationpasses 2
 -allowaccessmodification
 -dontpreverify
 
@@ -65,10 +65,6 @@
 -dontwarn okio.**
 -dontwarn retrofit2.Platform$Java8
 -dontwarn java.awt.**,javax.swing.**
--dontwarn java.awt.**,javax.swing.**
--dontwarn com.google.common.cache.**
--dontwarn com.google.common.primitives.**
--dontwarn android.security.NetworkSecurityPolicy
 -dontwarn java.nio.file.Files
 -dontwarn java.nio.file.Path
 -dontwarn java.nio.file.OpenOption
@@ -190,6 +186,11 @@
 -keep class com.realappraiser.gharvalue.model.*{ *; }
 -keep class com.realappraiser.gharvalue.communicator.*{ *; }
 
+# Keep the concrete subclass of the abstract class
+# Update this to the actual concrete class you want to use
+-keep class com.realappraiser.gharvalue.ticketRaiseSystem.model** { *; } # Replace with actual subclass
+-keep class com.realappraiser.gharvalue.ticketRaiseSystem.** { *; }
+-keep class com.realappraiser.gharvalue.viewtickets.** { *; }
 
 # GOOGLE API CLIENT LIBRARIES
 # Needed to keep generic types and @Key annotations accessed via reflection
@@ -250,9 +251,7 @@
 -keep class org.mozilla.javascript.v8dtoa.** { *; }
 -keep class org.mozilla.javascript.xml.** { *; }
 -keep class org.mozilla.javascript.xmlimpl.** { *; }
--keep class org.mozilla.javascript.tools.**
-
-
+-keep class org.mozilla.javascript.tools.*
 
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
@@ -260,4 +259,3 @@
     public static int d(...);
     public static int i(...);
 }
-

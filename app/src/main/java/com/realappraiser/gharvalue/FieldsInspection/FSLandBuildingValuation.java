@@ -895,6 +895,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         stepsModel.setPresentCondition(Singleton.getInstance().indPropertyFloors.get(i).getPresentCondition());
                         stepsModel.setFloorNo(Singleton.getInstance().indPropertyFloors.get(i).getFloorNo());
                         stepsModel.setDocumentFloorAreaUnit("1");
+                        stepsModel.setRD_FloorArea(1);
 
                         String dep = Singleton.getInstance().indPropertyFloors.get(i).getPercentageDepreciation();
                         stepsModel.setPercentageDepreciation(Singleton.getInstance().indPropertyFloors.get(i).getPercentageDepreciation());
@@ -942,6 +943,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                             stepsModel.setFloorUsage(floorusage);
                             stepsModel.setFloorNo(finalI);
                             stepsModel.setDocumentFloorAreaUnit("1");
+                            stepsModel.setRD_FloorArea(1);
                             list.add(stepsModel);
 
 
@@ -980,6 +982,7 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         stepsModel.setFloorUsage(floorusage);
                         stepsModel.setFloorNo(floorname_dynamic);
                         stepsModel.setDocumentFloorAreaUnit("1");
+                        stepsModel.setRD_FloorArea(1);
                         list.add(stepsModel);
 
                         Singleton.getInstance().indPropertyFloors.add(stepsModel);
@@ -1036,7 +1039,8 @@ public class FSLandBuildingValuation extends Fragment implements View.OnClickLis
                         steps2Model.setFlatPoojaNo(Singleton.getInstance().indPropertyFloors.get(i).getFlatPoojaNo());
                         steps2Model.setFlatDinningNo(Singleton.getInstance().indPropertyFloors.get(i).getFlatDinningNo());
                         steps2Model.setFloorNo(Singleton.getInstance().indPropertyFloors.get(i).getFloorNo());
-steps2Model.setDocumentFloorAreaUnit("1");
+                        steps2Model.setDocumentFloorAreaUnit("1");
+                        steps2Model.setRD_FloorArea(1);
                         floornolist.add(steps2Model);
 
                         Singleton.getInstance().floorFromBackend = true;
@@ -1053,8 +1057,9 @@ steps2Model.setDocumentFloorAreaUnit("1");
                             IndPropertyFloor steps2Model = new IndPropertyFloor();
                             steps2Model.setCaseId(Singleton.getInstance().aCase.getCaseId());
                             steps2Model.setFloorName(getResources().getString(R.string.floorname) + i + 1);
-                            steps2Model.setFloorNo(i+1);
+                            steps2Model.setFloorNo(i + 1);
                             steps2Model.setDocumentFloorAreaUnit("1");
+                            steps2Model.setRD_FloorArea(1);
                             floornolist.add(steps2Model);
                         }
                     } else {
@@ -1089,6 +1094,7 @@ steps2Model.setDocumentFloorAreaUnit("1");
                         steps2Model.setFloorName(getResources().getString(R.string.floorname) + floorname_dynamic);
                         steps2Model.setFloorNo(floorname_dynamic);
                         steps2Model.setDocumentFloorAreaUnit("1");
+                        steps2Model.setRD_FloorArea(1);
                         floornolist.add(steps2Model);
                         Singleton.getInstance().floorFromBackend = false;
                     }
@@ -1169,7 +1175,7 @@ steps2Model.setDocumentFloorAreaUnit("1");
                     stepsModel.setFloorNo(Singleton.getInstance().indPropertyFloorsValuations.get(i).getFloorNo());
                     stepsModel.setFloorDepreciationValue(Singleton.getInstance().indPropertyFloorsValuations.get(i).getFloorDepreciationValue());
                     stepsModel.setFloorCarpetArea(Singleton.getInstance().indPropertyFloorsValuations.get(i).getFloorCarpetArea());
-                    
+
                     floorsValuation.add(stepsModel);
                 }
 
@@ -1180,7 +1186,7 @@ steps2Model.setDocumentFloorAreaUnit("1");
                     for (int i = previousfloors; i < floors; i++) {
                         IndPropertyFloorsValuation stepsModel = new IndPropertyFloorsValuation();
                         stepsModel.setCaseId(caseid_int);
-                        stepsModel.setFloorNo(i+1);
+                        stepsModel.setFloorNo(i + 1);
                         stepsModel.setDocumentConstrValue("");
                         stepsModel.setDocumentConstrRate("");
                         stepsModel.setMeasuredConstrValue("");
@@ -1218,7 +1224,7 @@ steps2Model.setDocumentFloorAreaUnit("1");
                     for (int i = 0; i < floors_valsize; i++) {
                         IndPropertyFloorsValuation stepsModel = new IndPropertyFloorsValuation();
                         stepsModel.setCaseId(caseid_int);
-                        stepsModel.setFloorNo(i+1);
+                        stepsModel.setFloorNo(i + 1);
                         stepsModel.setDocumentConstrValue("");
                         stepsModel.setDocumentConstrRate("");
                         stepsModel.setMeasuredConstrValue("");
@@ -4230,7 +4236,7 @@ steps2Model.setDocumentFloorAreaUnit("1");
 
 
     public void CommonRate_actualarea_method(String str) {
-Log.d("Hari","HAri");
+        Log.d("Hari", "HAri");
         String rate_str = str;
         editText_rate_permissiblearea.setText(rate_str);
         String permissiblearea_str = editText_actualarea.getText().toString();
@@ -4589,7 +4595,6 @@ Log.d("Hari","HAri");
     }
 
     private void set_mandatory_building() {
-
 
 
         // compound_permissiblearea

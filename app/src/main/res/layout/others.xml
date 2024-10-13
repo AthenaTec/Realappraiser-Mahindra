@@ -3524,7 +3524,7 @@
                         android:layout_marginBottom="@dimen/_3sdp"
                         android:padding="@dimen/height_1"
                         android:src="@drawable/icon_more"
-                        tools:ignore="ContentDescription,RtlHardcoded" />
+                        tools:ignore="ContentDescription,NotSibling,RtlHardcoded" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -3630,7 +3630,7 @@
                         android:layout_marginBottom="@dimen/_3sdp"
                         android:padding="@dimen/height_1"
                         android:src="@drawable/icon_more"
-                        tools:ignore="ContentDescription,RtlHardcoded" />
+                        tools:ignore="ContentDescription,NotSibling,RtlHardcoded" />
                 </RelativeLayout>
 
 
@@ -3779,7 +3779,7 @@
                         android:layout_marginBottom="@dimen/_3sdp"
                         android:padding="@dimen/height_1"
                         android:src="@drawable/icon_more"
-                        tools:ignore="ContentDescription,RtlHardcoded" />
+                        tools:ignore="ContentDescription,NotSibling,RtlHardcoded" />
                 </RelativeLayout>
 
 
@@ -3958,7 +3958,7 @@
                         android:layout_marginBottom="@dimen/_3sdp"
                         android:padding="@dimen/height_1"
                         android:src="@drawable/icon_more"
-                        tools:ignore="ContentDescription,RtlHardcoded" />
+                        tools:ignore="ContentDescription,NotSibling,RtlHardcoded" />
                 </RelativeLayout>
 
                 <LinearLayout
