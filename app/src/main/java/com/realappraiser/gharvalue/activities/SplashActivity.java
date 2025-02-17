@@ -5,6 +5,8 @@ import static com.realappraiser.gharvalue.utils.General.REQUEST_ID_MULTIPLE_PERM
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,11 +26,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
@@ -86,6 +91,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -102,7 +108,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
     private static final String TAG = SplashActivity.class.getSimpleName();
     private static final long SPLASH_TIME = 1000;
 
-    private String  address = "";
+    private String address = "";
 
     private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
 
@@ -127,6 +133,8 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
     private TextView tvVersion, tvCopyRight;
     private boolean isConnected = false;
+
+    private AlertDialog permissionDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -166,6 +174,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         gpsService.getLocation();
         setUpGClient();
 
+
       /*  if (Connectivity.isConnected(this)) {
             SafetyNetChecker safetyNetChecker = new SafetyNetChecker(this, this, this);
         } else if (General.rootAndEmulatorChecker(SplashActivity.this) == false) {
@@ -177,7 +186,8 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             setVersionDetails();
         }*/
 
-        splashRunner();
+//        splashRunner();
+        checkAndRequestExactAlarmPermission(this);
         setVersionDetails();
     }
 
@@ -201,7 +211,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
     public void showLocationDialog(final Context context) {
         Singleton.getInstance().networkListenerAlert = true;
 
-         android.app.AlertDialog alert_show;
+        android.app.AlertDialog alert_show;
 
         android.app.AlertDialog.Builder alert_build = new android.app.AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         alert_build.setTitle("Location Information");
@@ -260,8 +270,8 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
     public void LoggedInAction() {
         if (!SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGGED_IN, false)) {
             // Without Login
-           // openLogin();
-           // navigateLoginScreen();
+            // openLogin();
+            // navigateLoginScreen();
             removeUser(this);
             //startActivity(new Intent(SplashActivity.this, HomeActivity.class));
         } else {
@@ -269,7 +279,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             if (Connectivity.isConnected(this)) {
                 // Get Drop down API
                 getSessionOut(true);
-               // InitiateGetFieldDropDownTask();
+                // InitiateGetFieldDropDownTask();
             } else {
                 startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 getSessionOut(false);
@@ -293,10 +303,10 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
 
-                if (requestData.isSuccessful()){
-                parseGetDropDownsDataResponse(requestData.getResponse(),
-                        requestData.getResponseCode(), requestData.isSuccessful());
-                }else{
+                if (requestData.isSuccessful()) {
+                    parseGetDropDownsDataResponse(requestData.getResponse(),
+                            requestData.getResponseCode(), requestData.isSuccessful());
+                } else {
                     openLogin();
                 }
             }
@@ -346,23 +356,23 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
             @Override
             public void onTaskComplete(JsonRequestData requestData) {
 
-                if (requestData.isSuccessful()){
+                if (requestData.isSuccessful()) {
                     parseOfflineCaseCountLimit(requestData.getResponse(),
                             requestData.getResponseCode(), requestData.isSuccessful());
-                }else {
-                   openLogin();
-                   // navigateLoginScreen();
+                } else {
+                    openLogin();
+                    // navigateLoginScreen();
                 }
             }
         });
         webserviceTask.execute();
     }
 
-    private void openLogin(){
+    private void openLogin() {
         General.logoutUser(this);
     }
 
-    public  void removeUser(Activity activity){
+    public void removeUser(Activity activity) {
         Singleton.getInstance().longitude = 0.0;
         Singleton.getInstance().latitude = 0.0;
         Singleton.getInstance().aCase = new Case();
@@ -512,15 +522,15 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
     }
 
-    private void getLocationFetch(){
-        if(general.checkLatLong()){
-           // getSessionOut(false);
-              startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-        }else{
+    private void getLocationFetch() {
+        if (general.checkLatLong()) {
+            // getSessionOut(false);
+            startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+        } else {
             if (general.checkPermissions()) {
                 getCurrentLocation(this);
-            }else{
-                Log.e(TAG,"Permission");
+            } else {
+                Log.e(TAG, "Permission");
             }
         }
     }
@@ -552,7 +562,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         }
     }
 
-    private void navigateLoginScreen(){
+    private void navigateLoginScreen() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -561,7 +571,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
     }
 
 
-    private  void getCurrentLocation(Activity activity){
+    private void getCurrentLocation(Activity activity) {
         if (general.GPS_status()) {
             try {
                 GPSService gpsService = new GPSService(activity);
@@ -577,11 +587,11 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
                             SettingsUtils.getInstance().putValue("lat", String.valueOf(general.getcurrent_latitude(activity)));
                             SettingsUtils.getInstance().putValue("long", String.valueOf(general.getcurrent_longitude(activity)));
                             startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-                          //  getSessionOut(false);
+                            //  getSessionOut(false);
                         }
                     }
                 }, 1500);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -592,7 +602,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         switch (requestCode) {
             case REQUEST_ID_MULTIPLE_PERMISSIONS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                   getCurrentLocation(this);
+                    getCurrentLocation(this);
                 } else {
                     general.customToast("Please enable all permissions to complete access of this application", this);
 
@@ -614,21 +624,76 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         }
     }
 
-    private void checkingPermission(){
-        if(general.checkPermissions()){
+    private void checkingPermission() {
+        if (general.checkPermissions()) {
             splashRunner();
             setVersionDetails();
-        }else{
+        } else {
             showLocationDialog(this);
         }
     }
 
+    public void checkAndRequestExactAlarmPermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            // Check if permission is granted
+            if (alarmManager != null && !alarmManager.canScheduleExactAlarms()) {
+                // Navigate to settings if permission is not granted
+                permissionDialog=new AlertDialog.Builder(context)
+                        .setTitle("Permission Required")
+                        .setMessage("This app needs permission to schedule exact alarms and reminders. Please enable this permission in the settings.")
+                        .setPositiveButton("Go to Settings", (dialog, which) -> {
+                            Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                            intent.setData(Uri.parse("package:" + context.getPackageName()));
+                            context.startActivity(intent);
+                        })
+                        .setNegativeButton("Exit App", (dialog, which) -> {
+                            // Exit the app
+                            finish();
+                            System.exit(0); // Ensures the app process is terminated
+
+                        })
+                        .setCancelable(false)
+                        .create();
+                permissionDialog.show();
+            } else {
+
+                // Permission is already granted
+                Toast.makeText(context, "Exact alarms are enabled.", Toast.LENGTH_SHORT).show();
+                splashRunner();
+            }
+        } else {
+
+            splashRunner();
+
+            // For devices below API 31
+            //  Toast.makeText(context, "Exact alarms are always enabled on this device.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //    private void checkDayLogut() {
+//        SimpleDateFormat formatMinutes = new SimpleDateFormat("mm");
+//        String getMinutes = formatMinutes.format(new Date());
+//        SimpleDateFormat formatSeconds = new SimpleDateFormat("ss");
+//        String getSeconds = formatSeconds.format(new Date());
+//        SimpleDateFormat formatHours = new SimpleDateFormat("HH");
+//        String getHours = formatHours.format(new Date());
+//        int hours = Integer.parseInt(getHours);
+//        int minutes = Integer.parseInt(getMinutes);
+//        int seconds = Integer.parseInt(getSeconds);
+//
+//        if (hours == 21 && minutes >= 0 && minutes <= 5) {
+//            sessionDayLogout(this);
+//        } else {
+//        }
+//    }
     private void getMyLocation() {
         if (mGoogleApiClient != null) {
             if (mGoogleApiClient.isConnected()) {
                 int permissionLocation = ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION);
-                int permission=ContextCompat.checkSelfPermission(this,Manifest.permission.FOREGROUND_SERVICE_LOCATION);
+                int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED && permission == PackageManager.PERMISSION_GRANTED) {
                     mylocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
@@ -673,7 +738,8 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
-                                            public void run() {General.customToast( getResources().getString(R.string.fetching_loca), SplashActivity.this);
+                                            public void run() {
+                                                General.customToast(getResources().getString(R.string.fetching_loca), SplashActivity.this);
 
                                             }
                                         }, 3000);
@@ -737,17 +803,15 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
     }
 
-    private void getSessionOut(boolean b){
-        if (!String.valueOf(SettingsUtils.getInstance().getValue("sessionCountDown", "")).isEmpty() && !general.getOfflineCase())
-        {
+    private void getSessionOut(boolean b) {
+        if (!String.valueOf(SettingsUtils.getInstance().getValue("sessionCountDown", "")).isEmpty() && !general.getOfflineCase()) {
             String VisitTime = SettingsUtils.getInstance().getValue("sessionCountDown", "");
             long currentVisitTime = System.currentTimeMillis();
             long totalVisitTime = currentVisitTime - Long.parseLong(VisitTime);
             long minutes = (totalVisitTime / 1000) / 60;
             Log.e(TAG, "onResume: " + minutes);
             //minutes >= 120
-            if (minutes >= 120)
-            {
+            if (minutes >= 120) {
                 sessionLogout(this);
                /* Log.e(TAG, "onResume: Latitude" + SettingsUtils.Latitudes);
                 if (general.checkLatLong()) { //SettingsUtils.Latitudes > 0
@@ -767,21 +831,18 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
                         }
                     }
                 }*/
-            }
-            else {
+            } else {
                 startActivity(new Intent(SplashActivity.this, HomeActivity.class));
             }
-        }else{
-            if(b)InitiateGetFieldDropDownTask();
-            else  startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+        } else {
+            if (b) InitiateGetFieldDropDownTask();
+            else startActivity(new Intent(SplashActivity.this, HomeActivity.class));
 
         }
     }
 
 
-
-    public  void sessionLogout(Activity activity)
-    {
+    public void sessionLogout(Activity activity) {
         Singleton.getInstance().longitude = 0.0;
         Singleton.getInstance().latitude = 0.0;
         Singleton.getInstance().aCase = new Case();
@@ -851,10 +912,10 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
                     "") + SettingsUtils.LocationTracker;
             requestData.setUrl(url);
             requestData.setCaseId("");
-            requestData.setEmpId(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID,""));
+            requestData.setEmpId(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""));
             requestData.setLocationType("Logout");
-            requestData.setLatitude(SettingsUtils.getInstance().getValue("lat",""));
-            requestData.setLongitude(SettingsUtils.getInstance().getValue("long",""));
+            requestData.setLatitude(SettingsUtils.getInstance().getValue("lat", ""));
+            requestData.setLongitude(SettingsUtils.getInstance().getValue("long", ""));
             requestData.setTrackerTime(time);
             requestData.setActivityType(String.valueOf(4));
             requestData.setComments("");
@@ -892,7 +953,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
 
         } else {
             General.hideloading();
-            General.customToastLong("No Internet Connection found",this);
+            General.customToastLong("No Internet Connection found", this);
         }
 
 
@@ -968,7 +1029,7 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         activity.finish();*/
     }
 
-    private void redirectLogin(){
+    private void redirectLogin() {
 
 
         if (Build.VERSION.SDK_INT < 26) {
@@ -991,8 +1052,250 @@ public class SplashActivity extends AppCompatActivity implements OnSuccessListen
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         this.finish();
         startActivity(intent);
-        General.customToast("Session Time out",this);
+        General.customToast("Session Time out", this);
 
 
     }
+
+//    public void sessionDayLogout(Activity activity) {
+//        Singleton.getInstance().longitude = 0.0;
+//        Singleton.getInstance().latitude = 0.0;
+//        Singleton.getInstance().aCase = new Case();
+//        Singleton.getInstance().property = new Property();
+//        Singleton.getInstance().indProperty = new IndProperty();
+//        Singleton.getInstance().indPropertyValuation = new IndPropertyValuation();
+//        Singleton.getInstance().indPropertyFloors = new ArrayList<>();
+//        Singleton.getInstance().proximities = new ArrayList<>();
+//        Singleton.getInstance().openCaseList.clear();
+//        Singleton.getInstance().closeCaseList.clear();
+//        Singleton.getInstance().GetImage_list_flat.clear();
+//        AppDatabase appDatabase = AppDatabase.getAppDatabase(MyApplication.getAppContext());
+//
+//
+//        // Total - 16 DB
+//
+//
+//        // Delete - datamodel
+//        appDatabase.interfaceDataModelQuery().deleteRow();
+//        // Delete - offlinedatamodel
+//        appDatabase.interfaceOfflineDataModelQuery().deleteRow();
+//        // Delete - casemodal
+//        appDatabase.interfaceCaseQuery().deleteRow();
+//        // Delete - propertymodal
+//        appDatabase.interfacePropertyQuery().deleteRow();
+//        // Delete - indpropertymodal
+//        appDatabase.interfaceIndpropertyQuery().deleteRow();
+//        // Delete - IndPropertyValuationModal
+//        appDatabase.interfaceIndPropertyValuationQuery().deleteRow();
+//        // Delete - IndPropertyFloorModal
+//        appDatabase.interfaceIndPropertyFloorsQuery().deleteRow();
+//        // Delete - IndPropertyFloorsValuationModal
+//        appDatabase.interfaceIndPropertyFloorsValuationQuery().deleteRow();
+//        // Delete - ProximityModal
+//        appDatabase.interfaceProximityQuery().deleteRow();
+//        // Delete - GetPhotoModel
+//        appDatabase.interfaceGetPhotoQuery().deleteRow();
+//        // Delete - OflineCase
+//        appDatabase.interfaceOfflineCaseQuery().deleteRow();
+//        // Delete - Document_list
+//        appDatabase.interfaceDocumentListQuery().deleteRow();
+//        // Delete - LatLongDetails
+//        appDatabase.interfaceLatLongQuery().deleteRow();
+//        // Delete - typeofproperty
+//        appDatabase.typeofPropertyQuery().deleteRow();
+//        // Delete - casedetail
+//        appDatabase.daoAccess().deleteRow();
+//        // Delete - propertyupdateroomdb
+//        appDatabase.propertyUpdateCategory().deleteRow();
+//        // Delete - GetPhotoMeasurmentQuery
+//        appDatabase.interfaceGetPhotoMeasurmentQuery().deleteRow();
+//
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                address = SettingsUtils.convertLatLngToAddress(activity);
+//            }
+//        });
+//
+//        @SuppressLint("SimpleDateFormat") String time =
+//                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+//                        .format(Calendar.getInstance().getTime());
+//        if (Connectivity.isConnected(this)) {
+//            JsonRequestData requestData = new JsonRequestData();
+//            String url = SettingsUtils.getInstance().getValue(SettingsUtils.API_BASE_URL,
+//                    "") + SettingsUtils.LocationTracker;
+//            requestData.setUrl(url);
+//            requestData.setCaseId("");
+//            requestData.setEmpId(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""));
+//            requestData.setLocationType("Logout");
+//            requestData.setLatitude(SettingsUtils.getInstance().getValue("lat", ""));
+//            requestData.setLongitude(SettingsUtils.getInstance().getValue("long", ""));
+//            requestData.setTrackerTime(time);
+//            requestData.setActivityType(String.valueOf(4));
+//            requestData.setComments("");
+//            requestData.setAgencyBId(SettingsUtils.getInstance().getValue(SettingsUtils.BranchId, ""));
+//            Log.e("convertLatLngToAddrJson", address);
+//
+//            if (!address.isEmpty()) {
+//                requestData.setAddress(address);
+//            } else {
+//                address = SettingsUtils.convertLatLngToAddress(this);
+//                requestData.setAddress(address);
+//            }
+//
+//
+//            requestData.setAuthToken(SettingsUtils.getInstance().getValue(SettingsUtils.KEY_TOKEN, ""));
+////            requestData.setAuthToken("Bearer FFcxMfxHjm79qtRcMFNbp4Ydf7l_3jGiLSeSuY2tC3QJmiurkOSfEQGtbN-M6S3kF13VMSM5CALbIJNnT37zMi81gCRCz6YWZD7Usqs9i73kIgJGoHdDsPJdHkWyzD52JuORASt5p-jEB5jN2abX2HXdcIDrZD_YxVHWlFVn4uITc1SA8nk5OPCy5-xmpSq4VrHoUPsRrRMPx411C8gfcJvdaOCTodGRKFVwzVffHRC2cTRi-");
+//            requestData.setRequestBody(RequestParam.LocationTracker(requestData));
+//
+//            Log.e("Location Params", new Gson().toJson(requestData));
+//
+//            WebserviceCommunicator webserviceTask = new WebserviceCommunicator(SplashActivity.this,
+//                    requestData, SettingsUtils.POST_TOKEN);
+//            webserviceTask.setFetchMyData(new TaskCompleteListener<JsonRequestData>() {
+//                public void onTaskComplete(JsonRequestData requestData) {
+//                    String sb = "Location updated sucessfully" +
+//                            requestData.getResponse();
+//                    Log.e(TAG, sb);
+//                    General.hideloading();
+//                    SettingsUtils.getInstance().putValue("sessionCountDown", "");
+//                    SettingsUtils.getInstance().putValue(SettingsUtils.KEY_LOGGED_IN, false);
+//                    redirectToLogin();
+//                }
+//            });
+//            webserviceTask.execute();
+//
+//        } else {
+//            General.hideloading();
+//            General.customToastLong("No Internet Connection found", this);
+//        }
+//
+//
+//
+//
+//
+//
+//
+//       /* SettingsUtils.getInstance().putValue("api_success",false);
+//
+//        if(isSuccess){
+//            if (Build.VERSION.SDK_INT < 26) {
+//                activity.stopService(new Intent(activity, GeoUpdate.class));
+//            } else {
+//                new OreoLocation(activity).stopOreoLocationUpdates();
+//            }
+//            new WorkerManager(activity).stopWorker();
+//            SettingsUtils.getInstance().putValue("api_success",true);
+//
+//        }*/
+//
+//
+//
+//
+//
+//
+//
+//
+//        /*if (new LocationTrackerApi(activity).shareLocation("",
+//                SettingsUtils.getInstance().getValue(SettingsUtils.KEY_LOGIN_ID, ""),
+//                "Logout", SettingsUtils.Latitudes, SettingsUtils.Longitudes, "", 4)) {
+//            if (Build.VERSION.SDK_INT < 26) {
+//                activity.stopService(new Intent(activity, GeoUpdate.class));
+//            } else {
+//                new OreoLocation(activity).stopOreoLocationUpdates();
+//            }
+//            new WorkerManager(activity).stopWorker();
+//
+//
+//            Intent intent = new Intent(activity, LoginActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            activity.startActivity(intent);
+//
+//           *//* activity.finishAffinity();
+//            Intent intent = new Intent(activity, LoginActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//            activity.startActivity(intent);
+//            activity.finish();*//*
+//
+//
+//
+//            return;
+//        }
+//
+//        if (Build.VERSION.SDK_INT < 26) {
+//            activity.stopService(new Intent(activity, GeoUpdate.class));
+//        } else {
+//            new OreoLocation(activity).stopOreoLocationUpdates();
+//        }
+//        new WorkerManager(activity).stopWorker();
+//        Intent intent = new Intent(activity, LoginActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        activity.startActivity(intent);*/
+//
+//       /* activity.finishAffinity();
+//        Intent intent = new Intent(activity, LoginActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        activity.startActivity(intent);
+//        activity.finish();*/
+//    }
+
+    private void redirectToLogin() {
+
+
+        if (Build.VERSION.SDK_INT < 26) {
+            stopService(new Intent(this, GeoUpdate.class));
+        } else {
+            new OreoLocation(this).stopOreoLocationUpdates();
+        }
+        new WorkerManager(this).stopWorker();
+
+        General.hideloading();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LogOutScheduler.cancelAlarm();
+            Intent intent = new Intent(MyApplication.getAppContext(), LocationService.class);
+            intent.setAction(LocationService.ACTION_STOP);
+            MyApplication.getAppContext().startService(intent);
+        }
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.finish();
+        startActivity(intent);
+        General.customToast("You have been logged out successfully", this);
+
+
+    }
+
+    private boolean isExactAlarmPermissionGranted(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // API level 31 and above
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            return alarmManager != null && alarmManager.canScheduleExactAlarms();
+        }
+        // Exact alarms are always allowed on devices below API 31
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isExactAlarmPermissionGranted(this)) {
+            splashRunner();
+//            Toast.makeText(this, "Exact alarms are now enabled.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (permissionDialog != null && permissionDialog.isShowing()) {
+            permissionDialog.dismiss();
+        }
+    }
 }
+

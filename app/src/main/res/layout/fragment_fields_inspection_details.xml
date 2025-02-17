@@ -798,11 +798,11 @@
                         android:maxLength="100"
                         android:textSize="@dimen/_13sdp"
                         android:imeOptions="actionNext"
-                        android:nextFocusForward="@+id/editText_plotno"
-                        android:clickable="false"
-                        android:longClickable="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
+                        android:nextFocusForward="@+id/editText_plotno"/>
+<!--                        android:clickable="false"-->
+<!--                        android:longClickable="false"-->
+<!--                        android:focusable="false"-->
+<!--                        android:focusableInTouchMode="false"-->
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
