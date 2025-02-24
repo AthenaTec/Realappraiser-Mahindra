@@ -127,7 +127,8 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor'com.jakewharton:butterknife-compiler:10.2.1'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
-    implementation 'com.github.barteksc:android-pdf-viewer:3.0.0-beta.4'
+//    implementation 'com.github.barteksc:android-pdf-viewer:3.0.0-beta.4'
+    implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
     /****form design compile****/
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'

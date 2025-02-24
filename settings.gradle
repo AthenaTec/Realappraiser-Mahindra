@@ -21,6 +21,13 @@ dependencyResolutionManagement {
         jcenter()
         maven { url 'https://www.jitpack.io' }
     }
+
+   /* repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }*/
 }
 
 rootProject.name = "Real Appraiser"
