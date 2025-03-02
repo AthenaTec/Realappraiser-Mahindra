@@ -152,7 +152,7 @@
                     android:layout_height="@dimen/_38sdp">
 
 
-                    <com.victor.loading.rotate.RotateLoading
+                    <!--<com.victor.loading.rotate.RotateLoading
                         android:id="@+id/rotateloading"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -161,7 +161,20 @@
                         android:layout_marginRight="@dimen/height_50"
                         app:loading_color="@color/colorPrimary"
                         app:loading_width="1dp"
-                        tools:ignore="InconsistentLayout" />
+                        tools:ignore="InconsistentLayout" />-->
+
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/rotateloading"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/height_50"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/dual_ring_200x200"
+                         />
 
                     <LinearLayout
                         android:id="@+id/GoOfflineLayout"

@@ -407,7 +407,7 @@
             app:srcCompat="@drawable/image_go"
             tools:ignore="ContentDescription,InconsistentLayout,RtlHardcoded" />
 
-        <com.victor.loading.rotate.RotateLoading
+        <!--<com.victor.loading.rotate.RotateLoading
             android:id="@+id/rotateloading"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -417,8 +417,20 @@
             android:padding="@dimen/height_6"
             app:loading_color="@color/colorPrimary"
             app:loading_width="1dp"
-            tools:ignore="InconsistentLayout,RtlHardcoded" />
+            tools:ignore="InconsistentLayout,RtlHardcoded" />-->
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/rotateloading"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="@dimen/height_8"
+            android:padding="@dimen/height_6"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/dual_ring_200x200"
+             />
 
     </RelativeLayout>
 
